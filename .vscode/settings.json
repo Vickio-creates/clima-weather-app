@@ -1,0 +1,9 @@
+{
+    "diffEditor.useInlineViewWhenSpaceIsLimited": true,
+    "editor.inlineSuggest.edits.renderSideBySide": "never",
+    "editor.inlineSuggest.enabled": false,
+    "editor.inlineSuggest.edits.showLongDistanceHint": false,
+    "editor.inlineSuggest.syntaxHighlightingEnabled": false,
+    "editor.inlineSuggest.suppressInSnippetMode": false,
+    "editor.inlineSuggest.showToolbar": "never"
+}
