@@ -1,30 +1,36 @@
+# Clima Weather App
 
+A weather application interface built using HTML, CSS, and JavaScript.
 
-This structure keeps the project modular, scalable, and easy to maintain.
+This project is part of my learning journey in frontend development where I practice turning a Figma design into a functional web interface.
 
----
+## Features
 
-## 🖼️ Screenshots
+- Weather application UI
+- City search interface
+- Responsive layout
+- Modular folder structure
 
-![Clima Weather App Screenshot](assets/images/Screenshot 2026-02-13 at 10.37.27.png)
-![Clima Weather App Screenshot](assets/images/Screenshot 2026-02-13 at 10.37.44.png)
+## Project Structure
 
+index.html – main page  
+style/ – CSS styles  
+scripts/ – JavaScript functionality  
+assets/images/ – project images and screenshots
 
+## Screenshots
 
----
+<img width="1920" height="1200" alt="Screenshot 2026-02-13 at 10 37 27" src="https://github.com/user-attachments/assets/62019a8f-7fce-4a2e-9c3c-50b887d79f32" />
 
-## 🎯 Goals
+<img width="1920" height="1200" alt="Screenshot 2026-02-13 at 14 18 21" src="https://github.com/user-attachments/assets/df1295ea-7f50-4a4a-b1f1-d33880eb777e" />
 
-- Improve my design‑to‑code workflow  
-- Build clean, reusable UI components  
-- Practice responsive design  
-- Learn API integration  
-- Document my development process publicly  
+## Goals
 
----
+- Improve my design-to-code workflow
+- Build clean and reusable UI components
+- Practice responsive design
+- Learn API integration for real weather data
 
-## 📬 Feedback
+## Status
 
-If you have suggestions or feedback, feel free to open an issue or reach out.  
-This project is part of my learning journey, and I’m improving it step by step.
-
+Work in progress 
