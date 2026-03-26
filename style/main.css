@@ -5,7 +5,7 @@ body {
     overflow: hidden;
     display: grid;
     background: linear-gradient(135deg, #0f172a, #1e293b);
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 main {
@@ -32,4 +32,9 @@ span {
     font-weight: 600;
     opacity: 70%;
     letter-spacing: 11%;
+}
+
+.app-layout {
+    display: flex;
+    gap: 100px;
 }
