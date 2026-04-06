@@ -1,4 +1,4 @@
-.search-card-city {
+.card-search {
     width: 320px;
     display: flex;
     align-items: center;
@@ -12,7 +12,7 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-.card-city {
+.input-box {
     width: 248px;
     height: 52px;
     display: flex;
@@ -29,7 +29,7 @@
 }
 
 /*search icon*/
-.card-city svg {
+.input-box svg {
     stroke: white;
     opacity: 80%;
     width: 20px;
@@ -37,7 +37,7 @@
     display: flex;
 }
 
-.card-city input {
+.input-box input {
     flex: 1;
     height: 100%;
     background: transparent;
@@ -53,6 +53,6 @@
 }
 
 /*Location search placeholder*/
-.card-city input::placeholder {
+.input-box input::placeholder {
     color: rgba(255, 255, 255, 0.6);
 }
