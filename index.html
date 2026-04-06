@@ -44,8 +44,8 @@
         <!-- Search -->
         <div class="card-search">
           <div class="input-box">
-            <input type="text" placeholder="Enter a city..." />
-            <i data-lucide="search"></i>
+            <input type="text" id = "city-input" placeholder="Enter a city..." onkeydown = "handleEnter(event)" />
+            <i data-lucide="search" onclick = "updateCity()"></i>
           </div>
         </div>
 
@@ -99,7 +99,7 @@
         <div class="middle-content">
           <div class="open-location">
           <span class="country">Lithuania</span>
-          <h2 class="city">Vilnius</h2>
+          <h2 class="city" id = "city-name">Vilnius</h2>
           </div>
           <p class="text-description">
             Vilnius is the capital of Lithuania, known for its UNESCO-listed Old Town and rich architecture.
