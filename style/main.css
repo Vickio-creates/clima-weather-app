@@ -1,11 +1,20 @@
 /*The body interface of the app*/
 body {
     margin: 0;
-    min-height: 100%;
-    overflow: hidden;
-    display: grid;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
     font-family: 'Inter', sans-serif;
+    background: url('https://images.unsplash.com/photo-1723987322441-2ce6de0065b1?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&q=60&w=3000') no-repeat center center/cover;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 40, 0.6);
+    z-index: -1;
 }
 
 main {
@@ -36,5 +45,9 @@ span {
 
 .app-layout {
     display: flex;
-    gap: 100px;
+    width: 100%;
+    min-height: 100vh;
+    gap: 2px;
+    padding: 20px;
+    align-items: flex-start;
 }

@@ -1,9 +1,9 @@
-.middle {
+/*.middle {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+}*/
 
 .middle-content {
     width: 480px;
