@@ -1,23 +1,75 @@
+.app-layout {
+    display: flex;
+    width: 100%;
+    max-width: 1328px;
+    gap: 32px;
+    padding: 40px 12px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
 .left-panel {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    width: 368px;
+    width: 320px;
     flex-shrink: 0;
+    margin-top: 40px;
 }
 
-.middle{
-    flex: 1;
-    min-width: 0;
+.middle {
+    width: 560px;
+    flex-shrink: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: stretch;
 }
 
-.right-panel{
-    width: 368px;
+.right-panel {
+    width: 320px;
     flex-shrink: 0;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+    .app-layout {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 24px 16px;
+    }
+
+    .left-panel {
+        width: 100%;
+        max-width: 360px;
+        margin-top: 0;
+        align-items: center;
+    }
+
+    .middle {
+        width: 100%;
+        max-width: 360px;
+        align-self: auto;
+    }
+
+    .right-panel {
+        width: 100%;
+        max-width: 360px;
+    }
+}
+
+@media (max-width: 420px) {
+    .app-layout {
+        padding: 16px 12px;
+        gap: 14px;
+    }
+
+    .left-panel,
+    .middle,
+    .right-panel {
+        max-width: 100%;
+    }
 }

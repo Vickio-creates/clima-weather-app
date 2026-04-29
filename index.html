@@ -15,20 +15,20 @@
   <link rel="stylesheet" href="style/components/search.css" />
   <link rel="stylesheet" href="style/components/middle.css" />
   <link rel="stylesheet" href="style/components/forecast.css" />
-
+  <link rel="stylesheet" href="style/components/footer.css" />
 
   <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="scripts/app.js" defer></script>
 
   <!-- Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <main class="app">
+  <main>
 
     <div class="app-layout">
 
@@ -46,12 +46,12 @@
         <!-- Search -->
         <div class="card-search">
           <div class="input-box">
-            <input type="text" id = "city-input" placeholder="Enter a city..." onkeydown = "handleEnter(event)" />
-            <i data-lucide="search" onclick = "updateCity()"></i>
+            <input type="text" id="city-input" placeholder="Enter a city..." />
+            <i data-lucide="search" id="search-icon"></i>
           </div>
         </div>
 
-        <!-- Recent -->
+        <!-- Recent Searches -->
         <div class="card-recent">
 
           <div class="card-header">
@@ -62,7 +62,6 @@
             </div>
           </div>
 
-          <!-- Item -->
           <div class="location-item">
             <div class="location-info">
               <span class="location-icon">
@@ -76,13 +75,11 @@
             <div class="location-temp">-6°C</div>
           </div>
 
-          <!-- Item -->
           <div class="location-item">
             <div class="location-info">
               <span class="location-icon">
                 <i data-lucide="cloud-drizzle"></i>
               </span>
-
               <div>
                 <div class="location-city">BERLIN</div>
                 <div class="location-country">Germany</div>
@@ -97,139 +94,136 @@
 
       <!-- MIDDLE -->
       <section class="middle">
-
         <div class="middle-content">
+
           <div class="open-location">
-          <span class="country">Lithuania</span>
-          <h2 class="city" id = "city-name">Vilnius</h2>
+            <span class="country" id="country">Lithuania</span>
+            <h2 class="city" id="city-name">VILNIUS</h2>
           </div>
-          <p class="text-description">
-            Vilnius is the capital of Lithuania, known for its UNESCO-listed Old Town and rich architecture.
+
+          <p class="text-description" id="city-description">
+            Search for a city to see the weather.
           </p>
 
           <div class="weather">
             <div class="weather-main">
               <i class="location-icon-big" data-lucide="cloud-snow"></i>
-              <div class="temp">-6°C</div>
+              <div class="temp">
+                <p id="temperature">--°C</p>
+                <p id="description">--</p>
+              </div>
             </div>
 
             <div class="extra">
               <div class="humidity">
                 <span>H:</span>
-                <span>-2°C</span>
+                <span id="high-temp">--°C</span>
               </div>
               <div class="latitude">
                 <span>L:</span>
-                <span>-8°C</span>
+                <span id="low-temp">--°C</span>
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
       <!-- RIGHT PANEL -->
+      <section class="right-panel">
+        <div class="forecast-card">
+          <h3>7-DAYS FORECAST</h3>
 
-<section class="right-panel">
-  <div class="forecast-card">
-    <h3>7-DAYS FORECAST</h3>
-<div class="forecast-item">
-  <span class="week-day">Mon</span>
-  <span class="day-icon">
-    <i data-lucide="cloud-rain"></i>
-  </span>
-  <span class="temp-day">-6°C</span>
-</div>
+          <div class="forecast-item">
+            <span class="week-day">Mon</span>
+            <span class="day-icon"><i data-lucide="cloud-rain"></i></span>
+            <span class="temp-day">-6°C</span>
+          </div>
+          <div class="day-divider"></div>
 
-<div class="forecast-item">
-  <span class="week-day">Tue</span>
-  <span class="day-icon">
-    <i data-lucide="cloud-snow"></i>
-  </span>
-  <span class="temp-day">-16°C</span>
-</div>
+          <div class="forecast-item selected-day">
+            <span class="week-day">Tue</span>
+            <span class="day-icon"><i data-lucide="cloud-snow"></i></span>
+            <span class="temp-day">-16°C</span>
+          </div>
+          <div class="day-divider"></div>
 
-<div class="forecast-item">
-  <span class="week-day">Wed</span>
-  <span class="day-icon">
-    <i data-lucide="cloud-rain"></i>
-  </span>
-  <span class="temp-day">-6°C</span>
-</div>
+          <div class="forecast-item">
+            <span class="week-day">Wed</span>
+            <span class="day-icon"><i data-lucide="cloud-rain"></i></span>
+            <span class="temp-day">-6°C</span>
+          </div>
+          <div class="day-divider"></div>
 
-<div class="forecast-item">
-  <span class="week-day">Thu</span>
-  <span class="day-icon">
-    <i data-lucide="cloud-snow"></i>
-  </span>
-  <span class="temp-day">-9°C</span>
-</div>
+          <div class="forecast-item">
+            <span class="week-day">Thu</span>
+            <span class="day-icon"><i data-lucide="cloud-snow"></i></span>
+            <span class="temp-day">-9°C</span>
+          </div>
+          <div class="day-divider"></div>
 
-<div class="forecast-item">
-  <span class="week-day">Fri</span>
-  <span class="day-icon">
-    <i data-lucide="wind"></i>
-  </span>
-  <span class="temp-day">-6°C</span>
-</div>
+          <div class="forecast-item">
+            <span class="week-day">Fri</span>
+            <span class="day-icon"><i data-lucide="wind"></i></span>
+            <span class="temp-day">-6°C</span>
+          </div>
+          <div class="day-divider"></div>
 
-<div class="forecast-item">
-  <span class="week-day">Sat</span> 
-  <span class="day-icon">
-    <i data-lucide="wind"></i>
-  </span>
-  <span class="temp-day">-6°C</span>
-</div>
+          <div class="forecast-item">
+            <span class="week-day">Sat</span>
+            <span class="day-icon"><i data-lucide="wind"></i></span>
+            <span class="temp-day">-6°C</span>
+          </div>
+          <div class="day-divider"></div>
 
-<div class="forecast-item">
-  <span class="week-day">Sun</span>
-  <span class="day-icon">
-    <i data-lucide="cloud-snow"></i>
-  </span>
-  <span class="temp-day">-23°C</span>
-</div>
+          <div class="forecast-item">
+            <span class="week-day">Sun</span>
+            <span class="day-icon"><i data-lucide="cloud-snow"></i></span>
+            <span class="temp-day">-23°C</span>
+          </div>
 
-<!-- DIVIDER ADDED HERE -->
-<div class="divider"></div>
+          <div class="divider"></div>
 
-<div class="weather-details">
-  <div class="detail-item">
-    <div class="detail-left">
-  <span class="weather-icon">
-      <i data-lucide="droplet"></i>
-    </span>
-    <span>Humidity</span>
-    </div>
-    <span>70%</span>
-  </div>
+          <div class="weather-details">
+            <div class="detail-item">
+              <div class="detail-left">
+                <span class="weather-icon"><i data-lucide="droplet"></i></span>
+                <span>Humidity</span>
+              </div>
+              <span>70%</span>
+            </div>
 
-  <div class="detail-item">
-    <div class="detail-left">
-    <span class="weather-icon">
-      <i data-lucide="wind"></i>
-    </span>
-    <span>Wind</span>
-    </div>
-    <span>2.8 m/s</span>
-  </div>
+            <div class="detail-item">
+              <div class="detail-left">
+                <span class="weather-icon"><i data-lucide="wind"></i></span>
+                <span>Wind</span>
+              </div>
+              <span>2.8 m/s</span>
+            </div>
 
-  <div class="detail-item">
-    <div class="detail-left">
-    <span class="weather-icon">
-      <i data-lucide="thermometer"></i>
-    </span>
-    <span>Feels like</span>
-    </div>
-    <span>-4°C</span>
-  </div>
-</div>
+            <div class="detail-item">
+              <div class="detail-left">
+                <span class="weather-icon"><i data-lucide="thermometer"></i></span>
+                <span>Feels like</span>
+              </div>
+              <span>-4°C</span>
+            </div>
+          </div>
 
-  </div>
-</section>
-
+        </div>
+      </section>
 
     </div>
-
   </main>
-</body>
 
+  <footer class="app-footer">
+    <p>Build by Estelle</p>
+    <span class="github-link">
+      <i data-lucide="github"></i>
+      <p><a href="#">GitHub</a></p>
+    </span>
+    <time>2026</time>
+  </footer>
+
+</body>
 </html>

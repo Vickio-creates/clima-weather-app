@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 8px;
     padding: 24px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -16,33 +16,32 @@
 
 .forecast-item {
     width: 272px;
-    height: 72px;
-    display: flex;
+    height: 56px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     align-items: center;
-    justify-content: space-between;
-    padding: 16px;
+    padding: 0 16px;
+    gap: 12px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    gap: 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    box-sizing: border-box;
 }
 
-.week-day{
-    font-size: 14px;
-    font-weight: 400;
-}
-
-.temp-day{
-    font-size: 16px;
-    font-weight: 600;
+.selected-day {
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
 }
 
 .forecast-card h3 {
     width: 100%;
-    margin: 0 0 10px;
+    margin: 0 0 2px;
     font-weight: 600;
+    font-size: 12px;
     opacity: 0.7;
     letter-spacing: 8%;
     color: white;
@@ -50,12 +49,33 @@
     text-align: left;
 }
 
+.week-day,
+.temp-day,
 .day-icon {
-    width: 42px;
-    height: 42px;
     display: flex;
     align-items: center;
+    height: 100%;
+}
+
+.week-day {
+    grid-column: 1;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: normal;
+}
+
+.day-icon {
+    grid-column: 2;
     justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.temp-day {
+    grid-column: 4;
+    justify-content: flex-end;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .weather-icon {
@@ -67,10 +87,10 @@
 .weather-details {
     width: 100%;
     margin-top: 8px;
-    padding: 18px 16px;
+    padding: 0px 16px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
 }
 
 .detail-item {
@@ -93,23 +113,17 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 1px;
-    background: rgba(255,255,255,0.12);
 }
 
-.detail-item span:first-child,
-.detail-item span:last-child {
+.detail-left span:last-child {
     font-size: 14px;
+    font-weight: 500;
     letter-spacing: 0.04em;
 }
 
-.detail-item span:nth-child(2){
-    font-size: 14px;
-    font-weight: 400;
+.detail-item > span:last-child {
+    font-size: 16px;
     letter-spacing: 0.04em;
-}
-
-.detail-item span:last-child {
     opacity: 1;
     font-weight: 700;
 }
@@ -121,8 +135,102 @@
 }
 
 .divider {
-    width: 100%;
+    width: 320px;
     height: 1px;
     background: rgba(255,255,255,0.2);
-    margin: 10px 0 0;
+    margin: 24px 0 24px;
+}
+
+.day-divider {
+    width: 320px;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: -2px 0 -2px;
+}
+
+@media (max-width: 768px) {
+    .forecast-card {
+        width: 100%;
+        min-height: unset;
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    .forecast-item,
+    .divider,
+    .day-divider {
+        width: 100%;
+    }
+
+    .forecast-item {
+        height: 52px;
+        padding: 0 14px;
+    }
+
+    .week-day {
+        font-size: 13px;
+    }
+
+    .temp-day {
+        font-size: 15px;
+    }
+
+    .weather-details {
+        padding: 0;
+        gap: 12px;
+    }
+
+    .detail-left span:last-child {
+        font-size: 13px;
+    }
+
+    .detail-item > span:last-child {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 420px) {
+    .forecast-card {
+        padding: 14px;
+        gap: 6px;
+    }
+
+    .forecast-card h3 {
+        font-size: 11px;
+    }
+
+    .forecast-item {
+        height: 48px;
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .week-day {
+        font-size: 12px;
+    }
+
+    .day-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .temp-day {
+        font-size: 14px;
+    }
+
+    .weather-details {
+        gap: 10px;
+    }
+
+    .detail-left {
+        gap: 8px;
+    }
+
+    .detail-left span:last-child {
+        font-size: 12px;
+    }
+
+    .detail-item > span:last-child {
+        font-size: 14px;
+    }
 }
