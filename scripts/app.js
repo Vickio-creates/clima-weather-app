@@ -45,11 +45,12 @@ async function getWeather(city) {
     document.querySelector("#temperature").textContent = `${data.temperature}°C`;
     document.querySelector("#description").textContent = data.condition;
 
+    const iconName = getWeatherIcon(data.condition);
+    const wrapper = document.querySelector("#weather-icon-wrapper");
+    wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;      
+    lucide.createIcons();
 
-  const iconName = getWeatherIcon(data.condition);
-  const wrapper = document.querySelector("#weather-icon-wrapper");
-  wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;      
-  lucide.createIcons();
+    addRecentSearch(data.city, data.country, data.temperature, data.condition);
 
   } catch (error) {
     console.log("Error fetching the data:", error);
@@ -71,4 +72,25 @@ function getWeatherIcon(condition) {
     "Unknown": "cloud"
   };
   return icons[condition] || "cloud";
+}
+
+function addRecentSearch(city, country, temperature, condition){
+    const iconName = getWeatherIcon(condition);
+    const recentList = document.querySelector("#recent-list");
+    const newElement = document.createElement("div");
+    newElement.className = "location-item";
+    newElement.innerHTML = `<div class="location-info">
+    <span class="location-icon">
+                <i data-lucide="${iconName}"></i>
+              </span>
+              <div>
+                <div class="location-city">${city.toUpperCase()}</div>
+                <div class="location-country">${country}</div>
+              </div>
+            </div>
+            <div class="location-temp">${temperature}°C</div>
+          </div>`;
+
+          recentList.prepend(newElement);
+          lucide.createIcons();
 }
