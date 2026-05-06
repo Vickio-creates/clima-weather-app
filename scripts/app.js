@@ -45,8 +45,30 @@ async function getWeather(city) {
     document.querySelector("#temperature").textContent = `${data.temperature}°C`;
     document.querySelector("#description").textContent = data.condition;
 
+
+  const iconName = getWeatherIcon(data.condition);
+  const wrapper = document.querySelector("#weather-icon-wrapper");
+  wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;      
+  lucide.createIcons();
+
   } catch (error) {
     console.log("Error fetching the data:", error);
     alert("Could not connect to the weather API.");
   }
+}
+
+function getWeatherIcon(condition) {
+  const icons = {
+    "Sunny": "sun",
+    "Cloudy": "cloud",
+    "Partly Cloudy": "cloud-sun",
+    "Overcast": "cloudy",
+    "Rainy": "cloud-rain",
+    "Stormy": "cloud-lightning",
+    "Snowy": "cloud-snow",
+    "Windy": "wind",
+    "Clear": "star",
+    "Unknown": "cloud"
+  };
+  return icons[condition] || "cloud";
 }
