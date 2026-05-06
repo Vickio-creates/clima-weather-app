@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   lucide.createIcons();
+  displayDate();
 
   const cityInput = document.querySelector("#city-input");
   const searchIcon = document.querySelector(".input-box .lucide-search");
@@ -26,7 +27,7 @@ function updateCity() {
     return;
   }
 
-  getWeather(city);
+  getWeather(city); 
   input.value = "";
 }
 
@@ -93,4 +94,14 @@ function addRecentSearch(city, country, temperature, condition){
 
           recentList.prepend(newElement);
           lucide.createIcons();
+}
+
+function displayDate(){
+  const today = new Date();
+  const dateString = today.toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long'
+  });
+  document.querySelector("#city-date").textContent = dateString;
 }
