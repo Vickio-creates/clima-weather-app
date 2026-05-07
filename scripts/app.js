@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cityInput.addEventListener("keydown", handleEnter);
   if (searchIcon) searchIcon.addEventListener("click", updateCity);
+
+  loadRecentSearches();
 });
 
 // Function to press Enter on the keyboard
@@ -52,6 +54,7 @@ async function getWeather(city) {
     lucide.createIcons();
 
     addRecentSearch(data.city, data.country, data.temperature, data.condition);
+    saveToLocalStorage(data.city, data.country, data.temperature, data.condition);
 
   } catch (error) {
     console.log("Error fetching the data:", error);
@@ -104,4 +107,28 @@ function displayDate(){
     month: 'long'
   });
   document.querySelector("#city-date").textContent = dateString;
+}
+
+function saveToLocalStorage(city, country, temperature, condition){
+  const saved = localStorage.getItem("recentSearches");
+  const searches = saved ? JSON.parse(saved) : [];
+  const newSearch = {
+    city: city,
+    country: country,
+    temperature: temperature,
+    condition: condition};
+
+    searches.unshift(newSearch);
+    searches.splice(5);
+    localStorage.setItem("recentSearches", JSON.stringify(searches));
+}
+
+function loadRecentSearches(){
+  const saved = localStorage.getItem("recentSearches");
+  if(!saved) return;
+
+  const searches = JSON.parse(saved);
+  searches.reverse().forEach(function(search) {
+    addRecentSearch(search.city, search.country, search.temperature, search.condition);
+  });
 }
