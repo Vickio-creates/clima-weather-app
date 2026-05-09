@@ -25,7 +25,35 @@ if(!$data || $data["cod"] !== 200){
 
 echo json_encode([
     "city" => $data["name"],
-    "country" => $data["sys"]["country"],
+    "country" => getCountryName($data["sys"]["country"]),
     "temperature" => round($data["main"]["temp"]),
     "condition" => $data["weather"][0]["main"]
 ]);
+
+function getCountryName(string $code): string {
+    $code = strtoupper($code);
+    $countries = [
+        "LT" => "Lithuania",
+        "FR" => "France",
+        "GB" => "United Kingdom",
+        "US" => "United States",
+        "DE" => "Germany",
+        "JP" => "Japan",
+        "RU" => "Russia",
+        "NL" => "Netherlands",
+        "BE" => "Belgium",
+        "PL" => "Poland",
+        "CM" => "Cameroon",
+        "AU" => "Australia",
+        "CN" => "China",
+        "ES" => "Spain",
+        "IT" => "Italy",
+        "CA" => "Canada",
+        "AE" => "United Arab Emirates",
+        "SE" => "Sweden",
+        "NO" => "Norway",
+        "DK" => "Denmark",
+        "PT" => "Portugal"
+    ];
+    return $countries[$code] ?? $code;
+}

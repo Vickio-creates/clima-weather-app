@@ -53,8 +53,9 @@ async function getWeather(city) {
     wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;      
     lucide.createIcons();
 
-    addRecentSearch(data.city, data.country, data.temperature, data.condition);
+    //addRecentSearch(data.city, data.country, data.temperature, data.condition);
     saveToLocalStorage(data.city, data.country, data.temperature, data.condition);
+    refreshRecentSearches();
 
   } catch (error) {
     console.log("Error fetching the data:", error);
@@ -72,7 +73,7 @@ function getWeatherIcon(condition) {
     "Stormy": "cloud-lightning",
     "Snowy": "cloud-snow",
     "Windy": "wind",
-    "Clear": "star",
+    "Clear": "sun",
     "Unknown": "cloud"
   };
   return icons[condition] || "cloud";
@@ -118,11 +119,15 @@ function saveToLocalStorage(city, country, temperature, condition){
     temperature: temperature,
     condition: condition};
 
-    searches.unshift(newSearch);
-    searches.splice(5);
-    localStorage.setItem("recentSearches", JSON.stringify(searches));
+    const filtered = searches.filter(function(s){
+      return s.city.toLowerCase() !== city.toLowerCase();
+    });
+    filtered.unshift(newSearch);
+    filtered.splice(5);
+    localStorage.setItem("recentSearches", JSON.stringify(filtered));
 }
 
+//Uploading the recent search list with cities enter by the user
 function loadRecentSearches(){
   const saved = localStorage.getItem("recentSearches");
   if(!saved) return;
@@ -131,4 +136,12 @@ function loadRecentSearches(){
   searches.reverse().forEach(function(search) {
     addRecentSearch(search.city, search.country, search.temperature, search.condition);
   });
+}
+
+//Refreshing the recent search list directly from the local storage
+function refreshRecentSearches(){
+  const recentList = document.querySelector("#recent-list");
+  recentList.innerHTML = "";
+
+  loadRecentSearches();
 }
