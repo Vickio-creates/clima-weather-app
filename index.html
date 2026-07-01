@@ -4,207 +4,277 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clima App</title>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="style/main.css" />
-  <link rel="stylesheet" href="style/components/card.css" />
-  <link rel="stylesheet" href="style/components/layout.css" />
-  <link rel="stylesheet" href="style/components/logo.css" />
-  <link rel="stylesheet" href="style/components/recent.css" />
-  <link rel="stylesheet" href="style/components/search.css" />
-  <link rel="stylesheet" href="style/components/middle.css" />
-  <link rel="stylesheet" href="style/components/forecast.css" />
-  <link rel="stylesheet" href="style/components/footer.css" />
-
-  <!-- Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="scripts/app.js" defer></script>
+  <title>Clima — Your Personal Weather Assistant</title>
 
   <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style/landing.css" />
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Scripts -->
+  <script src="scripts/recommendations.js" defer></script>
+  <script src="scripts/landing.js" defer></script>
 </head>
 
-<body>
+<body class="landing-page">
+
+  <!-- Top background area: navigation + hero + features -->
+  <div class="landing-hero-area">
+
+    <!-- Navigation -->
+    <header class="landing-nav">
+      <div class="landing-container nav-inner">
+        <a href="index.html" class="nav-logo">
+          <span class="nav-logo-icon">
+            <i data-lucide="cloud"></i>
+          </span>
+          <span class="nav-logo-text">Clima</span>
+        </a>
+
+        <div class="nav-menu">
+          <nav class="nav-links" aria-label="Main navigation">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#about">About</a>
+            <a href="#contact" data-open-contact>Contact</a>
+          </nav>
+
+          <div class="nav-actions">
+            <a href="login.html" class="btn btn-outline">Log in</a>
+            <a href="signup.html" class="btn btn-primary">Sign Up</a>
+          </div>
+        </div>
+
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="landing-container hero-grid">
+
+        <div class="hero-content">
+          <p class="hero-kicker">Clima</p>
+
+          <h1>
+            Your personal<br>
+            weather <span class="text-accent">assistant</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Smart forecasts, personalized recommendations, and real-time alerts - all in one place.
+          </p>
+
+          <div class="hero-actions">
+            <a href="signup.html" class="btn btn-primary btn-lg">Sign Up</a>
+            <a href="#features" class="btn btn-outline btn-lg">Learn more</a>
+          </div>
+
+          <p class="hero-trust">
+            <i data-lucide="badge-check"></i>
+            Free to start. No credit card required.
+          </p>
+        </div>
+
+        <!-- Live weather preview card -->
+        <div class="weather-preview" aria-live="polite">
+          <div class="weather-preview-location">
+            <i data-lucide="map-pin"></i>
+            <span id="preview-location">Vilnius, Lithuania</span>
+          </div>
+
+          <div class="weather-preview-main">
+            <div class="weather-preview-icon" id="preview-icon-wrapper">
+              <i data-lucide="cloud-rain"></i>
+            </div>
+
+            <div class="weather-preview-temp">
+              <span class="temp-value" id="preview-temp">17°C</span>
+              <span class="temp-detail" id="preview-detail">Cloudy · Feels like 16°C</span>
+            </div>
+          </div>
+
+          <div class="weather-preview-recs">
+            <div class="rec-item">
+              <div class="rec-icon">
+                <i data-lucide="shirt"></i>
+              </div>
+
+              <div class="rec-text">
+                <span class="rec-label">What to wear?</span>
+                <span class="rec-value" id="preview-wear">Light layers</span>
+              </div>
+            </div>
+
+            <div class="rec-item">
+              <div class="rec-icon">
+                <i data-lucide="umbrella"></i>
+              </div>
+
+              <div class="rec-text">
+                <span class="rec-label">Umbrella?</span>
+                <span class="rec-value" id="preview-umbrella">Not needed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <div class="landing-container">
+        <h2>
+          Everything you need, in one
+          <span class="text-accent">intelligent assistant</span>
+        </h2>
+
+        <div class="features-grid">
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="person-standing"></i>
+            </div>
+
+            <h3>Personalized Guidance</h3>
+            <p>Get recommendations based on your location and daily routine.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="bell"></i>
+            </div>
+
+            <h3>Real-time Alerts</h3>
+            <p>Stay ahead with severe weather alerts.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="bot"></i>
+            </div>
+
+            <h3>AI Assistant</h3>
+            <p>Ask anything and get instant, helpful weather advice.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="shirt"></i>
+            </div>
+
+            <h3>Activity Recommendations</h3>
+            <p>Plan your day with confidence based on weather conditions.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Other page sections after scrolling -->
   <main>
 
-    <div class="app-layout">
+    <!-- How It Works -->
+    <section class="info-section" id="how-it-works">
+      <div class="landing-container info-grid">
 
-      <!-- LEFT PANEL -->
-      <aside class="left-panel">
-
-        <!-- Logo -->
-        <div class="card-logo">
-          <div class="logo-box">
-            <i data-lucide="cloud"></i>
-          </div>
-          <h1>Clima</h1>
-        </div>
-
-        <!-- Search -->
-        <div class="card-search">
-          <div class="input-box">
-            <input type="text" id="city-input" placeholder="Enter a city..." />
-            <i data-lucide="search" id="search-icon"></i>
-          </div>
-        </div>
-
-        <!-- Recent Searches -->
-        <div class="card-recent">
-
-          <div class="card-header">
-            <span>Recent Searches</span>
-            <div class="see-all">
-              <a href="#">See All</a>
-              <i data-lucide="chevron-right"></i>
-            </div>
-          </div>
-
-          <div id="recent-list">
-          </div>
-        </div>
-
-      </aside>
-
-      <!-- MIDDLE -->
-      <section class="middle">
-        <div class="middle-content">
-
-          <div class="open-location">
-            <span class="country" id="country">Lithuania</span>
-            <h2 class="city" id="city-name">VILNIUS</h2>
-          </div>
-
-          <p class="text-description" id="city-description">
-            Search for a city to see the weather.
+        <div>
+          <h2>How It Works</h2>
+          <p>
+            Search any city, get live forecasts from OpenWeatherMap, and receive smart recommendations
+            tailored to the conditions - from what to wear to whether you need an umbrella.
+            Clima is there to assist you daily.
           </p>
-          <p class="city-date" id="city-date"></p>
-
-          <div class="weather">
-            <div class="weather-main">
-              <div id="weather-icon-wrapper">
-                <i class="location-icon-big" data-lucide="cloud-snow"></i>
-              </div>
-              <div class="temp">
-                <p id="temperature">--°C</p>
-                <p id="description">--</p>
-              </div>
-            </div>
-
-            <div class="extra">
-              <div class="humidity">
-                <span>H:</span>
-                <span id="high-temp">--°C</span>
-              </div>
-              <div class="latitude">
-                <span>L:</span>
-                <span id="low-temp">--°C</span>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </section>
 
-      <!-- RIGHT PANEL -->
-      <section class="right-panel">
-        <div class="forecast-card">
-          <h3>7-DAYS FORECAST</h3>
+        <ol class="steps-list">
+          <li><span>1</span> Enter your city or use your location</li>
+          <li><span>2</span> View real-time weather and 7-day forecast</li>
+          <li><span>3</span> Get AI-powered advice for your day</li>
+        </ol>
 
-          <div class="forecast-item">
-            <span class="week-day">Mon</span>
-            <span class="day-icon"><i data-lucide="cloud-rain"></i></span>
-            <span class="temp-day">-6°C</span>
-          </div>
-          <div class="day-divider"></div>
+      </div>
+    </section>
 
-          <div class="forecast-item selected-day">
-            <span class="week-day">Tue</span>
-            <span class="day-icon"><i data-lucide="cloud-snow"></i></span>
-            <span class="temp-day">-16°C</span>
-          </div>
-          <div class="day-divider"></div>
+    <!-- About -->
+    <section class="info-section info-section-alt" id="about">
+      <div class="landing-container">
+        <h2>About Clima</h2>
+        <p>
+          Clima is a smart weather web application built as part of my academic journey -
+          combining clean UI design, live API data, and intelligent recommendations to help
+          you plan every day with confidence.
+        </p>
+      </div>
+    </section>
 
-          <div class="forecast-item">
-            <span class="week-day">Wed</span>
-            <span class="day-icon"><i data-lucide="cloud-rain"></i></span>
-            <span class="temp-day">-6°C</span>
-          </div>
-          <div class="day-divider"></div>
+    <!-- Contact -->
+    <section class="info-section" id="contact">
+      <div class="landing-container contact-block">
+        <h2>Get in touch</h2>
+        <p>Questions or feedback? Reach out on GitHub or try the app today.</p>
+        <button type="button" class="btn btn-primary" data-open-contact>
+          Contact me
+        </button>
+      </div>
+    </section>
 
-          <div class="forecast-item">
-            <span class="week-day">Thu</span>
-            <span class="day-icon"><i data-lucide="cloud-snow"></i></span>
-            <span class="temp-day">-9°C</span>
-          </div>
-          <div class="day-divider"></div>
-
-          <div class="forecast-item">
-            <span class="week-day">Fri</span>
-            <span class="day-icon"><i data-lucide="wind"></i></span>
-            <span class="temp-day">-6°C</span>
-          </div>
-          <div class="day-divider"></div>
-
-          <div class="forecast-item">
-            <span class="week-day">Sat</span>
-            <span class="day-icon"><i data-lucide="wind"></i></span>
-            <span class="temp-day">-6°C</span>
-          </div>
-          <div class="day-divider"></div>
-
-          <div class="forecast-item">
-            <span class="week-day">Sun</span>
-            <span class="day-icon"><i data-lucide="cloud-snow"></i></span>
-            <span class="temp-day">-23°C</span>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="weather-details">
-
-            <div class="detail-item">
-              <div class="detail-left">
-                <span class="weather-icon"><i data-lucide="droplet"></i></span>
-                <span>Humidity</span>
-              </div>
-              <span>70%</span>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-left">
-                <span class="weather-icon"><i data-lucide="wind"></i></span>
-                <span>Wind</span>
-              </div>
-              <span>2.8 m/s</span>
-            </div>
-
-            <div class="detail-item">
-              <div class="detail-left">
-                <span class="weather-icon"><i data-lucide="thermometer"></i></span>
-                <span>Feels like</span>
-              </div>
-              <span>-4°C</span>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-    </div>
   </main>
 
-  <footer class="app-footer">
-    <p>Build by Estelle</p>
-    <span class="github-link">
-      <i data-lucide="git-branch"></i>
-      <p><a href="#">GitHub</a></p>
-    </span>
-    <time>2026</time>
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="landing-container footer-inner">
+      <p>Built by Estelle</p>
+
+      <span class="footer-divider">|</span>
+
+      <a href="https://github.com/Vickio-creates/clima-weather-app" target="_blank" rel="noopener noreferrer" class="footer-github">
+        <i data-lucide="github"></i>
+        GitHub
+      </a>
+
+      <span class="footer-divider">|</span>
+
+      <time>2026</time>
+    </div>
   </footer>
 
+  <!-- Contact Dialog -->
+  <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="contact-title">
+    <form class="contact-form" method="dialog">
+
+      <button type="button" class="dialog-close" aria-label="Close contact form" data-close-contact>
+        <i data-lucide="x"></i>
+      </button>
+
+      <h2 id="contact-title">Contact me</h2>
+      <p>Send a message about Clima, feedback, or collaboration.</p>
+
+      <label for="contact-name">Name</label>
+      <input type="text" id="contact-name" name="name" placeholder="Your name" required>
+
+      <label for="contact-email">Email</label>
+      <input type="email" id="contact-email" name="email" placeholder="you@example.com" required>
+
+      <label for="contact-message">Message</label>
+      <textarea id="contact-message" name="message" rows="5" placeholder="Write your message..." required></textarea>
+
+      <button type="submit" class="btn btn-primary">Send message</button>
+
+    </form>
+  </dialog>
+
 </body>
+
 </html>

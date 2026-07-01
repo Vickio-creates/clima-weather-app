@@ -27,7 +27,13 @@ echo json_encode([
     "city" => $data["name"],
     "country" => getCountryName($data["sys"]["country"]),
     "temperature" => round($data["main"]["temp"]),
-    "condition" => $data["weather"][0]["main"]
+    "highTemp" => round($data["main"]["temp_max"]),
+    "lowTemp" => round($data["main"]["temp_min"]),
+    "feelsLike" => round($data["main"]["feels_like"]),
+    "humidity" => $data["main"]["humidity"],
+    "windSpeed" => round($data["wind"]["speed"], 1),
+    "condition" => $data["weather"][0]["main"],
+    "description" => $data["weather"][0]["description"]
 ]);
 
 function getCountryName(string $code): string {

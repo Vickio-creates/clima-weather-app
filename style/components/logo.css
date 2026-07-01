@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0066FF;
+    background: #2d6cdf;
     border: 1px solid white;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
@@ -34,4 +34,9 @@
     height: 38px;
     color: #fff;
     stroke-width: 2.25;
+}
+
+.card-logo-link {
+    text-decoration: none;
+    color: inherit;
 }
