@@ -1,0 +1,77 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+/* Landing page base */
+.landing-page {
+  margin: 0;
+  color: #111827;
+  background: #ffffff;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Top area only: navigation + hero + features */
+.landing-hero-area {
+  min-height: 100vh;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+
+  background-image: url("../../assets/images/piotr-ams-g1Q9_3GQ9d0-unsplash.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+}
+
+/* Dark overlay only on top area */
+.landing-hero-area::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 14, 24, 0.72) 0%,
+      rgba(8, 14, 24, 0.50) 45%,
+      rgba(8, 14, 24, 0.58) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(8, 14, 24, 0.15) 0%,
+      rgba(8, 14, 24, 0.38) 65%,
+      rgba(8, 14, 24, 0.72) 100%
+    );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.landing-hero-area > * {
+  position: relative;
+  z-index: 2;
+}
+
+main {
+  flex: 1;
+}
+
+.landing-container {
+  width: min(1220px, calc(100% - 160px));
+  margin: 0 auto;
+}
+
+.text-accent {
+  color: #2d6cdf;
+}
+

@@ -1,0 +1,335 @@
+/* ==========================================================================
+   1. MASTER DASHBOARD PAGE SETUP
+   ========================================================================== */
+.dashboard-page {
+    min-height: 100vh;
+    color: #fff;
+    background: url('https://images.unsplash.com/photo-1517524006037-e55b7efed26e?auto=format&fit=crop&q=80&w=3000') no-repeat center center/cover;
+    background-attachment: fixed;
+}
+
+.dashboard-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 30px 40px 40px;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   2. NAVBAR CONTROLS
+   ========================================================================== */
+.dashboard-topbar {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+.dashboard-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.dashboard-logo-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #1265ff;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    box-shadow: 0 8px 24px rgba(18, 101, 255, 0.35);
+}
+
+.dashboard-logo-box svg {
+    width: 25px;
+    height: 25px;
+    stroke-width: 2.35;
+}
+
+.dashboard-logo-text {
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.dashboard-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-action,
+.logout-button {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
+.icon-action {
+    position: relative;
+    width: 42px;
+    cursor: pointer;
+}
+
+.logout-button {
+    gap: 10px;
+    padding: 0 18px;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #1265ff;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* ==========================================================================
+   3. MASTER GRID ARRANGEMENT ENGINE (Matches ChatGPT Image)
+   ========================================================================== */
+.dashboard-page .app-layout {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 340px; /* Splitting left content area from right panel */
+    column-gap: 32px;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+/* Master container for Left + Middle columns and Quick Cards */
+.layout-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Horizontal alignment container for Left & Middle panels */
+.panels-upper-row {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    column-gap: 32px;
+    align-items: start;
+}
+
+.dashboard-page .left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-page .middle {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-page .middle-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ==========================================================================
+   4. GLASSMORPHISM VISUAL CARDS
+   ========================================================================== */
+.dashboard-page .card-search,
+.dashboard-page .card-recent,
+.dashboard-page .ai-card,
+.dashboard-page .hourly-card,
+.dashboard-page .forecast-card,
+.dashboard-page .quick-card {
+    text-decoration: none;
+    color: inherit;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-page .card-search,
+.dashboard-page .card-recent,
+.dashboard-page .ai-card {
+    width: 100%;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.dashboard-page .input-box {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.07);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+.dashboard-page .input-box input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+
+/* ==========================================================================
+   5. DEEP PANEL COMPONENTS
+   ========================================================================== */
+.ai-card { display: flex; flex-direction: column; gap: 14px; }
+.ai-heading, .ai-title { display: flex; align-items: center; }
+.ai-heading { justify-content: space-between; }
+.ai-title { gap: 8px; }
+.ai-icon svg { width: 19px; height: 19px; color: #b8d7ff; }
+.ai-card h3 { margin: 0; font-size: 15px; font-weight: 800; }
+.beta-pill { padding: 2px 6px; border-radius: 6px; background: #7257ff; font-size: 9px; font-weight: 900; }
+.ai-card p { margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 13px; }
+.ai-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.ai-list li { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+
+.ai-input { display: grid; grid-template-columns: 1fr 44px; gap: 8px; }
+.ai-input input { height: 42px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 0 14px; color: #fff; background: rgba(255, 255, 255, 0.05); outline: none; }
+.ai-input button { height: 42px; border: 0; border-radius: 10px; background: #1265ff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.ai-input button svg { width: 18px; height: 18px; color: #fff; }
+
+.dashboard-page .country { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: rgba(255, 255, 255, 0.6); }
+.dashboard-page .city { font-size: 64px; font-weight: 900; line-height: 1; margin: 4px 0 0; }
+.dashboard-greeting { margin: 12px 0 24px; font-size: 18px; color: rgba(255, 255, 255, 0.85); }
+
+.dashboard-page .weather { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.dashboard-page .weather-main { display: flex; align-items: center; gap: 24px; }
+.dashboard-page .location-icon-big { width: 80px; height: 80px; }
+.dashboard-page .temp { display: flex; flex-direction: column; gap: 2px; }
+.dashboard-page #temperature { font-size: 72px; font-weight: 800; line-height: 1; }
+.dashboard-page #description { font-size: 18px; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
+.weather-meta { display: flex; gap: 8px; font-size: 14px; color: rgba(255, 255, 255, 0.6); margin: 4px 0 0; }
+.dashboard-page .extra { display: flex; flex-direction: column; gap: 4px; text-align: right; }
+
+.hourly-card { width: 100%; padding: 20px; border-radius: 20px; box-sizing: border-box; }
+.hourly-card h3 { margin: 0 0 16px; font-size: 14px; font-weight: 800; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
+.hourly-list { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+.hourly-item { display: flex; flex-direction: column; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.03); padding: 12px 8px; border-radius: 12px; }
+.hourly-item span { color: rgba(255, 255, 255, 0.6); font-size: 12px; }
+.hourly-item svg { width: 24px; height: 24px; }
+.hourly-item strong { font-size: 14px; }
+
+.dashboard-page .forecast-card { width: 100%; padding: 20px; border-radius: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+.dashboard-page .forecast-card h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); margin: 0 0 4px; }
+.dashboard-page .forecast-item { display: grid; grid-template-columns: 60px 1fr auto; align-items: center; padding: 4px 0; }
+.dashboard-page .week-day { font-size: 14px; color: rgba(255, 255, 255, 0.7); }
+.dashboard-page .day-icon { justify-self: center; }
+.dashboard-page .day-icon svg { width: 20px; height: 20px; }
+.dashboard-page .temp-day { font-size: 15px; font-weight: 700; text-align: right; }
+.dashboard-page .day-divider { width: 100%; height: 1px; background: rgba(255, 255, 255, 0.08); }
+.dashboard-page .divider { width: 100%; height: 1px; background: rgba(255, 255, 255, 0.15); margin: 10px 0; }
+
+.dashboard-page .weather-details { display: flex; flex-direction: column; gap: 12px; }
+.dashboard-page .detail-item { display: flex; justify-content: space-between; align-items: center; }
+.dashboard-page .detail-left { display: flex; align-items: center; gap: 10px; font-size: 14px; color: rgba(255, 255, 255, 0.7); }
+.dashboard-page .detail-item > span:last-child { font-size: 15px; font-weight: 700; }
+
+/* ==========================================================================
+   6. HORIZONTAL QUICK RECOMMENDATIONS ROW (Bottom Row Container)
+   ========================================================================== */
+.quick-cards-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Split perfectly into 4 horizontal blocks */
+    gap: 16px;
+}
+
+.quick-card {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    box-sizing: border-box;
+}
+
+.quick-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.quick-icon svg { width: 20px; height: 20px; }
+.quick-card-text { flex-grow: 1; }
+.quick-card h3 { margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+.quick-card p { margin: 2px 0 0; font-size: 14px; font-weight: 700; white-space: nowrap; }
+
+.status-dot { width: 18px; height: 18px; border-radius: 50%; background: #25c56c; display: flex; align-items: center; justify-content: center; }
+.status-dot svg { width: 12px; height: 12px; color: #fff; }
+.quick-arrow { width: 16px; height: 16px; color: rgba(255, 255, 255, 0.4); }
+
+.app-footer {
+    width: 100%;
+    max-width: 1400px;
+    margin: 40px auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 20px;
+}
+.app-footer a { color: inherit; text-decoration: none; }
+.github-link { display: flex; align-items: center; gap: 6px; }
+
+/* ==========================================================================
+   7. COMPACT SCREEN SCALING RULES
+   ========================================================================== */
+@media (max-width: 1250px) {
+    .panels-upper-row { grid-template-columns: 1fr; gap: 24px; }
+    .quick-cards-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 950px) {
+    .dashboard-page .app-layout { grid-template-columns: 1fr; gap: 24px; }
+    .quick-cards-row { grid-template-columns: 1fr; }
+    .hourly-list { grid-template-columns: repeat(3, 1fr); }
+}

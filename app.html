@@ -8,17 +8,18 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="style/main.css" />
-  <link rel="stylesheet" href="style/components/card.css" />
-  <link rel="stylesheet" href="style/components/logo.css" />
-  <link rel="stylesheet" href="style/components/recent.css" />
-  <link rel="stylesheet" href="style/components/search.css" />
-  <link rel="stylesheet" href="style/components/middle.css" />
-  <link rel="stylesheet" href="style/components/forecast.css" />
-  <link rel="stylesheet" href="style/components/layout.css" />
-  <link rel="stylesheet" href="style/components/footer.css" />
+  <link rel="stylesheet" href="style/dashboard/card.css" />
+  <link rel="stylesheet" href="style/dashboard/logo.css" />
+  <link rel="stylesheet" href="style/dashboard/recent.css" />
+  <link rel="stylesheet" href="style/dashboard/search.css" />
+  <link rel="stylesheet" href="style/dashboard/middle.css" />
+  <link rel="stylesheet" href="style/dashboard/forecast.css" />
+  <link rel="stylesheet" href="style/dashboard/layout.css" />
+  <link rel="stylesheet" href="style/dashboard/footer.css" />
 
   <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="scripts/auth.js" defer></script>
   <script src="scripts/app.js" defer></script>
 
   <!-- Font -->
@@ -40,11 +41,14 @@
       </a>
 
       <div class="dashboard-actions">
-        <button type="button" class="icon-action" aria-label="Notifications">
+        <a href="notifications.html" class="icon-action" aria-label="Notifications">
           <i data-lucide="bell"></i>
           <span class="notification-badge">2</span>
-        </button>
-        <a href="index.html" class="logout-button">
+        </a>
+        <a href="profile.html" class="icon-action" aria-label="Profile">
+          <i data-lucide="user-round"></i>
+        </a>
+        <a href="login.html" class="logout-button" data-logout>
           <i data-lucide="log-out"></i>
           <span>Log out</span>
         </a>
@@ -53,20 +57,23 @@
 
     <!-- MAIN DASHBOARD CONTENT GRID -->
     <div class="app-layout">
-      
+
       <!-- LEFT + MIDDLE CONTENT COLUMN BLOCK -->
       <div class="layout-main-content">
-        
+
         <!-- UPPER ROW: LEFT & MIDDLE PANELS -->
         <div class="panels-upper-row">
-          
+
           <!-- LEFT PANEL -->
           <aside class="left-panel">
             <!-- Search -->
             <div class="card-search">
               <div class="input-box">
                 <input type="text" id="city-input" placeholder="Enter a city..." />
-                <i data-lucide="search" id="search-icon"></i>
+
+                <span id="search-icon" class="search-icon" role="button" tabindex="0" aria-label="Search city">
+                  <i data-lucide="search"></i>
+                </span>
               </div>
             </div>
 
@@ -115,7 +122,7 @@
                 <h2 class="city" id="city-name">VILNIUS</h2>
               </div>
 
-              <p class="dashboard-greeting">Good morning, Estelle 👋</p>
+              <p class="dashboard-greeting">Good morning, <span data-user-name>Estelle</span> 👋</p>
 
               <div class="weather">
                 <div class="weather-main">
@@ -145,12 +152,17 @@
               <section class="hourly-card" aria-labelledby="hourly-title">
                 <h3 id="hourly-title">Today at a glance</h3>
                 <div class="hourly-list">
-                  <article class="hourly-item"><span>Now</span><i data-lucide="cloud-rain"></i><strong>--°C</strong></article>
-                  <article class="hourly-item"><span>10:00</span><i data-lucide="cloud-rain"></i><strong>6°C</strong></article>
+                  <article class="hourly-item"><span>Now</span><i data-lucide="cloud-rain"></i><strong>--°C</strong>
+                  </article>
+                  <article class="hourly-item"><span>10:00</span><i data-lucide="cloud-rain"></i><strong>6°C</strong>
+                  </article>
                   <article class="hourly-item"><span>13:00</span><i data-lucide="sun"></i><strong>8°C</strong></article>
-                  <article class="hourly-item"><span>16:00</span><i data-lucide="cloud-sun-rain"></i><strong>9°C</strong></article>
-                  <article class="hourly-item"><span>19:00</span><i data-lucide="cloud-rain"></i><strong>6°C</strong></article>
-                  <article class="hourly-item"><span>22:00</span><i data-lucide="cloud-moon-rain"></i><strong>4°C</strong></article>
+                  <article class="hourly-item"><span>16:00</span><i
+                      data-lucide="cloud-sun-rain"></i><strong>9°C</strong></article>
+                  <article class="hourly-item"><span>19:00</span><i data-lucide="cloud-rain"></i><strong>6°C</strong>
+                  </article>
+                  <article class="hourly-item"><span>22:00</span><i
+                      data-lucide="cloud-moon-rain"></i><strong>4°C</strong></article>
                 </div>
               </section>
             </div>
@@ -160,26 +172,38 @@
 
         <!-- LOWER ROW: HORIZONTAL ECO-QUICK CARDS ROW (Matches Mockup) -->
         <section class="quick-cards-row" aria-label="Weather recommendations">
-          <article class="quick-card">
+          <a class="quick-card" href="alert-heavy-rain.html">
             <span class="quick-icon"><i data-lucide="bell"></i></span>
-            <div class="quick-card-text"><h3>No Active Alerts</h3><p>You're all caught up!</p></div>
-            <span class="status-dot"><i data-lucide="check"></i></span>
-          </article>
-          <article class="quick-card">
+            <div class="quick-card-text">
+              <h3>Heavy Rain Warning</h3>
+              <p>Open alert details</p>
+            </div>
+            <i data-lucide="chevron-right" class="quick-arrow"></i>
+          </a>
+          <a class="quick-card" href="profile.html">
             <span class="quick-icon"><i data-lucide="shirt"></i></span>
-            <div class="quick-card-text"><h3>What to Wear?</h3><p>Light jacket</p></div>
+            <div class="quick-card-text">
+              <h3>What to Wear?</h3>
+              <p id="wear-recommendation">Light jacket</p>
+            </div>
             <i data-lucide="chevron-right" class="quick-arrow"></i>
-          </article>
-          <article class="quick-card">
+          </a>
+          <a class="quick-card" href="forecast-precipitation.html">
             <span class="quick-icon"><i data-lucide="umbrella"></i></span>
-            <div class="quick-card-text"><h3>Umbrella?</h3><p>Recommended</p></div>
+            <div class="quick-card-text">
+              <h3>Umbrella?</h3>
+              <p id="umbrella-recommendation">Recommended</p>
+            </div>
             <i data-lucide="chevron-right" class="quick-arrow"></i>
-          </article>
-          <article class="quick-card">
+          </a>
+          <a class="quick-card" href="forecast-hourly.html">
             <span class="quick-icon"><i data-lucide="person-standing"></i></span>
-            <div class="quick-card-text"><h3>Outdoor Plans?</h3><p>Good until 3 PM</p></div>
+            <div class="quick-card-text">
+              <h3>Outdoor Plans?</h3>
+              <p id="outdoor-recommendation">Good until 3 PM</p>
+            </div>
             <i data-lucide="chevron-right" class="quick-arrow"></i>
-          </article>
+          </a>
         </section>
 
       </div>
@@ -187,30 +211,55 @@
       <!-- RIGHT PANEL (STRETCHES TALL DOWN THE RIGHT SIDE) -->
       <section class="right-panel">
         <div class="forecast-card">
-          <h3>7-DAYS FORECAST</h3>
-          <div class="forecast-item"><span class="week-day">Mon</span><span class="day-icon"><i data-lucide="cloud-rain"></i></span><span class="temp-day">-6°C</span></div>
+          <h3><a href="forecast-daily.html" style="color: inherit; text-decoration: none;">7-DAYS FORECAST</a></h3>
+          <div class="forecast-item"><span class="week-day">Mon</span><span class="day-icon"><i
+                data-lucide="cloud-rain"></i></span><span class="temp-day">-6°C</span></div>
           <div class="day-divider"></div>
-          <div class="forecast-item selected-day"><span class="week-day">Tue</span><span class="day-icon"><i data-lucide="cloud-snow"></i></span><span class="temp-day">-16°C</span></div>
+          <div class="forecast-item selected-day"><span class="week-day">Tue</span><span class="day-icon"><i
+                data-lucide="cloud-snow"></i></span><span class="temp-day">-16°C</span></div>
           <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Wed</span><span class="day-icon"><i data-lucide="cloud-rain"></i></span><span class="temp-day">-6°C</span></div>
+          <div class="forecast-item"><span class="week-day">Wed</span><span class="day-icon"><i
+                data-lucide="cloud-rain"></i></span><span class="temp-day">-6°C</span></div>
           <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Thu</span><span class="day-icon"><i data-lucide="cloud-snow"></i></span><span class="temp-day">-9°C</span></div>
+          <div class="forecast-item"><span class="week-day">Thu</span><span class="day-icon"><i
+                data-lucide="cloud-snow"></i></span><span class="temp-day">-9°C</span></div>
           <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Fri</span><span class="day-icon"><i data-lucide="wind"></i></span><span class="temp-day">-6°C</span></div>
+          <div class="forecast-item"><span class="week-day">Fri</span><span class="day-icon"><i
+                data-lucide="wind"></i></span><span class="temp-day">-6°C</span></div>
           <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Sat</span><span class="day-icon"><i data-lucide="wind"></i></span><span class="temp-day">-6°C</span></div>
+          <div class="forecast-item"><span class="week-day">Sat</span><span class="day-icon"><i
+                data-lucide="wind"></i></span><span class="temp-day">-6°C</span></div>
           <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Sun</span><span class="day-icon"><i data-lucide="cloud-snow"></i></span><span class="temp-day">-23°C</span></div>
+          <div class="forecast-item"><span class="week-day">Sun</span><span class="day-icon"><i
+                data-lucide="cloud-snow"></i></span><span class="temp-day">-23°C</span></div>
 
           <div class="divider"></div>
 
           <div class="weather-details">
-            <div class="detail-item"><div class="detail-left"><span class="weather-icon"><i data-lucide="droplet"></i></span><span>Humidity</span></div><span id="humidity-value">70%</span></div>
-            <div class="detail-item"><div class="detail-left"><span class="weather-icon"><i data-lucide="wind"></i></span><span>Wind</span></div><span id="wind-value">2.8 m/s</span></div>
-            <div class="detail-item"><div class="detail-left"><span class="weather-icon"><i data-lucide="sun"></i></span><span>UV Index</span></div><span>2 Low</span></div>
-            <div class="detail-item"><div class="detail-left"><span class="weather-icon"><i data-lucide="eye"></i></span><span>Air Quality</span></div><span>42 Good</span></div>
-            <div class="detail-item"><div class="detail-left"><span class="weather-icon"><i data-lucide="sunrise"></i></span><span>Sunrise</span></div><span>04:45</span></div>
-            <div class="detail-item"><div class="detail-left"><span class="weather-icon"><i data-lucide="sunset"></i></span><span>Sunset</span></div><span>21:37</span></div>
+            <div class="detail-item">
+              <div class="detail-left"><span class="weather-icon"><i
+                    data-lucide="droplet"></i></span><span>Humidity</span></div><span id="humidity-value">70%</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-left"><span class="weather-icon"><i data-lucide="wind"></i></span><span>Wind</span>
+              </div><span id="wind-value">2.8 m/s</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-left"><span class="weather-icon"><i data-lucide="sun"></i></span><span>UV Index</span>
+              </div><span>2 Low</span>
+            </div>
+            <a class="detail-item" href="forecast-air-quality.html" style="text-decoration:none;color:inherit;">
+              <div class="detail-left"><span class="weather-icon"><i data-lucide="eye"></i></span><span>Air
+                  Quality</span></div><span>42 Good</span>
+            </a>
+            <div class="detail-item">
+              <div class="detail-left"><span class="weather-icon"><i
+                    data-lucide="sunrise"></i></span><span>Sunrise</span></div><span>04:45</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-left"><span class="weather-icon"><i data-lucide="sunset"></i></span><span>Sunset</span>
+              </div><span>21:37</span>
+            </div>
           </div>
         </div>
       </section>
@@ -222,10 +271,12 @@
     <p>Built by Estelle</p>
     <span class="github-link">
       <i data-lucide="git-branch"></i>
-      <p><a href="https://github.com/Vickio-creates/clima-weather-app" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+      <p><a href="https://github.com/Vickio-creates/clima-weather-app" target="_blank"
+          rel="noopener noreferrer">GitHub</a></p>
     </span>
     <time>2026</time>
   </footer>
 
 </body>
+
 </html>

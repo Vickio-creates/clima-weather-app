@@ -68,6 +68,30 @@
     color: rgba(255, 255, 255, 0.6);
 }
 
+.search-icon {
+    width: 24px;
+    height: 24px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.search-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.search-icon:hover svg {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
     .card-search {
         width: 100%;

@@ -1,0 +1,55 @@
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 26px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: #2d6cdf;
+  color: #ffffff;
+  border-color: #2d6cdf;
+}
+
+.btn-primary:hover {
+  background: #245ac4;
+  border-color: #245ac4;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.btn-lg {
+  padding: 14px 30px;
+  font-size: 18px;
+  border-radius: 8px;
+}
+
+.nav-actions .btn {
+  min-width: 98px;
+  height: 42px;
+  font-size: 16px;
+  font-weight: 700;
+}
+

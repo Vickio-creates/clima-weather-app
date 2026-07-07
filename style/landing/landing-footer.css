@@ -1,0 +1,42 @@
+/* Footer */
+.landing-footer {
+  padding: 34px 0;
+  background: #0f172a;
+  border-top: 0;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.footer-inner p {
+  margin: 0;
+}
+
+.footer-divider {
+  display: none;
+}
+
+.footer-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-github:hover {
+  color: #ffffff;
+}
+
+.footer-github svg {
+  width: 16px;
+  height: 16px;
+}
+

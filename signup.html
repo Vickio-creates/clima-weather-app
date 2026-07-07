@@ -1,147 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clima — Sign Up</title>
-
+  <title>Clima — Register</title>
   <link rel="stylesheet" href="style/signup.css" />
-
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="scripts/signup.js" defer></script>
-
+  <script src="scripts/auth.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 </head>
-
 <body class="signup-page">
   <main class="auth-shell">
     <section class="auth-intro" aria-labelledby="auth-brand-title">
-      <a href="index.html" class="auth-logo" aria-label="Clima home">
-        <span class="auth-logo-icon">
-          <i data-lucide="cloud"></i>
-        </span>
-        <span>Clima</span>
-      </a>
-
-      <div class="auth-copy">
-        <h1 id="auth-brand-title">Your personal <span>weather assistant</span></h1>
-        <p>Smart forecasts, personalized recommendations, and real-time alerts - all in one place.</p>
-      </div>
-
+      <a href="index.html" class="auth-logo" aria-label="Clima home"><span class="auth-logo-icon"><i data-lucide="cloud"></i></span><span>Clima</span></a>
+      <div class="auth-copy"><h1 id="auth-brand-title">Your personal <span>weather assistant</span></h1><p>Smart forecasts, personalized recommendations, and real-time alerts — all in one place.</p></div>
       <div class="auth-features">
-        <article>
-          <span><i data-lucide="person-standing"></i></span>
-          <div>
-            <h2>Personalized Guidance</h2>
-            <p>Get recommendations based on your preferences and daily routine.</p>
-          </div>
-        </article>
-        <article>
-          <span><i data-lucide="sparkles"></i></span>
-          <div>
-            <h2>AI Assistant</h2>
-            <p>Ask anything and get instant, helpful weather advice.</p>
-          </div>
-        </article>
-        <article>
-          <span><i data-lucide="bell"></i></span>
-          <div>
-            <h2>Smart Alerts</h2>
-            <p>Stay ahead with real-time alerts and notifications.</p>
-          </div>
-        </article>
+        <article><span><i data-lucide="person-standing"></i></span><div><h2>Personalized guidance</h2><p>Get recommendations based on your preferences and daily routine.</p></div></article>
+        <article><span><i data-lucide="sparkles"></i></span><div><h2>AI assistant</h2><p>Ask anything and get instant, helpful weather advice.</p></div></article>
+        <article><span><i data-lucide="bell"></i></span><div><h2>Smart alerts</h2><p>Stay ahead with real-time alerts and notifications.</p></div></article>
       </div>
     </section>
 
     <section class="auth-form-card" aria-labelledby="signup-title">
-      <form class="signup-form" action="app.html">
-        <div class="form-heading">
-          <h2 id="signup-title">Create account</h2>
-          <p>Sign up to start using Clima.</p>
-        </div>
+      <form class="signup-form" id="register-form" novalidate>
+        <div class="form-heading"><h2 id="signup-title">Create account</h2><p>Sign up to start using Clima.</p></div>
+        <p id="auth-message" class="auth-message" role="status"></p>
 
         <label for="signup-name">Name</label>
-        <div class="field">
-          <i data-lucide="user"></i>
-          <input type="text" id="signup-name" name="name" placeholder="Enter your name" required>
-        </div>
+        <div class="field"><i data-lucide="user"></i><input type="text" id="signup-name" name="name" placeholder="Enter your name" required></div>
 
         <label for="signup-email">Email</label>
-        <div class="field">
-          <i data-lucide="mail"></i>
-          <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
-        </div>
+        <div class="field"><i data-lucide="mail"></i><input type="email" id="signup-email" name="email" placeholder="Enter your email" required></div>
 
         <label for="signup-password">Password</label>
-        <div class="field">
-          <i data-lucide="lock"></i>
-          <input type="password" id="signup-password" name="password" placeholder="Create your password" required>
-          <button type="button" class="password-toggle" data-toggle-password aria-label="Show password">
-            <i data-lucide="eye-off"></i>
-          </button>
-        </div>
+        <div class="field"><i data-lucide="lock"></i><input type="password" id="signup-password" name="password" placeholder="Create your password" required><button type="button" class="password-toggle" data-toggle-password aria-label="Show password"><i data-lucide="eye-off"></i></button></div>
 
         <label for="signup-confirm">Confirm password</label>
-        <div class="field">
-          <i data-lucide="shield-check"></i>
-          <input type="password" id="signup-confirm" name="confirm-password" placeholder="Confirm your password" required>
-        </div>
+        <div class="field"><i data-lucide="shield-check"></i><input type="password" id="signup-confirm" name="confirm-password" placeholder="Confirm your password" required><button type="button" class="password-toggle" data-toggle-password aria-label="Show password"><i data-lucide="eye-off"></i></button></div>
 
-        <div class="form-options">
-          <label class="checkbox-row" for="terms">
-            <input type="checkbox" id="terms" name="terms" required>
-            <span>I agree to the terms</span>
-          </label>
-          <a href="app.html">Already have an account?</a>
-        </div>
-
-        <button type="submit" class="submit-button">Sign up</button>
-
-        <p class="switch-auth">Already using Clima? <a href="app.html">Sign in</a></p>
-
-        <div class="auth-divider">
-          <span></span>
-          <p>or continue with</p>
-          <span></span>
-        </div>
-
-        <div class="social-buttons">
-          <button type="button">
-            <span class="google-mark">G</span>
-            Google
-          </button>
-          <button type="button">
-            <i data-lucide="apple"></i>
-            Apple
-          </button>
-          <button type="button">
-            <span class="facebook-mark">f</span>
-            Facebook
-          </button>
-        </div>
+        <div class="form-options"><label class="checkbox-row" for="terms"><input type="checkbox" id="terms" name="terms" required><span>I agree to the terms</span></label><a href="login.html">Already have an account?</a></div>
+        <button type="submit" class="submit-button">Create account</button>
+        <p class="switch-auth">Already using Clima? <a href="login.html">Sign in</a></p>
+        <div class="auth-divider"><span></span><p>or continue with</p><span></span></div>
+        <div class="social-buttons"><button type="button"><span class="google-mark">G</span>Google</button><button type="button"><i data-lucide="apple"></i>Apple</button><button type="button"><span class="facebook-mark">f</span>Facebook</button></div>
       </form>
     </section>
 
-    <section class="auth-visual" aria-label="Weather illustration">
-      <div class="sun"></div>
-      <div class="cloud cloud-one"></div>
-      <div class="cloud cloud-two"></div>
-      <div class="city-skyline">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <div class="road"></div>
-      <div class="trees">
-        <span></span>
-        <span></span>
-      </div>
-    </section>
+    <section class="auth-visual" aria-label="Weather illustration"><div class="sun"></div><div class="cloud cloud-one"></div><div class="cloud cloud-two"></div><div class="city-skyline"><span></span><span></span><span></span><span></span></div><div class="road"></div><div class="trees"><span></span><span></span></div></section>
   </main>
 </body>
-
 </html>

@@ -1,0 +1,81 @@
+/* Info sections after scrolling */
+.info-section {
+  padding: 90px 0;
+  background: #ffffff;
+  color: #111827;
+  border-top: none;
+}
+
+.info-section-alt {
+  background: #eef5ff;
+}
+
+.info-section h2 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111827;
+  margin: 0 0 20px;
+}
+
+.info-section p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #4b5563;
+  margin: 0;
+  max-width: 640px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.steps-list li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 15px;
+  color: #4b5563;
+}
+
+.steps-list li span {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2d6cdf;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.contact-block {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.contact-block h2,
+.contact-block p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-block .btn {
+  margin-top: 28px;
+}
+

@@ -1,12 +1,19 @@
-document.addEventListener("DOMContentLoaded", () => {
-  lucide.createIcons();
+document.addEventListener("DOMContentLoaded", async () => {
+  const currentUser = typeof requireClimaAuth === "function" ? await requireClimaAuth() : null;
+  if (!currentUser) return;
+  if (typeof updateUserInterface === "function") updateUserInterface(currentUser);
+  if(window.lucide) lucide.createIcons();
   displayDate();
 
   const cityInput = document.querySelector("#city-input");
   const searchIcon = document.querySelector("#search-icon") || document.querySelector(".input-box .lucide-search");
 
-  if (cityInput) cityInput.addEventListener("keydown", handleEnter);
-  if (searchIcon) searchIcon.addEventListener("click", updateCity);
+  if (cityInput) {
+    cityInput.addEventListener("keydown", handleEnter);
+  }
+  if (searchIcon){
+    searchIcon.addEventListener("click", updateCity);
+  } 
 
   loadRecentSearches();
 });
@@ -58,13 +65,17 @@ async function getWeather(city) {
     document.querySelector("#high-temp").textContent = `${data.highTemp ?? data.temperature}°C`;
     document.querySelector("#low-temp").textContent = `${data.lowTemp ?? data.temperature}°C`;
 
+
+    updateDashboardRecommendations(data.temperature, data.condition, windSpeed, humidity);
+
     const nowTemp = document.querySelector(".hourly-item:first-child strong");
     if (nowTemp) nowTemp.textContent = `${data.temperature}°C`;
 
     const iconName = getWeatherIcon(data.condition);
     const wrapper = document.querySelector("#weather-icon-wrapper");
     wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;
-    lucide.createIcons();
+    if(window.lucide) lucide.createIcons();
+
 
     saveToLocalStorage(data.city, data.country, data.temperature, data.condition);
     refreshRecentSearches();
@@ -119,7 +130,7 @@ function addRecentSearch(city, country, temperature, condition) {
   `;
 
   recentList.prepend(newElement);
-  lucide.createIcons();
+    if(window.lucide) lucide.createIcons();
 }
 
 function displayDate() {
@@ -198,4 +209,31 @@ function formatCondition(condition) {
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
     .join(" ");
+}
+
+
+function updateDashboardRecommendations(temperature, condition, windSpeed, humidity) {
+  const wear = document.querySelector("#wear-recommendation");
+  const umbrella = document.querySelector("#umbrella-recommendation");
+  const outdoor = document.querySelector("#outdoor-recommendation");
+
+  const conditionLower = String(condition || "").toLowerCase();
+  const rainy = ["rain", "drizzle", "thunderstorm", "snow", "mist"].some((word) => conditionLower.includes(word));
+
+  if (wear) {
+    if (temperature <= 0) wear.textContent = "Warm coat & layers";
+    else if (temperature <= 10) wear.textContent = "Warm jacket";
+    else if (temperature <= 18) wear.textContent = "Light jacket";
+    else if (temperature <= 26) wear.textContent = "Light layers";
+    else wear.textContent = "Light breathable clothes";
+  }
+
+  if (umbrella) umbrella.textContent = rainy ? "Recommended" : "Not needed now";
+
+  if (outdoor) {
+    if (rainy) outdoor.textContent = "Better before rain";
+    else if (windSpeed >= 10) outdoor.textContent = "Careful, windy";
+    else if (humidity >= 85 && temperature >= 25) outdoor.textContent = "Keep it light";
+    else outdoor.textContent = "Good conditions";
+  }
 }
