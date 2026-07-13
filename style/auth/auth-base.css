@@ -1,0 +1,20 @@
+body.signup-page {
+    min-height: 100vh;
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    color: #10203a;
+
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(5, 12, 25, 0.78) 0%,
+            rgba(5, 12, 25, 0.58) 48%,
+            rgba(5, 12, 25, 0.72) 100%
+        ),
+        url("../../assets/images/piotr-ams-g1Q9_3GQ9d0-unsplash.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}

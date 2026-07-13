@@ -1,0 +1,4 @@
+.signup-page::before,
+.signup-page::after {
+    display: none;
+}

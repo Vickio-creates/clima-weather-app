@@ -1,1 +1,4 @@
 config.php
+database.php
+.env
+.DS_Store

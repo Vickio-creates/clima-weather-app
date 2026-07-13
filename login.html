@@ -1,52 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clima — Log In</title>
-  <link rel="stylesheet" href="style/signup.css" />
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="scripts/auth.js" defer></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clima — Log In</title>
+    <link rel="stylesheet" href="style/signup.css" />
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="scripts/auth.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 </head>
+
 <body class="signup-page">
-  <main class="auth-shell">
-    <section class="auth-intro" aria-labelledby="login-brand-title">
-      <a href="index.html" class="auth-logo" aria-label="Clima home"><span class="auth-logo-icon"><i data-lucide="cloud"></i></span><span>Clima</span></a>
-      <div class="auth-copy">
-        <h1 id="login-brand-title">Welcome back to <span>smart weather</span></h1>
-        <p>Log in to see your personalized weather dashboard, alerts, and recommendations.</p>
-      </div>
-      <div class="auth-features">
-        <article><span><i data-lucide="map-pin"></i></span><div><h2>Location-aware</h2><p>View weather information based on your saved city.</p></div></article>
-        <article><span><i data-lucide="bell"></i></span><div><h2>Smart alerts</h2><p>Open important warnings before they affect your day.</p></div></article>
-        <article><span><i data-lucide="sparkles"></i></span><div><h2>Personal advice</h2><p>Get daily guidance based on weather conditions.</p></div></article>
-      </div>
-    </section>
+    <header class="auth-page-nav">
+        <a href="index.html" class="auth-nav-logo">
+            <span class="auth-nav-icon">
+                <i data-lucide="cloud"></i>
+            </span>
+            <span>Clima</span>
+        </a>
 
-    <section class="auth-form-card" aria-labelledby="login-title">
-      <form class="signup-form" id="login-form" novalidate>
-        <div class="form-heading">
-          <h2 id="login-title">Log in</h2>
-          <p>Continue to your Clima dashboard.</p>
-        </div>
-        <p id="auth-message" class="auth-message" role="status"></p>
+        <a href="index.html" class="auth-nav-link">
+            Back to home
+        </a>
+    </header>
 
-        <label for="login-email">Email</label>
-        <div class="field"><i data-lucide="mail"></i><input type="email" id="login-email" name="email" placeholder="Enter your email" required></div>
+    <main class="auth-shell">
+        <section class="auth-intro" aria-labelledby="login-brand-title">
+            <div class="auth-copy">
+                <h1 id="login-brand-title">Welcome back to smart weather assistant</h1>
+                <p>Log in to see your personalized weather dashboard, alerts, and recommendations.</p>
+            </div>
+            <div class="auth-features">
+                <article><span><i data-lucide="person-standing"></i></span>
+                    <div>
+                        <h2>Personalized guidance</h2>
+                        <p>Get recommendations based on your preferences and daily routine.</p>
+                    </div>
+                </article>
+                <article><span><i data-lucide="sparkles"></i></span>
+                    <div>
+                        <h2>AI assistant</h2>
+                        <p>Ask anything and get instant, helpful weather advice.</p>
+                    </div>
+                </article>
+                <article><span><i data-lucide="bell"></i></span>
+                    <div>
+                        <h2>Smart alerts</h2>
+                        <p>Stay ahead with real-time alerts and notifications.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
 
-        <label for="login-password">Password</label>
-        <div class="field"><i data-lucide="lock"></i><input type="password" id="login-password" name="password" placeholder="Enter your password" required><button type="button" class="password-toggle" data-toggle-password aria-label="Show password"><i data-lucide="eye-off"></i></button></div>
+        <section class="auth-form-card" aria-labelledby="login-title">
+            <form class="signup-form" id="login-form" novalidate>
+                <div class="form-heading">
+                    <h2 id="login-title">Log in</h2>
+                    <p>Continue to your Clima dashboard.</p>
+                </div>
+                <p id="auth-message" class="auth-message" role="status"></p>
 
-        <div class="form-options"><label class="checkbox-row"><input type="checkbox" name="remember"><span>Remember me</span></label><a href="#">Forgot password?</a></div>
-        <button type="submit" class="submit-button">Log in</button>
-        <p class="switch-auth">New to Clima? <a href="signup.html">Create account</a></p>
-      </form>
-    </section>
+                <label for="login-email">Email</label>
+                <div class="field"><i data-lucide="mail"></i><input type="email" id="login-email" name="email"
+                        placeholder="Enter your email" required></div>
+                <p class="field-hint">Enter the email address used during registration.</p>
 
-    <section class="auth-visual" aria-label="Weather illustration"><div class="sun"></div><div class="cloud cloud-one"></div><div class="cloud cloud-two"></div><div class="city-skyline"><span></span><span></span><span></span><span></span></div><div class="road"></div><div class="trees"><span></span><span></span></div></section>
-  </main>
+                <label for="login-password">Password</label>
+                <div class="field"><i data-lucide="lock"></i><input type="password" id="login-password" name="password"
+                        placeholder="Enter your password" required><button type="button" class="password-toggle"
+                        data-toggle-password aria-label="Show password"><i data-lucide="eye-off"></i></button></div>
+                <p class="field-hint">Use the password connected to your Clima account.</p>
+                <div class="form-options"><label class="checkbox-row"><input type="checkbox"
+                            name="remember"><span>Remember me</span></label><a href="#">Forgot password?</a></div>
+                <button type="submit" class="submit-button">Log in</button>
+                <p class="switch-auth">New to Clima? <a href="signup.html">Create account</a></p>
+            </form>
+        </section>
+
+        <section class="auth-visual" aria-label="Weather illustration">
+            <div class="sun"></div>
+            <div class="cloud cloud-one"></div>
+            <div class="cloud cloud-two"></div>
+            <div class="city-skyline"><span></span><span></span><span></span><span></span></div>
+            <div class="road"></div>
+            <div class="trees"><span></span><span></span></div>
+        </section>
+    </main>
 </body>
+
 </html>

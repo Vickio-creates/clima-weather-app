@@ -6,7 +6,7 @@ const AUTH_ENDPOINTS = {
   login: "backend/auth/login.php",
   logout: "backend/auth/logout.php",
   session: "backend/auth/session.php",
-  profileUpdate: "backend/profile/update.php"
+  profileUpdate: "backend/profile/update.php",
 };
 
 function getClimaUser() {
@@ -35,9 +35,9 @@ async function requestJson(url, options = {}) {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(options.headers || {})
+      ...(options.headers || {}),
     },
-    ...options
+    ...options,
   });
 
   const data = await response.json().catch(() => ({}));
@@ -94,6 +94,10 @@ function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function validateStrongPassword(password) {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+}
+
 function setButtonLoading(button, isLoading, loadingText) {
   if (!button) return;
   if (isLoading) {
@@ -114,28 +118,53 @@ function initRegisterForm() {
     event.preventDefault();
 
     const name = document.querySelector("#signup-name").value.trim();
-    const email = document.querySelector("#signup-email").value.trim().toLowerCase();
+    const email = document
+      .querySelector("#signup-email")
+      .value.trim()
+      .toLowerCase();
     const password = document.querySelector("#signup-password").value;
     const confirm = document.querySelector("#signup-confirm").value;
     const terms = document.querySelector("#terms").checked;
     const message = document.querySelector("#auth-message");
     const submitButton = form.querySelector("button[type='submit']");
 
-    if (name.length < 2) return showAuthMessage(message, "Please enter your full name.", true);
-    if (!validateEmail(email)) return showAuthMessage(message, "Please enter a valid email address.", true);
-    if (password.length < 6) return showAuthMessage(message, "Password should be at least 6 characters.", true);
-    if (password !== confirm) return showAuthMessage(message, "Passwords do not match.", true);
-    if (!terms) return showAuthMessage(message, "Please accept the terms to continue.", true);
+    if (name.length < 2)
+      return showAuthMessage(message, "Please enter your full name.", true);
+    if (!validateEmail(email))
+      return showAuthMessage(
+        message,
+        "Please enter a valid email address.",
+        true,
+      );
+    if (!validateStrongPassword(password)) {
+      return showAuthMessage(
+        message,
+        "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
+        true,
+      );
+    }
+    if (password !== confirm)
+      return showAuthMessage(message, "Passwords do not match.", true);
+    if (!terms)
+      return showAuthMessage(
+        message,
+        "Please accept the terms to continue.",
+        true,
+      );
 
     try {
       setButtonLoading(submitButton, true, "Creating account...");
       const data = await requestJson(AUTH_ENDPOINTS.register, {
         method: "POST",
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, email, password }),
       });
       saveClimaUser(data.user);
-      showAuthMessage(message, "Account created. Opening your dashboard...", false);
-      setTimeout(() => window.location.href = "app.html", 650);
+      showAuthMessage(
+        message,
+        "Account created. Opening your dashboard...",
+        false,
+      );
+      setTimeout(() => (window.location.href = "app.html"), 650);
     } catch (error) {
       showAuthMessage(message, error.message, true);
     } finally {
@@ -151,23 +180,36 @@ function initLoginForm() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const email = document.querySelector("#login-email").value.trim().toLowerCase();
+    const email = document
+      .querySelector("#login-email")
+      .value.trim()
+      .toLowerCase();
     const password = document.querySelector("#login-password").value;
     const message = document.querySelector("#auth-message");
     const submitButton = form.querySelector("button[type='submit']");
 
-    if (!validateEmail(email)) return showAuthMessage(message, "Please enter a valid email address.", true);
-    if (!password) return showAuthMessage(message, "Please enter your password.", true);
+    if (!validateEmail(email))
+      return showAuthMessage(
+        message,
+        "Please enter a valid email address.",
+        true,
+      );
+    if (!password)
+      return showAuthMessage(message, "Please enter your password.", true);
 
     try {
       setButtonLoading(submitButton, true, "Logging in...");
       const data = await requestJson(AUTH_ENDPOINTS.login, {
         method: "POST",
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
       saveClimaUser(data.user);
-      showAuthMessage(message, "Welcome back. Opening your dashboard...", false);
-      setTimeout(() => window.location.href = "app.html", 650);
+      showAuthMessage(
+        message,
+        "Welcome back. Opening your dashboard...",
+        false,
+      );
+      setTimeout(() => (window.location.href = "app.html"), 650);
     } catch (error) {
       showAuthMessage(message, error.message, true);
     } finally {
@@ -179,7 +221,7 @@ function initLoginForm() {
 async function saveClimaProfile(user) {
   const data = await requestJson(AUTH_ENDPOINTS.profileUpdate, {
     method: "POST",
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   });
   saveClimaUser(data.user);
   return data.user;
@@ -200,7 +242,10 @@ function initPasswordToggles() {
     toggle.addEventListener("click", () => {
       const isHidden = input.type === "password";
       input.type = isHidden ? "text" : "password";
-      toggle.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+      toggle.setAttribute(
+        "aria-label",
+        isHidden ? "Hide password" : "Show password",
+      );
       toggle.innerHTML = `<i data-lucide="${isHidden ? "eye" : "eye-off"}"></i>`;
       if (window.lucide) lucide.createIcons();
     });
@@ -212,7 +257,10 @@ function initLogoutButtons() {
     button.addEventListener("click", async (event) => {
       event.preventDefault();
       try {
-        await requestJson(AUTH_ENDPOINTS.logout, { method: "POST", body: JSON.stringify({}) });
+        await requestJson(AUTH_ENDPOINTS.logout, {
+          method: "POST",
+          body: JSON.stringify({}),
+        });
       } catch (error) {
         // Even if server logout fails, clear local UI cache.
       }
@@ -228,4 +276,17 @@ document.addEventListener("DOMContentLoaded", () => {
   initRegisterForm();
   initLoginForm();
   initLogoutButtons();
+
+  const isAuthPage = document.querySelector("#login-form, #register-form");
+  const isProtectedPage = document.body.dataset.requireAuth === "true";
+
+  if (isAuthPage) {
+    redirectIfLoggedIn();
+  }
+
+  if (isProtectedPage) {
+    requireClimaAuth().then((user) => {
+      if (user) updateUserInterface(user);
+    });
+  }
 });

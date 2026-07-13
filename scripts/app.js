@@ -1,8 +1,16 @@
+const RECENT_SEARCH_LIMIT = 10;
+const DASHBOARD_RECENT_LIMIT = 2;
+
 document.addEventListener("DOMContentLoaded", async () => {
   const currentUser = typeof requireClimaAuth === "function" ? await requireClimaAuth() : null;
   if (!currentUser) return;
-  if (typeof updateUserInterface === "function") updateUserInterface(currentUser);
-  if(window.lucide) lucide.createIcons();
+
+  if (typeof updateUserInterface === "function") {
+    updateUserInterface(currentUser);
+  }
+
+  if (window.lucide) lucide.createIcons();
+
   displayDate();
 
   const cityInput = document.querySelector("#city-input");
@@ -11,11 +19,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (cityInput) {
     cityInput.addEventListener("keydown", handleEnter);
   }
-  if (searchIcon){
+
+  if (searchIcon) {
     searchIcon.addEventListener("click", updateCity);
-  } 
+  }
 
   loadRecentSearches();
+  initSearchHistoryModal();
 });
 
 function handleEnter(event) {
@@ -27,6 +37,8 @@ function handleEnter(event) {
 
 function updateCity() {
   const input = document.querySelector("#city-input");
+  if (!input) return;
+
   const city = input.value.trim();
 
   if (!city) {
@@ -49,35 +61,40 @@ async function getWeather(city) {
       return;
     }
 
-    const conditionText = formatCondition(data.description || data.condition);
+    const condition = data.condition || data.description || "Unknown";
+    const conditionText = formatCondition(data.description || condition);
     const humidity = data.humidity ?? 70;
     const windSpeed = data.windSpeed ?? 2.8;
     const feelsLike = data.feelsLike ?? data.temperature;
 
-    document.querySelector("#city-name").textContent = data.city;
-    document.querySelector("#country").textContent = data.country;
-    document.querySelector("#temperature").textContent = `${data.temperature}°C`;
-    document.querySelector("#description").textContent = conditionText;
-    document.querySelector("#feels-like").textContent = `Feels like ${feelsLike}°C`;
-    document.querySelector("#weather-summary").textContent = `Humidity ${humidity}% • Wind ${windSpeed} m/s`;
-    document.querySelector("#humidity-value").textContent = `${humidity}%`;
-    document.querySelector("#wind-value").textContent = `${windSpeed} m/s`;
-    document.querySelector("#high-temp").textContent = `${data.highTemp ?? data.temperature}°C`;
-    document.querySelector("#low-temp").textContent = `${data.lowTemp ?? data.temperature}°C`;
+    setText("#city-name", data.city);
+    setText("#country", data.country);
+    setText("#temperature", `${data.temperature}°C`);
+    setText("#description", conditionText);
+    setText("#feels-like", `Feels like ${feelsLike}°C`);
+    setText("#feels-like-value", `${feelsLike}°C`);
+    setText("#weather-summary", `Humidity ${humidity}% • Wind ${windSpeed} m/s`);
+    setText("#humidity-value", `${humidity}%`);
+    setText("#wind-value", `${windSpeed} m/s`);
+    setText("#high-temp", `${data.highTemp ?? data.temperature}°C`);
+    setText("#low-temp", `${data.lowTemp ?? data.temperature}°C`);
 
-
-    updateDashboardRecommendations(data.temperature, data.condition, windSpeed, humidity);
+    updateRightPanel(data);
+    updateDashboardRecommendations(data.temperature, condition, windSpeed, humidity);
 
     const nowTemp = document.querySelector(".hourly-item:first-child strong");
     if (nowTemp) nowTemp.textContent = `${data.temperature}°C`;
 
-    const iconName = getWeatherIcon(data.condition);
+    const iconName = getWeatherIcon(condition);
     const wrapper = document.querySelector("#weather-icon-wrapper");
-    wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;
-    if(window.lucide) lucide.createIcons();
 
+    if (wrapper) {
+      wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;
+    }
 
-    saveToLocalStorage(data.city, data.country, data.temperature, data.condition);
+    if (window.lucide) lucide.createIcons();
+
+    saveToLocalStorage(data.city, data.country, data.temperature, condition);
     refreshRecentSearches();
   } catch (error) {
     console.log("Error fetching the data:", error);
@@ -85,37 +102,100 @@ async function getWeather(city) {
   }
 }
 
+function setText(selector, text) {
+  const element = document.querySelector(selector);
+  if (element) element.textContent = text;
+}
+
 function getWeatherIcon(condition) {
   const normalized = String(condition || "").toLowerCase();
-  const icons = {
-    sunny: "sun",
-    clear: "sun",
-    cloudy: "cloud",
-    clouds: "cloud",
-    "partly cloudy": "cloud-sun",
-    overcast: "cloudy",
-    rainy: "cloud-rain",
-    rain: "cloud-rain",
-    drizzle: "cloud-drizzle",
-    stormy: "cloud-lightning",
-    thunderstorm: "cloud-lightning",
-    snowy: "cloud-snow",
-    snow: "cloud-snow",
-    windy: "wind",
-    mist: "droplets",
-    fog: "cloud-fog",
-    haze: "cloud-fog",
-    unknown: "cloud"
-  };
 
-  return icons[normalized] || "cloud";
+  if (normalized.includes("thunder")) return "cloud-lightning";
+  if (normalized.includes("drizzle")) return "cloud-drizzle";
+  if (normalized.includes("rain")) return "cloud-rain";
+  if (normalized.includes("snow")) return "cloud-snow";
+  if (normalized.includes("wind")) return "wind";
+  if (normalized.includes("mist")) return "droplets";
+  if (normalized.includes("fog") || normalized.includes("haze")) return "cloud-fog";
+  if (normalized.includes("cloud")) return "cloud";
+  if (normalized.includes("clear") || normalized.includes("sun")) return "sun";
+
+  return "cloud";
+}
+
+function formatDayName(dateText) {
+  const date = new Date(dateText);
+  return date.toLocaleDateString("en-US", { weekday: "short" });
+}
+
+function formatTimeFromUnix(unixTime) {
+  const date = new Date(unixTime * 1000);
+  return date.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function updateRightPanel(data) {
+  if (!data) return;
+
+  setText("#humidity-value", `${data.humidity ?? 70}%`);
+  setText("#wind-value", `${data.windSpeed ?? 2.8} m/s`);
+  setText("#uv-value", data.uvIndex || "2 Low");
+  setText("#air-quality-value", data.airQuality || "--");
+
+  if (data.sunrise) {
+    setText("#sunrise-value", formatTimeFromUnix(data.sunrise));
+  }
+
+  if (data.sunset) {
+    setText("#sunset-value", formatTimeFromUnix(data.sunset));
+  }
+
+  const forecast = Array.isArray(data.forecast) ? data.forecast : [];
+
+  for (let i = 1; i <= 7; i++) {
+    const dayName = document.querySelector(`#day-${i}-name`);
+    const dayIcon = document.querySelector(`#day-${i}-icon`);
+    const dayTemp = document.querySelector(`#day-${i}-temp`);
+
+    if (!dayName || !dayTemp) continue;
+
+    const forecastItem = dayName.closest(".forecast-item");
+    const divider = forecastItem?.nextElementSibling?.classList.contains("day-divider")
+      ? forecastItem.nextElementSibling
+      : null;
+
+    const day = forecast[i - 1];
+
+    if (!day) {
+      if (forecastItem) forecastItem.style.display = "none";
+      if (divider) divider.style.display = "none";
+      continue;
+    }
+
+    if (forecastItem) forecastItem.style.display = "";
+    if (divider) divider.style.display = "";
+
+    dayName.textContent = formatDayName(day.date);
+    dayTemp.textContent = `${Math.round(day.temp)}°C`;
+
+    if (dayIcon) {
+      dayIcon.setAttribute("data-lucide", getWeatherIcon(day.condition));
+    }
+  }
+
+  if (window.lucide) lucide.createIcons();
 }
 
 function addRecentSearch(city, country, temperature, condition) {
-  const iconName = getWeatherIcon(condition);
   const recentList = document.querySelector("#recent-list");
+  if (!recentList) return;
+
+  const iconName = getWeatherIcon(condition);
   const newElement = document.createElement("div");
   newElement.className = "location-item";
+
   newElement.innerHTML = `
     <div class="location-info">
       <span class="location-icon">
@@ -130,7 +210,8 @@ function addRecentSearch(city, country, temperature, condition) {
   `;
 
   recentList.prepend(newElement);
-    if(window.lucide) lucide.createIcons();
+
+  if (window.lucide) lucide.createIcons();
 }
 
 function displayDate() {
@@ -141,7 +222,7 @@ function displayDate() {
     month: "long"
   });
 
-  document.querySelector("#city-date").textContent = dateString;
+  setText("#city-date", dateString);
 }
 
 function saveToLocalStorage(city, country, temperature, condition) {
@@ -153,19 +234,26 @@ function saveToLocalStorage(city, country, temperature, condition) {
   });
 
   filtered.unshift(newSearch);
-  filtered.splice(2);
+  filtered.splice(RECENT_SEARCH_LIMIT);
+
   localStorage.setItem("recentSearches", JSON.stringify(filtered));
 }
 
 function loadRecentSearches() {
   const searches = getSavedSearches();
-  searches.slice(0, 2).reverse().forEach(function(search) {
-    addRecentSearch(search.city, search.country, search.temperature, search.condition);
-  });
+
+  searches
+    .slice(0, DASHBOARD_RECENT_LIMIT)
+    .reverse()
+    .forEach(function(search) {
+      addRecentSearch(search.city, search.country, search.temperature, search.condition);
+    });
 }
 
 function refreshRecentSearches() {
   const recentList = document.querySelector("#recent-list");
+  if (!recentList) return;
+
   recentList.innerHTML = "";
   loadRecentSearches();
 }
@@ -211,6 +299,71 @@ function formatCondition(condition) {
     .join(" ");
 }
 
+function initSearchHistoryModal() {
+  const seeAll = document.querySelector("#see-all-searches") || document.querySelector(".see-all a");
+  const modal = document.querySelector("#search-history-modal");
+  const closeButton = document.querySelector("#close-search-history");
+
+  if (!seeAll || !modal || !closeButton) return;
+
+  seeAll.addEventListener("click", function(event) {
+    event.preventDefault();
+    renderSearchHistory();
+    modal.hidden = false;
+
+    if (window.lucide) lucide.createIcons();
+  });
+
+  closeButton.addEventListener("click", function() {
+    modal.hidden = true;
+  });
+
+  modal.addEventListener("click", function(event) {
+    if (event.target === modal) {
+      modal.hidden = true;
+    }
+  });
+}
+
+function renderSearchHistory() {
+  const historyList = document.querySelector("#search-history-list");
+  if (!historyList) return;
+
+  const searches = getSavedSearches();
+  historyList.innerHTML = "";
+
+  searches.forEach(function(search) {
+    const iconName = getWeatherIcon(search.condition);
+
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "history-item";
+
+    item.innerHTML = `
+      <div class="location-info">
+        <span class="location-icon">
+          <i data-lucide="${iconName}"></i>
+        </span>
+        <div>
+          <div class="location-city">${search.city.toUpperCase()}</div>
+          <div class="location-country">${search.country}</div>
+        </div>
+      </div>
+      <div class="location-temp">${search.temperature}°C</div>
+    `;
+
+    item.addEventListener("click", function() {
+      getWeather(search.city);
+
+      const modal = document.querySelector("#search-history-modal");
+      if (modal) modal.hidden = true;
+    });
+
+    historyList.appendChild(item);
+  });
+
+  if (window.lucide) lucide.createIcons();
+}
 
 function updateDashboardRecommendations(temperature, condition, windSpeed, humidity) {
   const wear = document.querySelector("#wear-recommendation");
@@ -218,7 +371,9 @@ function updateDashboardRecommendations(temperature, condition, windSpeed, humid
   const outdoor = document.querySelector("#outdoor-recommendation");
 
   const conditionLower = String(condition || "").toLowerCase();
-  const rainy = ["rain", "drizzle", "thunderstorm", "snow", "mist"].some((word) => conditionLower.includes(word));
+  const rainy = ["rain", "drizzle", "thunderstorm", "snow", "mist"].some((word) =>
+    conditionLower.includes(word)
+  );
 
   if (wear) {
     if (temperature <= 0) wear.textContent = "Warm coat & layers";
@@ -228,7 +383,9 @@ function updateDashboardRecommendations(temperature, condition, windSpeed, humid
     else wear.textContent = "Light breathable clothes";
   }
 
-  if (umbrella) umbrella.textContent = rainy ? "Recommended" : "Not needed now";
+  if (umbrella) {
+    umbrella.textContent = rainy ? "Recommended" : "Not needed now";
+  }
 
   if (outdoor) {
     if (rainy) outdoor.textContent = "Better before rain";

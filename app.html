@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght=100..900&display=swap" rel="stylesheet">
 </head>
 
-<body class="dashboard-page">
+<body class="dashboard-page" data-require-auth="true">
   <main class="dashboard-main">
 
     <!-- NAVIGATION BAR -->
@@ -82,7 +82,7 @@
               <div class="card-header">
                 <span>Recent Searches</span>
                 <div class="see-all">
-                  <a href="#">See All</a>
+                  <a href="#" id="see-all-searches">See All</a>
                   <i data-lucide="chevron-right"></i>
                 </div>
               </div>
@@ -211,54 +211,109 @@
       <!-- RIGHT PANEL (STRETCHES TALL DOWN THE RIGHT SIDE) -->
       <section class="right-panel">
         <div class="forecast-card">
-          <h3><a href="forecast-daily.html" style="color: inherit; text-decoration: none;">7-DAYS FORECAST</a></h3>
-          <div class="forecast-item"><span class="week-day">Mon</span><span class="day-icon"><i
-                data-lucide="cloud-rain"></i></span><span class="temp-day">-6°C</span></div>
-          <div class="day-divider"></div>
-          <div class="forecast-item selected-day"><span class="week-day">Tue</span><span class="day-icon"><i
-                data-lucide="cloud-snow"></i></span><span class="temp-day">-16°C</span></div>
-          <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Wed</span><span class="day-icon"><i
-                data-lucide="cloud-rain"></i></span><span class="temp-day">-6°C</span></div>
-          <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Thu</span><span class="day-icon"><i
-                data-lucide="cloud-snow"></i></span><span class="temp-day">-9°C</span></div>
-          <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Fri</span><span class="day-icon"><i
-                data-lucide="wind"></i></span><span class="temp-day">-6°C</span></div>
-          <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Sat</span><span class="day-icon"><i
-                data-lucide="wind"></i></span><span class="temp-day">-6°C</span></div>
-          <div class="day-divider"></div>
-          <div class="forecast-item"><span class="week-day">Sun</span><span class="day-icon"><i
-                data-lucide="cloud-snow"></i></span><span class="temp-day">-23°C</span></div>
+          <h3><a href="forecast-daily.html">7-DAYS FORECAST</a></h3>
+          <div class="forecast-days">
 
-          <div class="divider"></div>
+            <div class="forecast-item">
+              <span class="week-day" id="day-1-name">Mon</span>
+              <span class="day-icon"><i id="day-1-icon" data-lucide="cloud-rain"></i></span>
+              <span class="temp-day" id="day-1-temp">--°C</span>
+            </div>
 
-          <div class="weather-details">
-            <div class="detail-item">
-              <div class="detail-left"><span class="weather-icon"><i
-                    data-lucide="droplet"></i></span><span>Humidity</span></div><span id="humidity-value">70%</span>
+            <div class="forecast-item selected-day">
+              <span class="week-day" id="day-2-name">Tue</span>
+              <span class="day-icon"><i id="day-2-icon" data-lucide="cloud-snow"></i></span>
+              <span class="temp-day" id="day-2-temp">--°C</span>
             </div>
-            <div class="detail-item">
-              <div class="detail-left"><span class="weather-icon"><i data-lucide="wind"></i></span><span>Wind</span>
-              </div><span id="wind-value">2.8 m/s</span>
+
+            <div class="forecast-item">
+              <span class="week-day" id="day-3-name">Wed</span>
+              <span class="day-icon"><i id="day-3-icon" data-lucide="cloud-rain"></i></span>
+              <span class="temp-day" id="day-3-temp">--°C</span>
             </div>
-            <div class="detail-item">
-              <div class="detail-left"><span class="weather-icon"><i data-lucide="sun"></i></span><span>UV Index</span>
-              </div><span>2 Low</span>
+
+            <div class="forecast-item">
+              <span class="week-day" id="day-4-name">Thu</span>
+              <span class="day-icon"><i id="day-4-icon" data-lucide="cloud-snow"></i></span>
+              <span class="temp-day" id="day-4-temp">--°C</span>
             </div>
-            <a class="detail-item" href="forecast-air-quality.html" style="text-decoration:none;color:inherit;">
-              <div class="detail-left"><span class="weather-icon"><i data-lucide="eye"></i></span><span>Air
-                  Quality</span></div><span>42 Good</span>
-            </a>
-            <div class="detail-item">
-              <div class="detail-left"><span class="weather-icon"><i
-                    data-lucide="sunrise"></i></span><span>Sunrise</span></div><span>04:45</span>
+
+            <div class="forecast-item">
+              <span class="week-day" id="day-5-name">Fri</span>
+              <span class="day-icon"><i id="day-5-icon" data-lucide="wind"></i></span>
+              <span class="temp-day" id="day-5-temp">--°C</span>
             </div>
-            <div class="detail-item">
-              <div class="detail-left"><span class="weather-icon"><i data-lucide="sunset"></i></span><span>Sunset</span>
-              </div><span>21:37</span>
+
+            <div class="forecast-item">
+              <span class="week-day" id="day-6-name">Sat</span>
+              <span class="day-icon"><i id="day-6-icon" data-lucide="wind"></i></span>
+              <span class="temp-day" id="day-6-temp">--°C</span>
+            </div>
+
+            <div class="forecast-item">
+              <span class="week-day" id="day-7-name">Sun</span>
+              <span class="day-icon"><i id="day-7-icon" data-lucide="cloud-snow"></i></span>
+              <span class="temp-day" id="day-7-temp">--°C</span>
+            </div>
+
+            <div class="divider" aria-hidden="true"></div>
+
+            <div class="weather-details">
+              <div class="detail-item">
+                <div class="detail-left">
+                  <span class="weather-icon"><i data-lucide="droplet"></i></span>
+                  <span>Humidity</span>
+                </div>
+                <span id="humidity-value">70%</span>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-left">
+                  <span class="weather-icon"><i data-lucide="wind"></i></span>
+                  <span>Wind</span>
+                </div>
+                <span id="wind-value">2.8 m/s</span>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-left">
+                  <span class="weather-icon"><i data-lucide="thermometer"></i></span>
+                  <span>Feels Like</span>
+                </div>
+                <span id="feels-like-value">-4°C</span>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-left">
+                  <span class="weather-icon"><i data-lucide="sun"></i></span>
+                  <span>UV Index</span>
+                </div>
+                <span id="uv-value">--</span>
+              </div>
+
+              <a class="detail-item" href="forecast-air-quality.html">
+                <div class="detail-left">
+                  <span class="weather-icon"><i data-lucide="eye"></i></span>
+                  <span>Air Quality</span>
+                </div>
+                <span id="air-quality-value">--</span>
+              </a>
+
+              <div class="detail-item">
+                <div class="detail-left">
+                  <span class="weather-icon"><i data-lucide="sunrise"></i></span>
+                  <span>Sunrise</span>
+                </div>
+                <span id="sunrise-value">--:--</span>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-left">
+                  <span class="weather-icon"><i data-lucide="sunset"></i></span>
+                  <span>Sunset</span>
+                </div>
+                <span id="sunset-value">--:--</span>
+              </div>
             </div>
           </div>
         </div>
@@ -266,6 +321,20 @@
 
     </div>
   </main>
+
+      <div class="history-modal" id="search-history-modal" hidden>
+        <div class="history-modal-card">
+          <div class="history-modal-header">
+            <h3>Search history</h3>
+            <button type="button" id="close-search-history" aria-label="Close search history">
+              <i data-lucide="x"></i>
+            </button>
+          </div>
+
+          <div id="search-history-list"></div>
+        </div>
+      </div>
+
 
   <footer class="app-footer">
     <p>Built by Estelle</p>
