@@ -15,7 +15,7 @@ function initProfileEdit(user) {
 
   document.querySelector("#edit-name").value = user.name || "";
   document.querySelector("#edit-email").value = user.email || "";
-  document.querySelector("#edit-location").value = user.location || "Klaipėda, Lithuania";
+  document.querySelector("#edit-location").value = user.location || "Klaipeda, Lithuania";
   document.querySelector("#edit-activity").value = user.activity || "Walking";
   document.querySelector("#edit-health").value = user.healthSensitivity || "None selected";
   document.querySelector("#edit-units").value = user.units || "Metric";

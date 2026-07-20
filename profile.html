@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clima — Profile</title>
+    <link rel="stylesheet" href="style/app-pages.css" />
+    <link rel="stylesheet" href="style/profile/profile.css"/>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="scripts/auth.js" defer></script>
+    <script src="scripts/clima-pages.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body class="clima-app-page" data-require-auth="true">
+    <div class="app-shell">
+        <aside class="app-sidebar">
+            <a href="app.html" class="sidebar-brand">
+                <span class="brand-mark">
+                    <i data-lucide="cloud"></i>
+                </span>
+                <span>Clima</span>
+            </a>
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="app.html" class="sidebar-link">
+                    <i data-lucide="home"></i>
+                    <span>Home</span>
+                </a>
+
+                <a href="forecast-hourly.html" class="sidebar-link">
+                    <i data-lucide="cloud-sun"></i>
+                    <span>Forecast</span>
+                </a>
+
+                <a href="assistant-chat.html" class="sidebar-link">
+                    <i data-lucide="message-circle"></i>
+                    <span>Assistant Chat</span>
+                </a>
+
+                <a href="alert.html" class="sidebar-link">
+                    <i data-lucide="bell"></i>
+                    <span>Alerts</span>
+                </a>
+
+                <a href="recommendations.html" class="sidebar-link">
+                    <i data-lucide="sparkles"></i>
+                    <span>Recommendations</span>
+                </a>
+
+                <a href="profile.html" class="sidebar-link active">
+                    <i data-lucide="user"></i>
+                    <span>Profile</span>
+                </a>
+
+                <a href="settings.html" class="sidebar-link">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <button type="button" class="sidebar-logout" data-logout>
+                <i data-lucide="log-out"></i>
+                <span>Log out</span>
+            </button>
+        </aside>
+
+        <main class="app-main">
+            <section class="profile-header">
+                <div class="profile-header-text">
+                    <span class="section-kicker">
+                        <i data-lucide="user-round"></i>
+                        User profile
+                    </span>
+
+                    <h1>My Profile</h1>
+                    <p>
+                        Manage your personal information, preferences, and weather personalization settings.
+                    </p>
+                </div>
+
+                <div class="profile-summary-card">
+                    <div class="profile-avatar">
+                        <span>E</span>
+                    </div>
+
+                    <div class="profile-summary-info">
+                        <h2 data-user-name>Estelle</h2>
+                        <p data-user-email>student@example.com</p>
+
+                        <span class="profile-location">
+                            <i data-lucide="map-pin"></i>
+                            <span data-user-location>Klaipeda, Lithuania</span>
+                        </span>
+                    </div>
+
+                    <a href="profile-edit.html" class="profile-edit-btn">
+                        <i data-lucide="pencil"></i>
+                        Edit Profile
+                    </a>
+                </div>
+            </section>
+
+            <section class="profile-tabs" aria-label="Profile sections">
+                <button type="button" class="profile-tab active">
+                    <i data-lucide="user"></i>
+                    <span>Personal Info</span>
+                </button>
+
+                <button type="button" class="profile-tab">
+                    <i data-lucide="sliders-horizontal"></i>
+                    <span>Preferences</span>
+                </button>
+
+                <button type="button" class="profile-tab">
+                    <i data-lucide="bell"></i>
+                    <span>Notifications</span>
+                </button>
+
+                <button type="button" class="profile-tab">
+                    <i data-lucide="shield-check"></i>
+                    <span>Security</span>
+                </button>
+            </section>
+
+            <section class="profile-content-grid">
+                <article class="profile-card">
+                    <div class="profile-card-header">
+                        <div>
+                            <span class="section-kicker">
+                                <i data-lucide="id-card"></i>
+                                Personal details
+                            </span>
+                            <h2>Personal Information</h2>
+                        </div>
+
+                        <a href="profile-edit.html" class="small-edit-link">
+                            <i data-lucide="pencil"></i>
+                            Edit
+                        </a>
+                    </div>
+
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="user"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Full name</p>
+                                <p class="info-value" data-user-name>Estelle</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="mail"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Email address</p>
+                                <p class="info-value" data-user-email>student@example.com</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="map-pin"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Location</p>
+                                <p class="info-value" data-user-location>Klaipėda, Lithuania</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="person-standing"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Main activity</p>
+                                <p class="info-value" data-user-activity>Walking</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="profile-card">
+                    <div class="profile-card-header">
+                        <div>
+                            <span class="section-kicker">
+                                <i data-lucide="cloud-sun"></i>
+                                Weather setup
+                            </span>
+                            <h2>Weather Preferences</h2>
+                        </div>
+                    </div>
+
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="thermometer"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Temperature unit</p>
+                                <p class="info-value">Celsius °C</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="bell"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Weather alerts</p>
+                                <p class="info-value">Rain, wind, air quality, and severe weather</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="heart-pulse"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Health sensitivity</p>
+                                <p class="info-value">Air quality and extreme temperature</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">
+                                <i data-lucide="sparkles"></i>
+                            </span>
+
+                            <div>
+                                <p class="info-label">Personalized advice</p>
+                                <p class="info-value">Enabled</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+    </div>
+</body>
+</html>
