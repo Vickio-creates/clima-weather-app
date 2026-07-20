@@ -126,8 +126,13 @@ Through this project, I am improving my skills in:
 
 ## Screenshots
 
-<img width="1920" height="1200" alt="Screenshot 2026-07-20 at 11 20 46" src="https://github.com/user-attachments/assets/62019a8f-7fce-4a2e-9c3c-50b887d79f32" />
-<img width="1920" height="1200" alt="Screenshot 2026-07-20 at 11 21 34" src="https://github.com/user-attachments/assets/979b55f1-711b-4dd6-811f-716d5ba1890a" />
+### Landing Page
+
+![Clima Landing Page](assets/images/landing-page.png)
+
+### Wireframe 
+
+![Clima Wireframe](assets/images/landing-page-wireframe.png)
 
 Updated screenshots will be added as the dashboard and profile page are polished.
 
