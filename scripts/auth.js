@@ -76,18 +76,75 @@ async function requireClimaAuth() {
 
 function updateUserInterface(user) {
   if (!user) return;
+  const displayName = user.name || "Clima User";
+  const displayEmail = user.email || "";
+  const displayLocation = user.location || "Klaipėda, Lithuania";
+  const displayActivity = user.activity || "Walking";
+  const displayTimezone = resolveUserTimeZone(user);
+
   document.querySelectorAll("[data-user-name]").forEach((el) => {
-    el.textContent = user.name || "Clima User";
+    el.textContent = displayName;
   });
   document.querySelectorAll("[data-user-email]").forEach((el) => {
-    el.textContent = user.email || "";
+    el.textContent = displayEmail;
   });
   document.querySelectorAll("[data-user-location]").forEach((el) => {
-    el.textContent = user.location || "Klaipėda, Lithuania";
+    el.textContent = displayLocation;
   });
   document.querySelectorAll("[data-user-activity]").forEach((el) => {
-    el.textContent = user.activity || "Walking";
+    el.textContent = displayActivity;
   });
+  document.querySelectorAll("[data-user-timezone]").forEach((el) => {
+    el.textContent = displayTimezone;
+  });
+
+  updateUserAvatar(user, displayName);
+}
+
+function updateUserAvatar(user, displayName) {
+  const avatarUrl = user.avatarUrl || user.photoUrl || user.photo || user.image || "";
+  const initial = (displayName.trim().charAt(0) || "C").toUpperCase();
+
+  document.querySelectorAll("[data-user-avatar-initial]").forEach((el) => {
+    el.textContent = initial;
+  });
+
+  document.querySelectorAll("[data-user-avatar-image]").forEach((img) => {
+    const fallback = img.parentElement?.querySelector("[data-user-avatar-fallback]");
+    if (avatarUrl) {
+      img.src = avatarUrl;
+      img.alt = `${displayName} profile photo`;
+      img.hidden = false;
+      if (fallback) fallback.hidden = true;
+      img.onerror = () => {
+        img.hidden = true;
+        img.removeAttribute("src");
+        if (fallback) fallback.hidden = false;
+      };
+      return;
+    }
+
+    img.hidden = true;
+    img.removeAttribute("src");
+    if (fallback) fallback.hidden = false;
+  });
+}
+
+function resolveUserTimeZone(user) {
+  if (user.timezone) return user.timezone;
+
+  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Vilnius";
+
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: zone,
+      timeZoneName: "short",
+    }).formatToParts(new Date());
+    const shortName = parts.find((part) => part.type === "timeZoneName")?.value;
+    return shortName ? `${zone} (${shortName})` : zone;
+  } catch (error) {
+    return zone;
+  }
 }
 
 function validateEmail(email) {

@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS clima_app
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE clima_mvp;
+USE clima_app;
 
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     user_id INT NOT NULL UNIQUE,
     default_location VARCHAR(120) NOT NULL DEFAULT 'Klaipėda, Lithuania',
     main_activity VARCHAR(80) NOT NULL DEFAULT 'Walking',
-    health_sensitivity VARCHAR(120) NOT NULL DEFAULT 'None selected',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_profiles_user
@@ -50,7 +49,7 @@ CREATE TABLE IF NOT EXISTS chat_history (
     user_id INT NOT NULL,
     user_prompt TEXT NOT NULL,
     weather_context JSON NULL,
-    ai_response TEXT NULL,
+    assistant_response TEXT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_chat_user
     FOREIGN KEY (user_id) REFERENCES users(id)

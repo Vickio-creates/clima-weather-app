@@ -6,10 +6,10 @@ require_once __DIR__ . '/../helpers/response.php';
 require_once __DIR__ . '/../helpers/user.php';
 require_once __DIR__ . '/../config/dbconnection.php';
 
-
 try {
     requirePost();
     startClimaSession();
+
     $data = readJsonBody();
 
     $name = trim((string) ($data['name'] ?? ''));
@@ -32,21 +32,47 @@ try {
 
     $check = $pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
     $check->execute([$email]);
+
     if ($check->fetch()) {
         jsonResponse(['error' => 'An account with this email already exists.'], 409);
     }
 
     $pdo->beginTransaction();
 
-    $insertUser = $pdo->prepare('INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)');
-    $insertUser->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
+    $insertUser = $pdo->prepare(
+        'INSERT INTO users (full_name, email, password_hash)
+            VALUES (?, ?, ?)'
+    );
+
+    $insertUser->execute([
+        $name,
+        $email,
+        password_hash($password, PASSWORD_DEFAULT)
+    ]);
+
     $userId = (int) $pdo->lastInsertId();
 
-    $insertProfile = $pdo->prepare('INSERT INTO user_profiles (user_id, default_location, main_activity, health_sensitivity) VALUES (?, ?, ?, ?)');
-    $insertProfile->execute([$userId, 'Klaipėda, Lithuania', 'Walking', 'None selected']);
+    $insertProfile = $pdo->prepare(
+        'INSERT INTO user_profiles (user_id, default_location, main_activity)
+            VALUES (?, ?, ?)'
+    );
 
-    $insertPreferences = $pdo->prepare('INSERT INTO user_preferences (user_id, unit_system, theme) VALUES (?, ?, ?)');
-    $insertPreferences->execute([$userId, 'Metric', 'light']);
+    $insertProfile->execute([
+        $userId,
+        'Klaipėda, Lithuania',
+        'Walking'
+    ]);
+
+    $insertPreferences = $pdo->prepare(
+        'INSERT INTO user_preferences (user_id, unit_system, theme)
+            ≠VALUES (?, ?, ?)'
+    );
+
+    $insertPreferences->execute([
+        $userId,
+        'Metric',
+        'light'
+    ]);
 
     $pdo->commit();
 
@@ -61,5 +87,6 @@ try {
     if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
+
     jsonResponse(['error' => $error->getMessage()], 500);
 }
