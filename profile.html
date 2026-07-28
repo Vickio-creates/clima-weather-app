@@ -209,7 +209,7 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Lifestyle and activities">
+                                <div class="profile-pill-list" aria-label="Lifestyle and activities" data-preference-group="activities">
                                     <button type="button" class="profile-pill active">Student</button>
                                     <button type="button" class="profile-pill">Office Worker</button>
                                     <button type="button" class="profile-pill">Outdoor Worker</button>
@@ -227,7 +227,7 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Weather preferences">
+                                <div class="profile-pill-list" aria-label="Weather preferences" data-preference-group="weather">
                                     <button type="button" class="profile-pill">Sensitive to Cold</button>
                                     <button type="button" class="profile-pill">Sensitive to Heat</button>
                                     <button type="button" class="profile-pill active">Rain Alerts</button>
@@ -245,7 +245,7 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Clothing preferences">
+                                <div class="profile-pill-list" aria-label="Clothing preferences" data-preference-group="clothing">
                                     <button type="button" class="profile-pill">Light Clothing</button>
                                     <button type="button" class="profile-pill active">Warm Clothing</button>
                                     <button type="button" class="profile-pill active">Waterproof</button>
@@ -262,7 +262,7 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Assistant preferences">
+                                <div class="profile-pill-list" aria-label="Assistant preferences" data-preference-group="assistant"> 
                                     <button type="button" class="profile-pill">Concise Responses</button>
                                     <button type="button" class="profile-pill active">Detailed Responses</button>
                                     <button type="button" class="profile-pill active">Friendly Tone</button>
@@ -284,22 +284,22 @@
                                 <div class="summary-list">
                                     <div class="summary-item">
                                         <span>Activities</span>
-                                        <strong>Student</strong>
+                                        <strong data-summary-activities>Student</strong>
                                     </div>
 
                                     <div class="summary-item">
                                         <span>Weather focus</span>
-                                        <strong>Rain, Wind, Air Quality</strong>
+                                        <strong data-summary-weather>Rain, Strong Wind, Air Quality</strong>
                                     </div>
 
                                     <div class="summary-item">
                                         <span>Clothing style</span>
-                                        <strong>Warm, Waterproof</strong>
+                                        <strong data-summary-clothing>Warm, Waterproof</strong>
                                     </div>
 
                                     <div class="summary-item">
                                         <span>Assistant tone</span>
-                                        <strong>Friendly, Detailed</strong>
+                                        <strong data-summary-assistant>Friendly, Detailed</strong>
                                     </div>
                                 </div>
                             </article>
@@ -314,6 +314,7 @@
                                 <button type="button" class="save-preferences-btn">
                                     Save Changes
                                 </button>
+                                <p class="save-preferences-status" role="status"></p>
                             </article>
                         </aside>
                     </section>
