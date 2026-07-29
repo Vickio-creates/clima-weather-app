@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clima — Edit Personal Info</title>
+
+    <!-- Main app styles -->
+    <link rel="stylesheet" href="style/app-pages.css" />
+
+    <!-- Profile styles -->
+    <link rel="stylesheet" href="style/profile/profile-base.css" />
+    <link rel="stylesheet" href="style/profile/profile-sidebar.css" />
+    <link rel="stylesheet" href="style/profile/profile-header.css" />
+    <link rel="stylesheet" href="style/profile/profile-cards.css" />
+    <link rel="stylesheet" href="style/profile/profile-edit.css" />
+    <link rel="stylesheet" href="style/profile/profile-responsive.css" />
+
+    <!-- Icons and scripts -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="scripts/auth.js" defer></script>
+    <script src="scripts/clima-pages.js" defer></script>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+</head>
+
+<body class="clima-app-page" data-require-auth="true">
+    <div class="app-shell">
+
+        <!-- Sidebar navigation -->
+        <aside class="app-sidebar">
+            <a href="app.html" class="sidebar-brand">
+                <span class="brand-mark">
+                    <i data-lucide="cloud"></i>
+                </span>
+                <span>Clima</span>
+            </a>
+
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="app.html" class="sidebar-link">
+                    <i data-lucide="home"></i>
+                    <span>Home</span>
+                </a>
+
+                <a href="forecast-hourly.html" class="sidebar-link">
+                    <i data-lucide="cloud-sun"></i>
+                    <span>Forecast</span>
+                </a>
+
+                <a href="assistant-chat.html" class="sidebar-link">
+                    <i data-lucide="message-circle"></i>
+                    <span>Assistant Chat</span>
+                </a>
+
+                <a href="alert-heavy-rain.html" class="sidebar-link">
+                    <i data-lucide="bell"></i>
+                    <span>Alerts</span>
+                </a>
+
+                <a href="recommendations.html" class="sidebar-link">
+                    <i data-lucide="sparkles"></i>
+                    <span>Recommendations</span>
+                </a>
+
+                <div class="sidebar-divider" aria-hidden="true"></div>
+
+                <a href="profile.html" class="sidebar-link active">
+                    <i data-lucide="user"></i>
+                    <span>Profile</span>
+                </a>
+
+                <a href="settings.html" class="sidebar-link">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <button type="button" class="sidebar-logout" data-logout>
+                <i data-lucide="log-out"></i>
+                <span>Log out</span>
+            </button>
+        </aside>
+
+        <!-- Main content -->
+        <main class="app-main">
+            <div class="profile-layout">
+
+                <!-- Page header -->
+                <section class="profile-header">
+                    <div class="profile-header-text">
+                        <h1>Edit Personal Info</h1>
+                        <p>Update the personal details shown in your Clima profile.</p>
+                    </div>
+
+                    <!-- Top identity summary -->
+                    <div class="profile-summary-card">
+                        <div class="profile-avatar profile-avatar-editable" aria-label="Profile avatar">
+                            <img data-user-avatar-image alt="" hidden />
+                            <span class="profile-avatar-fallback" data-user-avatar-fallback
+                                data-user-avatar-initial>E</span>
+                            <button type="button" class="profile-avatar-upload" data-photo-trigger
+                                aria-label="Change profile photo">
+                                <i data-lucide="camera"></i>
+                            </button>
+                            <input type="file" id="edit-photo" accept="image/jpeg, image/png, image/webp" hidden />
+                        </div>
+
+                        <div class="profile-summary-info">
+                            <h2>Profile photo</h2>
+                            <p>Choose the image that should appear on your Clima account.</p>
+                            <div class="profile-photo-meta">
+                                <span class="profile-photo-hint">JPG, PNG or WebP. Max size 2MB.</span>
+                            </div>
+                        </div>
+
+                        <a href="profile.html" class="profile-edit-btn">Back to Profile</a>
+                    </div>
+                </section>
+
+                <!-- Edit page layout -->
+                <section class="profile-content-grid">
+
+                    <!-- Left column: editable profile details -->
+                    <div class="profile-main-column">
+
+                        <!-- Edit personal information form -->
+                        <form id="profile-edit-form">
+
+                            <!-- Personal information card -->
+                            <article class="profile-card profile-edit-card">
+                                <div class="profile-card-header">
+                                    <div>
+                                        <h2>Personal information</h2>
+                                        <p>Edit your basic account and location details.</p>
+                                    </div>
+                                </div>
+
+                                <div class="profile-edit-form">
+                                    <label class="profile-form-field" for="edit-name">
+                                        <span>Full name</span>
+                                        <input type="text" id="edit-name" required />
+                                    </label>
+
+                                    <label class="profile-form-field" for="edit-email">
+                                        <span>Email address</span>
+                                        <input type="email" id="edit-email" required />
+                                    </label>
+
+                                    <label class="profile-form-field" for="edit-location">
+                                        <span>Default location</span>
+                                        <input type="text" id="edit-location" placeholder="Klaipėda, Lithuania" />
+                                    </label>
+                                </div>
+                            </article>
+
+                            <!-- About you card -->
+                            <article class="profile-card profile-edit-card">
+                                <div class="profile-card-header">
+                                    <div>
+                                        <h2>About you</h2>
+                                        <p>Choose your main activity so Clima can personalize daily recommendations.</p>
+                                    </div>
+                                </div>
+
+                                <div class="profile-edit-form">
+                                    <label class="profile-form-field" for="edit-activity">
+                                        <span>Main activity</span>
+                                        <select id="edit-activity">
+                                            <option value="Walking">Walking</option>
+                                            <option value="Studying">Studying</option>
+                                            <option value="Office Work">Office Work</option>
+                                            <option value="Outdoor Work">Outdoor Work</option>
+                                            <option value="Sports">Sports</option>
+                                            <option value="Travel">Travel</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </article>
+
+                            <!-- Form buttons -->
+                            <div class="profile-form-actions">
+                                <a href="profile.html" class="profile-cancel-btn">Cancel</a>
+
+                                <button type="submit" class="profile-save-btn">
+                                    Save Personal Info
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right column: current profile summary -->
+                    <aside class="profile-side-column" aria-label="Current personal information summary">
+                        <article class="profile-card profile-summary-panel">
+                            <div class="profile-card-header">
+                                <div>
+                                    <h2>Current profile</h2>
+                                    <p>This is the information currently shown on your profile.</p>
+                                </div>
+                            </div>
+
+                            <div class="summary-list">
+                                <div class="summary-item">
+                                    <span>Name</span>
+                                    <strong data-user-name>Clima User</strong>
+                                </div>
+
+                                <div class="summary-item">
+                                    <span>Email</span>
+                                    <strong data-user-email>user@example.com</strong>
+                                </div>
+
+                                <div class="summary-item">
+                                    <span>Location</span>
+                                    <strong data-user-location>Klaipėda, Lithuania</strong>
+                                </div>
+
+                                <div class="summary-item">
+                                    <span>Main activity</span>
+                                    <strong data-user-activity>Walking</strong>
+                                </div>
+
+                                <div class="summary-item">
+                                    <span>Account status</span>
+                                    <strong>Active</strong>
+                                </div>
+                            </div>
+                        </article>
+                    </aside>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Small message shown after saving -->
+    <div id="page-toast" role="status" aria-live="polite"></div>
+</body>
+
+</html>

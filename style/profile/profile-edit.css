@@ -1,0 +1,244 @@
+/* Main edit form wrapper */
+#profile-edit-form {
+    display: grid;
+    gap: 1.1rem;
+}
+
+/* Edit cards need their own internal spacing on the profile edit page */
+.profile-edit-card {
+    padding: 1.4rem;
+}
+
+.profile-avatar-editable {
+    overflow: visible;
+}
+
+.profile-avatar-upload {
+    position: absolute;
+    right: -6px;
+    bottom: 4px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(37, 99, 235, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.profile-avatar-upload:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 32px rgba(37, 99, 235, 0.45);
+}
+
+.profile-avatar-upload svg {
+    width: 18px;
+    height: 18px;
+}
+
+.profile-photo-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.9rem;
+}
+
+.profile-photo-hint {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.profile-avatar-editable.is-uploading .profile-avatar-upload {
+    cursor: wait;
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+/* Edit Personal Info form container inside each card */
+.profile-edit-form {
+    display: grid;
+    gap: 1.2rem;
+    margin-top: 1.25rem;
+}
+
+/* Each form field is displayed as a vertical label + input group */
+.profile-form-field {
+    display: grid;
+    gap: 0.45rem;
+}
+
+/* Field label text */
+.profile-form-field span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+/* Shared style for text inputs and select dropdowns */
+.profile-form-field input,
+.profile-form-field select {
+    width: 100%;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.58);
+    color: #ffffff;
+    padding: 0.95rem 1rem;
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.profile-form-field select {
+    padding-right: 3rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 5.25L7 9.25L11 5.25' stroke='%23cbd5e1' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 14px;
+}
+
+/* Better color for dropdown options */
+.profile-form-field select option {
+    background: #111827;
+    color: #ffffff;
+}
+
+/* Placeholder color inside inputs */
+.profile-form-field input::placeholder {
+    color: rgba(203, 213, 225, 0.55);
+}
+
+/* Focus state when the user clicks or types inside a field */
+.profile-form-field input:focus,
+.profile-form-field select:focus {
+    border-color: rgba(59, 130, 246, 0.8);
+    background: rgba(15, 23, 42, 0.78);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+/* Form action row for Cancel and Save buttons */
+.profile-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 0.4rem;
+}
+
+/* Cancel button style */
+.profile-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 1.3rem;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 14px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    background: rgba(15, 23, 42, 0.35);
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* Cancel button hover effect */
+.profile-cancel-btn:hover {
+    background: rgba(30, 41, 59, 0.72);
+    border-color: rgba(148, 163, 184, 0.42);
+}
+
+/* Save Personal Info button */
+.profile-save-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    min-width: 190px;
+    padding: 0 1.4rem;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.profile-save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 38px rgba(37, 99, 235, 0.36);
+}
+
+.profile-save-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+    transform: none;
+}
+
+/* Toast message shown after saving the profile */
+#page-toast {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    z-index: 100;
+    max-width: 320px;
+    padding: 0.9rem 1.1rem;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Show toast when JavaScript adds the is-visible class */
+#page-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mobile layout */
+@media (max-width: 720px) {
+    .profile-edit-card {
+        padding: 1.2rem;
+    }
+
+    .profile-photo-meta {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.65rem;
+    }
+
+    .profile-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .profile-save-btn,
+    .profile-cancel-btn {
+        width: 100%;
+    }
+
+    #page-toast {
+        right: 1rem;
+        left: 1rem;
+        bottom: 1rem;
+        max-width: none;
+    }
+}
