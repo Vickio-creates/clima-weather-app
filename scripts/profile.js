@@ -161,6 +161,60 @@ function getSelectedPreferenceValues(groupName) {
     return selectedText;
 }
 
+// Activate the correct preference buttons using values loaded from the database.
+function setActivePreferenceButtons(groupName, savedValues) {
+    // Find all buttons inside the selected preference group.
+    const groupButtons = document.querySelectorAll(
+        `[data-preference-group="${groupName}"] button.profile-pill`
+    );
 
-// Update the summary once when the page loads, using the buttons already marked as active in HTML.
+    // Go through each button and check if it exists in the saved database values.
+    groupButtons.forEach((button) => {
+        const buttonText = button.textContent.trim();
+
+        // If the saved values contain this button text, make it active.
+        // Otherwise, remove the active class.
+        button.classList.toggle("active", savedValues.includes(buttonText));
+    });
+}
+
+
+// Apply all saved preference groups to the Profile page.
+function applySavedPreferences(preferences) {
+    // Stop the function if there are no saved preferences.
+    if (!preferences) {
+        return;
+    }
+
+    // Apply saved activities, weather focus, clothing style, and assistant tone.
+    setActivePreferenceButtons("activities", preferences.activities || []);
+    setActivePreferenceButtons("weather", preferences.weatherFocus || []);
+    setActivePreferenceButtons("clothing", preferences.clothingStyle || []);
+    setActivePreferenceButtons("assistant", preferences.assistantTone || []);
+
+    // Update the summary after activating the saved buttons.
+    updatePreferencesSummary();
+}
+
+
+// Load saved preferences from the logged-in user's session data.
+async function loadSavedPreferences() {
+    // requireClimaAuth checks if the user is logged in and returns the user data.
+    if (typeof requireClimaAuth !== "function") {
+        return;
+    }
+
+    const user = await requireClimaAuth();
+
+    // If the backend returned saved preferences, apply them to the page.
+    if (user && user.preferences) {
+        applySavedPreferences(user.preferences);
+    }
+}
+
+
+// First update the summary using the default active buttons in HTML.
 updatePreferencesSummary();
+
+// Then load saved preferences from the database and replace the defaults.
+loadSavedPreferences();
