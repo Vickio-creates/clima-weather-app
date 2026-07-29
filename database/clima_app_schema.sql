@@ -37,6 +37,10 @@ CREATE TABLE IF NOT EXISTS user_preferences (
     privacy_location VARCHAR(80) NOT NULL DEFAULT 'While using the app',
     profile_personalization TINYINT(1) NOT NULL DEFAULT 1,
     activity_history TINYINT(1) NOT NULL DEFAULT 1,
+    activities JSON NULL,
+    weather_focus JSON NULL,
+    clothing_style JSON NULL, 
+    assistant_tone JSON NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_preferences_user
