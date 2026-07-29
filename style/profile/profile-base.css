@@ -1,0 +1,37 @@
+body.clima-app-page {
+    margin: 0;
+    height: 100vh;
+    padding: 0;
+    font-family: "Inter", sans-serif;
+    color: #ffffff;
+    background: #08192c;
+    overflow: hidden;
+}
+
+.app-shell {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    background: #08192c;
+    overflow: hidden;
+}
+
+/*Main profile page*/
+.app-main {
+    height: 100vh;
+    padding: 26px 34px 22px;
+    overflow: auto;
+    background: #1f2833;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    max-width: 1180px;
+    height: auto;
+}
+
+/*Profile panels*/
+.profile-panel[hidden] {
+    display: none;
+}

@@ -1,0 +1,175 @@
+/* Location card */
+.profile-location-card {
+    padding: 20px;
+}
+
+.profile-location-card .profile-card-header {
+    margin-bottom: 12px;
+}
+
+.profile-location-card strong {
+    display: block;
+    margin-top: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.change-location-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    background: transparent;
+    color: #6fa3ff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    padding: 0;
+}
+
+.change-location-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Save preferences card */
+.preference-save-card {
+    padding: 20px;
+}
+
+.save-preferences-btn {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 14px;
+    background: #3d78f2;
+    color: #ffffff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 14px 28px rgba(61, 120, 242, 0.25);
+}
+
+.save-preferences-btn:hover {
+    filter: brightness(1.08);
+}
+
+.save-preferences-status {
+    margin: 10px 0 0;
+    min-height: 17px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Compact Preferences layout */
+.profile-panel[data-profile-panel="preferences"] .profile-content-grid {
+    gap: 22px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-main-column,
+.profile-panel[data-profile-panel="preferences"] .profile-side-column {
+    gap: 16px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .about-card,
+.profile-panel[data-profile-panel="preferences"] .profile-summary-panel,
+.profile-panel[data-profile-panel="preferences"] .profile-location-card,
+.profile-panel[data-profile-panel="preferences"] .preference-save-card {
+    padding: 18px;
+    border-radius: 20px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-card-header {
+    margin-bottom: 12px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-card-header h2 {
+    font-size: 17px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-card-header p {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-pill-list {
+    gap: 9px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-pill {
+    min-height: 34px;
+    padding: 0 13px;
+    font-size: 13px;
+    border-radius: 11px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .summary-list {
+    margin-top: 12px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .summary-item {
+    gap: 5px;
+    padding: 13px 14px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .summary-item span {
+    font-size: 12px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .summary-item strong {
+    font-size: 13px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-location-card .profile-card-header {
+    margin-bottom: 10px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-location-card strong {
+    margin-top: 8px;
+    font-size: 15px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .change-location-btn {
+    font-size: 12px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .save-preferences-btn {
+    min-height: 42px;
+    border-radius: 12px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .save-preferences-status {
+    margin-top: 8px;
+    min-height: 15px;
+    font-size: 12px;
+}
+
+/* Better spacing inside the four Preferences cards */
+.profile-panel[data-profile-panel="preferences"] .profile-main-column > .about-card {
+    min-height: 160px;
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-main-column > .about-card .profile-card-header {
+    margin-bottom: 16px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-main-column > .about-card .profile-card-header h2 {
+    margin-bottom: 6px;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-main-column > .about-card .profile-card-header p {
+    margin-top: 0;
+    line-height: 1.45;
+}
+
+.profile-panel[data-profile-panel="preferences"] .profile-main-column > .about-card .profile-pill-list {
+    margin-top: 2px;
+}

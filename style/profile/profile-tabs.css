@@ -1,0 +1,43 @@
+/* Tabs */
+.profile-tabs {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 16px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+}
+
+.profile-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.profile-tab {
+    position: relative;
+    flex: 0 0 auto;
+    border: 0;
+    background: transparent;
+    padding: 0 0 12px;
+    color: rgba(255, 255, 255, 0.56);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.profile-tab.active {
+    color: #ffffff;
+}
+
+.profile-tab.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--clima-blue, #3d78f2);
+}

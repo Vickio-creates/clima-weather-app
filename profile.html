@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clima — Profile</title>
     <link rel="stylesheet" href="style/app-pages.css" />
-    <link rel="stylesheet" href="style/profile/profile.css" />
+    <link rel="stylesheet" href="style/profile/profile-base.css" />
+    <link rel="stylesheet" href="style/profile/profile-sidebar.css" />
+    <link rel="stylesheet" href="style/profile/profile-header.css" />
+    <link rel="stylesheet" href="style/profile/profile-tabs.css" />
+    <link rel="stylesheet" href="style/profile/profile-cards.css" />
+    <link rel="stylesheet" href="style/profile/profile-preferences.css" />
+    <link rel="stylesheet" href="style/profile/profile-responsive.css" />
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="scripts/auth.js" defer></script>
     <script src="scripts/clima-pages.js" defer></script>
@@ -209,7 +215,8 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Lifestyle and activities" data-preference-group="activities">
+                                <div class="profile-pill-list" aria-label="Lifestyle and activities"
+                                    data-preference-group="activities">
                                     <button type="button" class="profile-pill active">Student</button>
                                     <button type="button" class="profile-pill">Office Worker</button>
                                     <button type="button" class="profile-pill">Outdoor Worker</button>
@@ -227,7 +234,8 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Weather preferences" data-preference-group="weather">
+                                <div class="profile-pill-list" aria-label="Weather preferences"
+                                    data-preference-group="weather">
                                     <button type="button" class="profile-pill">Sensitive to Cold</button>
                                     <button type="button" class="profile-pill">Sensitive to Heat</button>
                                     <button type="button" class="profile-pill active">Rain Alerts</button>
@@ -245,7 +253,8 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Clothing preferences" data-preference-group="clothing">
+                                <div class="profile-pill-list" aria-label="Clothing preferences"
+                                    data-preference-group="clothing">
                                     <button type="button" class="profile-pill">Light Clothing</button>
                                     <button type="button" class="profile-pill active">Warm Clothing</button>
                                     <button type="button" class="profile-pill active">Waterproof</button>
@@ -262,7 +271,8 @@
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Assistant preferences" data-preference-group="assistant"> 
+                                <div class="profile-pill-list" aria-label="Assistant preferences"
+                                    data-preference-group="assistant">
                                     <button type="button" class="profile-pill">Concise Responses</button>
                                     <button type="button" class="profile-pill active">Detailed Responses</button>
                                     <button type="button" class="profile-pill active">Friendly Tone</button>
@@ -273,6 +283,20 @@
                         </div>
 
                         <aside class="profile-side-column" aria-label="Preferences summary">
+                            <article class="profile-card profile-location-card">
+                                <div class="profile-card-header">
+                                    <div>
+                                        <h2>Location</h2>
+                                        <strong data-user-location>Vilnius, Lithuania</strong>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="change-location-btn">
+                                    Change location
+                                    <i data-lucide="chevron-right"></i>
+                                </button>
+                            </article>
+
                             <article class="profile-card profile-summary-panel">
                                 <div class="profile-card-header">
                                     <div>

@@ -1,0 +1,109 @@
+/* Header text */
+.profile-header {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.profile-header-text h1 {
+    margin: 0;
+    font-size: clamp(32px, 3.6vw, 42px);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    text-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.profile-header-text p {
+    margin: 8px 0 0;
+    max-width: 360px;
+    font-size: 16px;
+    line-height: 1.45;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.72);
+    text-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* Profile summary */
+.profile-summary-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 18px;
+    padding: 0;
+}
+
+.profile-avatar {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: #2d6cdf;
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: 900;
+    border: 3px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
+}
+
+.profile-avatar img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+}
+
+.profile-avatar-fallback {
+    line-height: 1;
+    letter-spacing: -0.06em;
+}
+
+.profile-summary-info h2 {
+    margin: 0;
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+    text-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-summary-info p {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.profile-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: end;
+    min-width: 156px;
+    min-height: 50px;
+    padding: 0 20px;
+    background: #3d78f2;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    font-size: 16px;
+    text-decoration: none;
+    box-shadow:
+        0 16px 30px rgba(45, 108, 223, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.profile-edit-btn:hover {
+    color: #ffffff;
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
