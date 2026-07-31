@@ -1,0 +1,60 @@
+/* Medium desktop and laptop layout */
+@media (max-width: 1280px) {
+    .recommendations-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .recommendation-reason-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Tablet layout */
+@media (max-width: 920px) {
+    .recommendations-header {
+        flex-direction: column;
+    }
+
+    .recommendations-refresh-btn {
+        width: 100%;
+    }
+
+    .recommendations-weather-card {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+
+    .recommendations-weather-main {
+        align-items: flex-start;
+    }
+
+    .recommendations-temperature {
+        text-align: left;
+    }
+
+    .recommendations-weather-metrics {
+        padding-left: 0;
+        padding-top: 1rem;
+        border-left: none;
+        border-top: 1px solid rgba(148, 163, 184, 0.18);
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 720px) {
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recommendation-reason-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recommendations-assistant-card {
+        flex-direction: column;
+    }
+
+    .recommendations-weather-main {
+        flex-direction: column;
+    }
+}

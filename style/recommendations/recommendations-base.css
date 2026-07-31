@@ -1,0 +1,35 @@
+/* Main recommendation page layout */
+.recommendations-layout {
+    display: grid;
+    gap: 1.35rem;
+}
+
+/* Shared glass card style used by recommendation sections */
+.recommendations-weather-card,
+.recommendations-assistant-card,
+.recommendations-explanation-card,
+.recommendation-card {
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 26px;
+    background: rgba(15, 23, 42, 0.55);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+}
+
+/* Shared small label style */
+.recommendations-label,
+.recommendation-card-label {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+/* Status message below the weather card */
+.recommendations-status {
+    min-height: 1.2rem;
+    margin: 0;
+    color: #93c5fd;
+    font-weight: 800;
+}

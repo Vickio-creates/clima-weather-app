@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clima — Recommendations</title>
+
+    <!-- Main app styles -->
+    <link rel="stylesheet" href="style/app-pages.css" />
+
+    <!-- Shared app/profile layout styles -->
+<link rel="stylesheet" href="style/profile/profile-base.css" />
+<link rel="stylesheet" href="style/profile/profile-sidebar.css" />
+
+    <!-- Recommendation page styles -->
+    <link rel="stylesheet" href="style/recommendations/recommendations-base.css" />
+    <link rel="stylesheet" href="style/recommendations/recommendations-header.css" />
+    <link rel="stylesheet" href="style/recommendations/recommendations-weather.css" />
+    <link rel="stylesheet" href="style/recommendations/recommendations-cards.css" />
+    <link rel="stylesheet" href="style/recommendations/recommendations-responsive.css" />
+
+    <!-- Icons and scripts -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="scripts/auth.js" defer></script>
+    <script src="scripts/clima-pages.js" defer></script>
+    <script src="scripts/recommendations.js" defer></script>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+</head>
+
+<body class="clima-app-page" data-require-auth="true">
+    <div class="app-shell">
+
+        <!-- Sidebar navigation -->
+        <aside class="app-sidebar">
+            <a href="app.html" class="sidebar-brand">
+                <span class="brand-mark">
+                    <i data-lucide="cloud"></i>
+                </span>
+                <span>Clima</span>
+            </a>
+
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="app.html" class="sidebar-link">
+                    <i data-lucide="home"></i>
+                    <span>Home</span>
+                </a>
+
+                <a href="forecast-hourly.html" class="sidebar-link">
+                    <i data-lucide="cloud-sun"></i>
+                    <span>Forecast</span>
+                </a>
+
+                <a href="assistant-chat.html" class="sidebar-link">
+                    <i data-lucide="message-circle"></i>
+                    <span>Assistant Chat</span>
+                </a>
+
+                <a href="alert-heavy-rain.html" class="sidebar-link">
+                    <i data-lucide="bell"></i>
+                    <span>Alerts</span>
+                </a>
+
+                <a href="recommendations.html" class="sidebar-link active">
+                    <i data-lucide="sparkles"></i>
+                    <span>Recommendations</span>
+                </a>
+
+                <div class="sidebar-divider" aria-hidden="true"></div>
+
+                <a href="profile.html" class="sidebar-link">
+                    <i data-lucide="user"></i>
+                    <span>Profile</span>
+                </a>
+
+                <a href="settings.html" class="sidebar-link">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <button type="button" class="sidebar-logout" data-logout>
+                <i data-lucide="log-out"></i>
+                <span>Log out</span>
+            </button>
+        </aside>
+
+        <!-- Main content -->
+        <main class="app-main">
+    <section class="recommendations-layout">
+
+        <!-- Page header -->
+        <header class="recommendations-header">
+            <div>
+                <p class="recommendations-kicker">Personalized daily guidance</p>
+                <h1>Today’s Recommendations</h1>
+                <p>
+                    Clima uses your saved profile, preferences, and current weather conditions
+                    to suggest what to wear and how to plan your day.
+                </p>
+            </div>
+
+            <button type="button" class="recommendations-refresh-btn" id="load-recommendations-btn">
+                <i data-lucide="refresh-cw"></i>
+                Refresh recommendations
+            </button>
+        </header>
+
+        <!-- Weather summary card -->
+        <section class="recommendations-weather-card">
+            <div class="recommendations-weather-main">
+                <div class="recommendations-weather-icon" id="recommendation-weather-icon">
+                    <i data-lucide="cloud-sun"></i>
+                </div>
+
+                <div>
+                    <p class="recommendations-label">Current weather for</p>
+                    <h2 id="recommendation-location" data-user-location>Klaipėda, Lithuania</h2>
+                    <p id="recommendation-weather-detail">
+                        Load recommendations to get current weather guidance.
+                    </p>
+                </div>
+            </div>
+
+            <div class="recommendations-temperature">
+                <strong id="recommendation-temperature">--°C</strong>
+                <span id="recommendation-condition">Waiting</span>
+            </div>
+
+            <div class="recommendations-weather-metrics">
+                <div class="weather-metric-item">
+                    <span>
+                        <i data-lucide="droplets"></i>
+                        Humidity
+                    </span>
+                    <strong id="recommendation-humidity">--%</strong>
+                </div>
+
+                <div class="weather-metric-item">
+                    <span>
+                        <i data-lucide="wind"></i>
+                        Wind
+                    </span>
+                    <strong id="recommendation-wind">-- m/s</strong>
+                </div>
+
+                <div class="weather-metric-item">
+                    <span>
+                        <i data-lucide="thermometer"></i>
+                        Feels like
+                    </span>
+                    <strong id="recommendation-feels-like">--°C</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status message -->
+        <p class="recommendations-status" id="recommendations-status" role="status"></p>
+
+        <!-- Assistant summary card -->
+        <section class="recommendations-assistant-card">
+            <span class="assistant-card-icon">
+                <i data-lucide="bot"></i>
+            </span>
+
+            <div>
+                <h2>Clima Assistant says:</h2>
+                <p id="assistant-recommendation-text">
+                    Load recommendations to receive a short daily summary from Clima Assistant.
+                </p>
+            </div>
+        </section>
+
+        <!-- Recommendation cards -->
+        <section class="recommendations-grid" aria-label="Personalized recommendations">
+
+            <!-- Clothing recommendation -->
+            <article class="recommendation-card recommendation-card-clothing">
+                <div class="recommendation-card-top">
+                    <span class="recommendation-icon">
+                        <i data-lucide="shirt"></i>
+                    </span>
+
+                    <div>
+                        <p class="recommendation-card-label">Clothing</p>
+                        <span class="recommendation-badge">Daily advice</span>
+                    </div>
+                </div>
+
+                <h2 id="wear-recommendation-page">Not loaded yet</h2>
+
+                <p id="wear-recommendation-detail">
+                    Clothing advice will appear after loading the weather.
+                </p>
+
+                <div class="recommendation-reason">
+                    <span>
+                        <i data-lucide="lightbulb"></i>
+                    </span>
+
+                    <div>
+                        <strong>Why this?</strong>
+                        <p id="wear-recommendation-reason">
+                            Clima will explain the clothing suggestion here.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Rain preparation recommendation -->
+            <article class="recommendation-card recommendation-card-rain">
+                <div class="recommendation-card-top">
+                    <span class="recommendation-icon">
+                        <i data-lucide="umbrella"></i>
+                    </span>
+
+                    <div>
+                        <p class="recommendation-card-label">Rain preparation</p>
+                        <span class="recommendation-badge">Weather safety</span>
+                    </div>
+                </div>
+
+                <h2 id="umbrella-recommendation-page">Not loaded yet</h2>
+
+                <p id="umbrella-recommendation-detail">
+                    Clima will tell you whether an umbrella or waterproof clothing is useful.
+                </p>
+
+                <div class="recommendation-reason">
+                    <span>
+                        <i data-lucide="cloud-rain"></i>
+                    </span>
+
+                    <div>
+                        <strong>Why this?</strong>
+                        <p id="umbrella-recommendation-reason">
+                            Clima will explain the rain preparation advice here.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Outdoor activity recommendation -->
+            <article class="recommendation-card recommendation-card-outdoor">
+                <div class="recommendation-card-top">
+                    <span class="recommendation-icon">
+                        <i data-lucide="person-standing"></i>
+                    </span>
+
+                    <div>
+                        <p class="recommendation-card-label">Outdoor activity</p>
+                        <span class="recommendation-badge">Activity guidance</span>
+                    </div>
+                </div>
+
+                <h2 id="outdoor-recommendation-page">Not loaded yet</h2>
+
+                <p id="outdoor-recommendation-detail">
+                    Activity advice will be based on rain, wind, temperature, and humidity.
+                </p>
+
+                <div class="recommendation-reason">
+                    <span>
+                        <i data-lucide="sun"></i>
+                    </span>
+
+                    <div>
+                        <strong>Why this?</strong>
+                        <p id="outdoor-recommendation-reason">
+                            Clima will explain the outdoor activity advice here.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Weather focus recommendation -->
+            <article class="recommendation-card recommendation-card-focus">
+                <div class="recommendation-card-top">
+                    <span class="recommendation-icon">
+                        <i data-lucide="bell-ring"></i>
+                    </span>
+
+                    <div>
+                        <p class="recommendation-card-label">Weather focus</p>
+                        <span class="recommendation-badge">Profile-based</span>
+                    </div>
+                </div>
+
+                <h2 id="focus-recommendation-page">Not loaded yet</h2>
+
+                <p id="focus-recommendation-detail">
+                    This will reflect the weather preferences saved in your profile.
+                </p>
+
+                <div class="recommendation-reason">
+                    <span>
+                        <i data-lucide="sparkles"></i>
+                    </span>
+
+                    <div>
+                        <strong>Why this?</strong>
+                        <p id="focus-recommendation-reason">
+                            Clima will explain how your saved preferences affected this advice.
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <!-- Explanation card -->
+        <section class="recommendations-explanation-card">
+            <div class="profile-card-header">
+                <div>
+                    <h2>Why Clima recommends this</h2>
+                    <p>
+                        This section explains the decision in simple language so the user understands the advice.
+                    </p>
+                </div>
+            </div>
+
+            <div class="recommendation-reason-grid">
+                <article class="reason-summary-item">
+                    <span>
+                        <i data-lucide="thermometer"></i>
+                    </span>
+
+                    <div>
+                        <strong>Temperature</strong>
+                        <p id="reason-temperature">Waiting for weather data.</p>
+                    </div>
+                </article>
+
+                <article class="reason-summary-item">
+                    <span>
+                        <i data-lucide="cloud-rain"></i>
+                    </span>
+
+                    <div>
+                        <strong>Rain chance</strong>
+                        <p id="reason-rain">Waiting for weather data.</p>
+                    </div>
+                </article>
+
+                <article class="reason-summary-item">
+                    <span>
+                        <i data-lucide="person-standing"></i>
+                    </span>
+
+                    <div>
+                        <strong>Matches your profile</strong>
+                        <p id="reason-profile">Waiting for profile preferences.</p>
+                    </div>
+                </article>
+
+                <article class="reason-summary-item">
+                    <span>
+                        <i data-lucide="droplets"></i>
+                    </span>
+
+                    <div>
+                        <strong>Humidity</strong>
+                        <p id="reason-humidity">Waiting for humidity data.</p>
+                    </div>
+                </article>
+            </div>
+
+            <p id="personalized-explanation">
+                Load recommendations to see a personalized explanation.
+            </p>
+        </section>
+    </section>
+</main>
+    </div>
+</body>
+
+</html>

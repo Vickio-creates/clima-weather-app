@@ -1,0 +1,102 @@
+/* Weather summary card */
+.recommendations-weather-card {
+    display: grid;
+    grid-template-columns: 1fr auto minmax(220px, 300px);
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.45rem;
+}
+
+/* Left side: icon + location details */
+.recommendations-weather-main {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+/* Weather icon box */
+.recommendations-weather-icon {
+    width: 62px;
+    height: 62px;
+    flex: 0 0 auto;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    background: rgba(59, 130, 246, 0.18);
+    color: #93c5fd;
+}
+
+/* Weather icon size */
+.recommendations-weather-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+/* Weather location title */
+.recommendations-weather-card h2 {
+    margin: 0.25rem 0;
+    color: #ffffff;
+    font-size: 1.45rem;
+}
+
+/* Weather detail text */
+.recommendations-weather-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.68);
+}
+
+/* Temperature area */
+.recommendations-temperature {
+    text-align: right;
+    min-width: 120px;
+}
+
+/* Temperature value */
+.recommendations-temperature strong {
+    display: block;
+    color: #ffffff;
+    font-size: 3rem;
+    line-height: 1;
+}
+
+/* Weather condition text */
+.recommendations-temperature span {
+    color: rgba(255, 255, 255, 0.68);
+    font-weight: 800;
+}
+
+/* Right weather metrics */
+.recommendations-weather-metrics {
+    display: grid;
+    gap: 0.7rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+/* Each metric row */
+.weather-metric-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+/* Metric label with icon */
+.weather-metric-item span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.weather-metric-item svg {
+    width: 17px;
+    height: 17px;
+    color: #93c5fd;
+}
+
+/* Metric value */
+.weather-metric-item strong {
+    color: #ffffff;
+    font-weight: 800;
+}
