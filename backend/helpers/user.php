@@ -34,30 +34,32 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
     // user profile table, and user preferences table.
     $stmt = $pdo->prepare(
         'SELECT
-            u.id,
-            u.full_name,
-            u.email,
-            u.created_at,
-            p.default_location,
-            p.main_activity,
-            pr.unit_system,
-            pr.theme,
-            pr.notify_severe,
-            pr.notify_rain,
-            pr.notify_air_quality,
-            pr.notify_daily_summary,
-            pr.privacy_location,
-            pr.profile_personalization,
-            pr.activity_history,
-            pr.activities,
-            pr.weather_focus,
-            pr.clothing_style,
-            pr.assistant_tone
-        FROM users u
-        LEFT JOIN user_profiles p ON p.user_id = u.id
-        LEFT JOIN user_preferences pr ON pr.user_id = u.id
-        WHERE u.id = ?
-        LIMIT 1'
+        u.id,
+        u.full_name,
+        u.email,
+        u.created_at,
+        p.default_location,
+        p.main_activity,
+        p.bio,
+        p.personal_tags,
+        pr.unit_system,
+        pr.theme,
+        pr.notify_severe,
+        pr.notify_rain,
+        pr.notify_air_quality,
+        pr.notify_daily_summary,
+        pr.privacy_location,
+        pr.profile_personalization,
+        pr.activity_history,
+        pr.activities,
+        pr.weather_focus,
+        pr.clothing_style,
+        pr.assistant_tone
+    FROM users u
+    LEFT JOIN user_profiles p ON p.user_id = u.id
+    LEFT JOIN user_preferences pr ON pr.user_id = u.id
+    WHERE u.id = ?
+    LIMIT 1'
     );
 
     // Execute the query for the currently logged-in user.
@@ -82,6 +84,8 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
         // Default values are used when the database fields are empty.
         'location' => $row['default_location'] ?: 'Klaipėda, Lithuania',
         'activity' => $row['main_activity'] ?: 'Walking',
+        'bio' => $row['bio'] ?? '',
+        'personalTags' => decodePreferenceList($row['personal_tags'] ?? null),
 
         // User display and measurement preferences.
         'units' => $row['unit_system'] ?: 'Metric',

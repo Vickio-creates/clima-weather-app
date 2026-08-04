@@ -242,3 +242,82 @@
         max-width: none;
     }
 }
+
+/* Short bio textarea */
+#edit-bio {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* About You tag selection grid */
+.edit-tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+/* Hide the default checkbox */
+.edit-tag-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Tag box design */
+.edit-tag-option span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.45);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+/* Selected tag design */
+.edit-tag-option input:checked + span {
+    border-color: rgba(59, 130, 246, 0.85);
+    background: rgba(59, 130, 246, 0.22);
+    color: #ffffff;
+}
+
+/* Small help text */
+.form-help-text {
+    margin: 0.6rem 0 0;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+/* Short bio textarea dark style */
+#edit-bio {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.55);
+    color: #ffffff;
+    padding: 0.9rem 1rem;
+    font: inherit;
+    line-height: 1.5;
+}
+
+/* Placeholder text inside the bio textarea */
+#edit-bio::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+/* Focus state for the bio textarea */
+#edit-bio:focus {
+    outline: none;
+    border-color: rgba(59, 130, 246, 0.85);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}

@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clima — Profile</title>
+
     <link rel="stylesheet" href="style/app-pages.css" />
     <link rel="stylesheet" href="style/profile/profile-base.css" />
     <link rel="stylesheet" href="style/profile/profile-sidebar.css" />
@@ -13,10 +14,12 @@
     <link rel="stylesheet" href="style/profile/profile-cards.css" />
     <link rel="stylesheet" href="style/profile/profile-preferences.css" />
     <link rel="stylesheet" href="style/profile/profile-responsive.css" />
+
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="scripts/auth.js" defer></script>
     <script src="scripts/clima-pages.js" defer></script>
     <script src="scripts/profile.js" defer></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
@@ -31,6 +34,7 @@
                 </span>
                 <span>Clima</span>
             </a>
+
             <nav class="sidebar-nav" aria-label="Main navigation">
                 <a href="app.html" class="sidebar-link">
                     <i data-lucide="home"></i>
@@ -92,8 +96,8 @@
                         </div>
 
                         <div class="profile-summary-info">
-                            <h2 data-user-name>Estelle Victorine</h2>
-                            <p data-user-email>estelle.victorine@gmail.com</p>
+                            <h2 data-user-name>Clima User</h2>
+                            <p data-user-email>user@example.com</p>
                         </div>
 
                         <a href="profile-edit.html" class="profile-edit-btn">Edit Personal Info</a>
@@ -118,7 +122,7 @@
                     </button>
                 </section>
 
-                <!---Personal Info section-->
+                <!-- Personal Info section -->
                 <section class="profile-panel active" data-profile-panel="personal">
                     <section class="profile-content-grid">
                         <div class="profile-main-column">
@@ -126,44 +130,50 @@
                                 <div class="info-list">
                                     <div class="info-item">
                                         <span class="info-label">Full name</span>
-                                        <span class="info-value" data-user-name>Estelle Victorine</span>
+                                        <span class="info-value" data-user-name>Clima User</span>
                                     </div>
 
                                     <div class="info-item">
                                         <span class="info-label">Email</span>
-                                        <span class="info-value" data-user-email>estelle.victorine@gmail.com</span>
+                                        <span class="info-value" data-user-email>user@example.com</span>
                                     </div>
 
                                     <div class="info-item">
                                         <span class="info-label">Location</span>
-                                        <span class="info-value" data-user-location>Vilnius, Lithuania</span>
+                                        <span class="info-value" data-user-location>Klaipėda, Lithuania</span>
                                     </div>
 
                                     <div class="info-item">
                                         <span class="info-label">Timezone</span>
-                                        <span class="info-value" data-user-timezone>Europe/Vilnius (EEST)</span>
+                                        <span class="info-value" data-user-timezone>Europe/Vilnius (GMT+3)</span>
                                     </div>
                                 </div>
                             </article>
+
                             <article class="profile-card about-card">
                                 <div class="profile-card-header">
                                     <div>
                                         <h2>About you</h2>
-                                        <p>Tell us more about your lifestyle so Clima can give you better
-                                            recommendations.</p>
+                                        <p>
+                                            Tell us more about your lifestyle so Clima can give you better
+                                            recommendations.
+                                        </p>
                                     </div>
 
-                                    <a href="profile-edit.html" class="icon-edit-link" aria-label="Edit personal information">
+                                    <a href="profile-edit.html" class="icon-edit-link"
+                                        aria-label="Edit personal information">
                                         <i data-lucide="pencil"></i>
                                     </a>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Profile interests">
-                                    <span class="profile-pill">Student</span>
-                                    <span class="profile-pill">Morning Person</span>
-                                    <span class="profile-pill">Outdoor Activities</span>
-                                    <span class="profile-pill" data-user-activity>Walking</span>
-                                    <span class="profile-pill">Photography</span>
+                                <!-- This bio will be filled from the database by auth.js -->
+                                <p class="profile-about-bio" data-user-bio>
+                                    No short bio added yet.
+                                </p>
+
+                                <!-- This tag list will show only the selected tags from Edit Personal Info -->
+                                <div class="profile-pill-list" data-user-personal-tags aria-label="Profile interests">
+                                    <span class="profile-pill">No personal tags selected yet.</span>
                                 </div>
                             </article>
                         </div>
@@ -229,8 +239,10 @@
                                 <div class="profile-card-header">
                                     <div>
                                         <h2>Weather Preferences</h2>
-                                        <p>Help Clima personalize alerts and daily suggestions
-                                            based on the weather conditions that matter most to you.</p>
+                                        <p>
+                                            Help Clima personalize alerts and daily suggestions based on the weather
+                                            conditions that matter most to you.
+                                        </p>
                                     </div>
                                 </div>
 
@@ -248,8 +260,10 @@
                                 <div class="profile-card-header">
                                     <div>
                                         <h2>Clothing Preferences</h2>
-                                        <p>Choose the clothing style Clima should consider when giving daily outfit
-                                            suggestions.</p>
+                                        <p>
+                                            Choose the clothing style Clima should consider when giving daily outfit
+                                            suggestions.
+                                        </p>
                                     </div>
                                 </div>
 
@@ -279,7 +293,6 @@
                                     <button type="button" class="profile-pill">Formal Tone</button>
                                 </div>
                             </article>
-
                         </div>
 
                         <aside class="profile-side-column" aria-label="Preferences summary">
@@ -287,14 +300,14 @@
                                 <div class="profile-card-header">
                                     <div>
                                         <h2>Location</h2>
-                                        <strong data-user-location>Vilnius, Lithuania</strong>
+                                        <strong data-user-location>Klaipėda, Lithuania</strong>
                                     </div>
                                 </div>
 
-                                <button type="button" class="change-location-btn">
+                                <a href="profile-edit.html#edit-location" class="change-location-btn">
                                     Change location
                                     <i data-lucide="chevron-right"></i>
-                                </button>
+                                </a>
                             </article>
 
                             <article class="profile-card profile-summary-panel">
@@ -327,6 +340,7 @@
                                     </div>
                                 </div>
                             </article>
+
                             <article class="profile-card preference-save-card">
                                 <div class="profile-card-header">
                                     <div>
@@ -338,10 +352,35 @@
                                 <button type="button" class="save-preferences-btn">
                                     Save Changes
                                 </button>
+
                                 <p class="save-preferences-status" role="status"></p>
                             </article>
                         </aside>
                     </section>
+                </section>
+
+                <!-- Notifications section -->
+                <section class="profile-panel" data-profile-panel="notifications" hidden>
+                    <article class="profile-card about-card">
+                        <div class="profile-card-header">
+                            <div>
+                                <h2>Notifications</h2>
+                                <p>This section will be implemented in the final thesis version.</p>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- Security section -->
+                <section class="profile-panel" data-profile-panel="security" hidden>
+                    <article class="profile-card about-card">
+                        <div class="profile-card-header">
+                            <div>
+                                <h2>Security</h2>
+                                <p>This section will be implemented in the final thesis version.</p>
+                            </div>
+                        </div>
+                    </article>
                 </section>
             </div>
         </main>

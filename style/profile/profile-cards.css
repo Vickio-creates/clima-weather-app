@@ -180,3 +180,31 @@ button.profile-pill {
     font-weight: 800;
     color: #ffffff;
 }
+
+.profile-about-bio {
+    margin: 0 0 1rem;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.6;
+}
+
+.profile-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.profile-tag,
+.profile-tag-empty {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.profile-tag-empty {
+    color: rgba(255, 255, 255, 0.55);
+}
