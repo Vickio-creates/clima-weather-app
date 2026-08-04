@@ -1,3 +1,70 @@
+const PROFILE_COUNTRIES = [
+  "Lithuania",
+  "Cameroon",
+  "United States",
+  "United Kingdom",
+  "Canada",
+  "Germany",
+  "France",
+  "Spain",
+  "Italy",
+  "Netherlands",
+  "Belgium",
+  "Poland",
+  "Latvia",
+  "Estonia",
+  "Finland",
+  "Sweden",
+  "Norway",
+  "Denmark",
+  "Portugal",
+  "Ireland",
+  "Ukraine",
+  "Czechia",
+  "Austria",
+  "Switzerland",
+  "Greece",
+  "Turkey",
+  "Romania",
+  "Bulgaria",
+  "Hungary",
+  "Croatia",
+  "Serbia",
+  "Slovakia",
+  "Slovenia",
+  "Nigeria",
+  "Ghana",
+  "Kenya",
+  "South Africa",
+  "Egypt",
+  "Morocco",
+  "Algeria",
+  "Tunisia",
+  "Ethiopia",
+  "Uganda",
+  "Rwanda",
+  "Tanzania",
+  "United Arab Emirates",
+  "India",
+  "China",
+  "Japan",
+  "South Korea",
+  "Singapore",
+  "Malaysia",
+  "Indonesia",
+  "Philippines",
+  "Thailand",
+  "Vietnam",
+  "Australia",
+  "New Zealand",
+  "Brazil",
+  "Argentina",
+  "Mexico",
+  "Colombia",
+  "Chile",
+  "Peru"
+];
+
 // Run this code only after the HTML page has fully loaded.
 document.addEventListener("DOMContentLoaded", async () => {
   // Check if the user is logged in.
@@ -30,6 +97,8 @@ function initProfileEdit(user) {
   const nameInput = document.querySelector("#edit-name");
   const emailInput = document.querySelector("#edit-email");
   const locationInput = document.querySelector("#edit-location");
+  const locationCityInput = document.querySelector("#edit-location-city");
+  const locationCountryInput = document.querySelector("#edit-location-country");
   const activityInput = document.querySelector("#edit-activity");
 
   // Find the new About You fields.
@@ -42,15 +111,31 @@ function initProfileEdit(user) {
   const photoAvatar = document.querySelector(".profile-avatar-editable");
 
   // Stop if the required personal information fields are missing.
-  if (!nameInput || !emailInput || !locationInput || !activityInput) return;
+  const hasLocationField = locationInput || (locationCityInput && locationCountryInput);
+
+  if (!nameInput || !emailInput || !hasLocationField || !activityInput) return;
 
   // Keep a local copy of the current user.
   let currentUser = user;
 
+  if (locationCountryInput) {
+    populateCountrySelect(locationCountryInput);
+  }
+
+  const currentLocation = parseProfileLocation(currentUser.location);
+
   // Fill the form fields with the current user data.
   nameInput.value = currentUser.name || "";
   emailInput.value = currentUser.email || "";
-  locationInput.value = currentUser.location || "Klaipėda, Lithuania";
+  if (locationInput) {
+    locationInput.value = currentUser.location || "Klaipėda, Lithuania";
+  }
+  if (locationCityInput) {
+    locationCityInput.value = currentLocation.city;
+  }
+  if (locationCountryInput) {
+    setCountrySelectValue(locationCountryInput, currentLocation.country);
+  }
   activityInput.value = currentUser.activity || "Walking";
 
   // Fill the short bio field.
@@ -130,7 +215,7 @@ function initProfileEdit(user) {
       ...currentUser,
       name: nameInput.value.trim(),
       email: emailInput.value.trim().toLowerCase(),
-      location: locationInput.value.trim() || "Klaipėda, Lithuania",
+      location: getProfileLocationValue(locationCityInput, locationCountryInput, locationInput),
       activity: activityInput.value,
       bio: bioInput ? bioInput.value.trim() : "",
       personalTags: getSelectedPersonalTags(),
@@ -145,6 +230,18 @@ function initProfileEdit(user) {
 
       // Store the saved user data locally.
       currentUser = savedUser;
+
+      const savedLocation = parseProfileLocation(savedUser.location);
+
+      if (locationInput) {
+        locationInput.value = savedUser.location || "Klaipėda, Lithuania";
+      }
+      if (locationCityInput) {
+        locationCityInput.value = savedLocation.city;
+      }
+      if (locationCountryInput) {
+        setCountrySelectValue(locationCountryInput, savedLocation.country);
+      }
 
       // Refresh all user interface data on the page.
       updateUserInterface(savedUser);
@@ -174,6 +271,71 @@ function initProfileEdit(user) {
       input.checked = savedTags.includes(input.value);
     });
   }
+}
+
+
+function populateCountrySelect(select) {
+  const existingValue = select.value;
+
+  if (select.options.length <= 1) {
+    PROFILE_COUNTRIES.forEach((country) => {
+      const option = document.createElement("option");
+
+      option.value = country;
+      option.textContent = country;
+      select.appendChild(option);
+    });
+  }
+
+  if (existingValue) {
+    setCountrySelectValue(select, existingValue);
+  }
+}
+
+
+function parseProfileLocation(location) {
+  const text = String(location || "Klaipėda, Lithuania").trim();
+  const parts = text
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return {
+    city: parts[0] || "Klaipėda",
+    country: parts.slice(1).join(", ") || "Lithuania",
+  };
+}
+
+
+function setCountrySelectValue(select, country) {
+  const selectedCountry = String(country || "Lithuania").trim();
+  const existingOption = Array.from(select.options).find(
+    (option) => option.value.toLowerCase() === selectedCountry.toLowerCase()
+  );
+
+  if (existingOption) {
+    select.value = existingOption.value;
+    return;
+  }
+
+  const option = document.createElement("option");
+
+  option.value = selectedCountry;
+  option.textContent = selectedCountry;
+  select.appendChild(option);
+  select.value = selectedCountry;
+}
+
+
+function getProfileLocationValue(cityInput, countrySelect, fallbackInput) {
+  if (fallbackInput) {
+    return fallbackInput.value.trim() || "Klaipėda, Lithuania";
+  }
+
+  const city = cityInput?.value.trim() || "Klaipėda";
+  const country = countrySelect?.value.trim() || "Lithuania";
+
+  return `${city}, ${country}`;
 }
 
 

@@ -100,10 +100,10 @@
               </div>
               <p>Here's your personalized weather guidance for today.</p>
               <ul class="ai-list">
-                <li><span>☔</span> Light rain expected this afternoon.</li>
-                <li><span>💧</span> Carry an umbrella.</li>
-                <li><span>🧥</span> Cool and breezy in the morning.</li>
-                <li><span>🌤️</span> Good conditions for outdoor activities before 3 PM.</li>
+                <li><span>Now</span> Loading live weather guidance.</li>
+                <li><span>Wear</span> Checking what fits the conditions.</li>
+                <li><span>Rain</span> Checking if you need an umbrella.</li>
+                <li><span>Plan</span> Checking outdoor conditions.</li>
               </ul>
               <form class="ai-input" action="#" aria-label="Ask Clima">
                 <input type="text" placeholder="Ask Clima anything..." />
@@ -118,11 +118,11 @@
           <section class="middle">
             <div class="middle-content">
               <div class="open-location">
-                <span class="country" id="country">Lithuania</span>
-                <h2 class="city" id="city-name">VILNIUS</h2>
+                <span class="country" id="country">Current location</span>
+                <h2 class="city" id="city-name">LOCATING...</h2>
               </div>
 
-              <p class="dashboard-greeting">Good morning, <span data-user-name>Estelle</span> 👋</p>
+              <p class="dashboard-greeting">Hello, <span data-user-name>Estelle</span> 👋</p>
 
               <div class="weather">
                 <div class="weather-main">
@@ -130,19 +130,19 @@
                     <i class="location-icon-big" data-lucide="cloud-rain"></i>
                   </div>
                   <div class="temp">
-                    <p id="temperature">-6°C</p>
-                    <p id="description">Light rain</p>
+                    <p id="temperature">--°C</p>
+                    <p id="description">Loading weather</p>
                     <p class="weather-meta" id="weather-meta">
-                      <span id="feels-like">Feels like -4°C</span>
+                      <span id="feels-like">Feels like --°C</span>
                       <span class="meta-dot">•</span>
-                      <span id="weather-summary">Humidity 70% • Wind 2.8 m/s</span>
+                      <span id="weather-summary">Humidity --% • Wind -- m/s</span>
                     </p>
                   </div>
                 </div>
 
                 <div class="extra">
-                  <div class="humidity"><span>H:</span> <span id="high-temp">-2°C</span></div>
-                  <div class="latitude"><span>L:</span> <span id="low-temp">-8°C</span></div>
+                  <div class="humidity"><span>H:</span> <span id="high-temp">--°C</span></div>
+                  <div class="latitude"><span>L:</span> <span id="low-temp">--°C</span></div>
                 </div>
               </div>
 
@@ -152,17 +152,17 @@
               <section class="hourly-card" aria-labelledby="hourly-title">
                 <h3 id="hourly-title">Today at a glance</h3>
                 <div class="hourly-list">
-                  <article class="hourly-item"><span>Now</span><i data-lucide="cloud-rain"></i><strong>--°C</strong>
+                  <article class="hourly-item"><span>Now</span><i data-lucide="cloud"></i><strong>--°C</strong>
                   </article>
-                  <article class="hourly-item"><span>10:00</span><i data-lucide="cloud-rain"></i><strong>6°C</strong>
+                  <article class="hourly-item"><span>--:--</span><i data-lucide="cloud"></i><strong>--°C</strong>
                   </article>
-                  <article class="hourly-item"><span>13:00</span><i data-lucide="sun"></i><strong>8°C</strong></article>
-                  <article class="hourly-item"><span>16:00</span><i
-                      data-lucide="cloud-sun-rain"></i><strong>9°C</strong></article>
-                  <article class="hourly-item"><span>19:00</span><i data-lucide="cloud-rain"></i><strong>6°C</strong>
+                  <article class="hourly-item"><span>--:--</span><i data-lucide="cloud"></i><strong>--°C</strong></article>
+                  <article class="hourly-item"><span>--:--</span><i
+                      data-lucide="cloud"></i><strong>--°C</strong></article>
+                  <article class="hourly-item"><span>--:--</span><i data-lucide="cloud"></i><strong>--°C</strong>
                   </article>
-                  <article class="hourly-item"><span>22:00</span><i
-                      data-lucide="cloud-moon-rain"></i><strong>4°C</strong></article>
+                  <article class="hourly-item"><span>--:--</span><i
+                      data-lucide="cloud"></i><strong>--°C</strong></article>
                 </div>
               </section>
             </div>
@@ -175,7 +175,7 @@
           <a class="quick-card" href="alert-heavy-rain.html">
             <span class="quick-icon"><i data-lucide="bell"></i></span>
             <div class="quick-card-text">
-              <h3>Heavy Rain Warning</h3>
+              <h3>Weather Alerts</h3>
               <p>Open alert details</p>
             </div>
             <i data-lucide="chevron-right" class="quick-arrow"></i>
@@ -184,7 +184,7 @@
             <span class="quick-icon"><i data-lucide="shirt"></i></span>
             <div class="quick-card-text">
               <h3>What to Wear?</h3>
-              <p id="wear-recommendation">Light jacket</p>
+              <p id="wear-recommendation">Checking...</p>
             </div>
             <i data-lucide="chevron-right" class="quick-arrow"></i>
           </a>
@@ -192,7 +192,7 @@
             <span class="quick-icon"><i data-lucide="umbrella"></i></span>
             <div class="quick-card-text">
               <h3>Umbrella?</h3>
-              <p id="umbrella-recommendation">Recommended</p>
+              <p id="umbrella-recommendation">Checking...</p>
             </div>
             <i data-lucide="chevron-right" class="quick-arrow"></i>
           </a>
@@ -200,7 +200,7 @@
             <span class="quick-icon"><i data-lucide="person-standing"></i></span>
             <div class="quick-card-text">
               <h3>Outdoor Plans?</h3>
-              <p id="outdoor-recommendation">Good until 3 PM</p>
+              <p id="outdoor-recommendation">Checking...</p>
             </div>
             <i data-lucide="chevron-right" class="quick-arrow"></i>
           </a>
@@ -264,7 +264,7 @@
                   <span class="weather-icon"><i data-lucide="droplet"></i></span>
                   <span>Humidity</span>
                 </div>
-                <span id="humidity-value">70%</span>
+                <span id="humidity-value">--%</span>
               </div>
 
               <div class="detail-item">
@@ -272,7 +272,7 @@
                   <span class="weather-icon"><i data-lucide="wind"></i></span>
                   <span>Wind</span>
                 </div>
-                <span id="wind-value">2.8 m/s</span>
+                <span id="wind-value">-- m/s</span>
               </div>
 
               <div class="detail-item">
@@ -280,7 +280,7 @@
                   <span class="weather-icon"><i data-lucide="thermometer"></i></span>
                   <span>Feels Like</span>
                 </div>
-                <span id="feels-like-value">-4°C</span>
+                <span id="feels-like-value">--°C</span>
               </div>
 
               <div class="detail-item">

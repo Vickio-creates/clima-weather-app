@@ -142,10 +142,25 @@
         <input type="email" id="edit-email" required />
     </label>
 
-    <label class="profile-form-field" for="edit-location">
+    <div class="profile-form-field profile-form-field-full">
         <span>Default location</span>
-        <input type="text" id="edit-location" placeholder="Klaipėda, Lithuania" />
-    </label>
+        <div class="profile-location-fields">
+            <label for="edit-location-city">
+                <span class="profile-field-hint">City</span>
+                <input type="text" id="edit-location-city" placeholder="Klaipėda" />
+            </label>
+
+            <label for="edit-location-country">
+                <span class="profile-field-hint">Country</span>
+                <select id="edit-location-country">
+                    <option value="">Choose country</option>
+                </select>
+            </label>
+        </div>
+        <p class="form-help-text">
+            Type your city and choose the country Clima should use for your default weather.
+        </p>
+    </div>
 
     <label class="profile-form-field" for="edit-activity">
         <span>Main activity</span>

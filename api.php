@@ -21,17 +21,42 @@ if (!defined('OPENWEATHER_API_KEY') || OPENWEATHER_API_KEY === '' || OPENWEATHER
 }
 
 $city = isset($_GET["city"]) ? trim($_GET["city"]) : "";
+$lat = isset($_GET["lat"]) ? trim($_GET["lat"]) : "";
+$lon = isset($_GET["lon"]) ? trim($_GET["lon"]) : "";
+$hasCoordinates = $lat !== "" || $lon !== "";
 
-if ($city === "") {
-    http_response_code(422);
-    echo json_encode(["error" => "City is required."]);
-    exit;
-}
+if ($hasCoordinates) {
+    $latitude = filter_var($lat, FILTER_VALIDATE_FLOAT);
+    $longitude = filter_var($lon, FILTER_VALIDATE_FLOAT);
 
-if (mb_strlen($city) > 60 || !preg_match("/^[\p{L}\s.'-]+$/u", $city)) {
-    http_response_code(422);
-    echo json_encode(["error" => "Please enter a valid city name."]);
-    exit;
+    if (
+        $latitude === false ||
+        $longitude === false ||
+        $latitude < -90 ||
+        $latitude > 90 ||
+        $longitude < -180 ||
+        $longitude > 180
+    ) {
+        http_response_code(422);
+        echo json_encode(["error" => "Please allow a valid current location."]);
+        exit;
+    }
+
+    $weatherQuery = "lat=" . urlencode((string) $latitude) . "&lon=" . urlencode((string) $longitude);
+} else {
+    if ($city === "") {
+        http_response_code(422);
+        echo json_encode(["error" => "City is required."]);
+        exit;
+    }
+
+    if (mb_strlen($city) > 60 || !preg_match("/^[\p{L}\s.'-]+$/u", $city)) {
+        http_response_code(422);
+        echo json_encode(["error" => "Please enter a valid city name."]);
+        exit;
+    }
+
+    $weatherQuery = "q=" . urlencode($city);
 }
 
 $apiKey = OPENWEATHER_API_KEY;
@@ -39,7 +64,7 @@ $apiKey = OPENWEATHER_API_KEY;
 /*
   1. Current weather request
 */
-$currentUrl = "https://api.openweathermap.org/data/2.5/weather?q=" . urlencode($city) . "&appid=" . urlencode($apiKey) . "&units=metric";
+$currentUrl = "https://api.openweathermap.org/data/2.5/weather?" . $weatherQuery . "&appid=" . urlencode($apiKey) . "&units=metric";
 
 $currentResponse = @file_get_contents($currentUrl);
 
@@ -61,15 +86,17 @@ if (!$currentData || $currentCode !== 200) {
 /*
 2. Forecast request
 */
-$forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" . urlencode($city) . "&appid=" . urlencode($apiKey) . "&units=metric";
+$forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?" . $weatherQuery . "&appid=" . urlencode($apiKey) . "&units=metric";
 
 $forecastResponse = @file_get_contents($forecastUrl);
 $forecastData = json_decode($forecastResponse, true);
 
 $forecast = [];
+$hourly = [];
 
 if ($forecastResponse !== false && isset($forecastData["list"]) && is_array($forecastData["list"])) {
     $forecast = buildDailyForecast($forecastData["list"]);
+    $hourly = buildHourlyForecast($forecastData["list"]);
 }
 
 /*
@@ -90,7 +117,9 @@ echo json_encode([
     "visibility" => $currentData["visibility"] ?? null,
     "sunrise" => $currentData["sys"]["sunrise"] ?? null,
     "sunset" => $currentData["sys"]["sunset"] ?? null,
-    "forecast" => $forecast
+    "timezoneOffset" => $currentData["timezone"] ?? 0,
+    "forecast" => $forecast,
+    "hourly" => $hourly
 ]);
 
 function buildDailyForecast(array $items): array
@@ -143,6 +172,23 @@ function buildDailyForecast(array $items): array
     }
 
     return array_slice($result, 0, 7);
+}
+
+function buildHourlyForecast(array $items): array
+{
+    $hourly = [];
+
+    foreach (array_slice($items, 0, 6) as $item) {
+        $hourly[] = [
+            "dt" => $item["dt"] ?? null,
+            "time" => $item["dt_txt"] ?? "",
+            "temp" => round($item["main"]["temp"] ?? 0),
+            "condition" => $item["weather"][0]["main"] ?? "Unknown",
+            "description" => $item["weather"][0]["description"] ?? "Unknown"
+        ];
+    }
+
+    return $hourly;
 }
 
 function getCountryName(string $code): string
