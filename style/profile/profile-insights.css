@@ -1,0 +1,235 @@
+/* Shared weather overview shown beside Notifications and Security. UI-only data. */
+.profile-feature-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 290px);
+    align-items: start;
+    gap: 22px;
+}
+
+.profile-feature-layout > *,
+.profile-insights,
+.insight-card {
+    min-width: 0;
+}
+
+.profile-insights {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+}
+
+.insight-card {
+    padding: 20px;
+    border-radius: 18px;
+    background: #ffffff;
+    border-color: rgba(16, 32, 58, 0.12);
+}
+
+.insight-card h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.current-weather-summary {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    margin: 30px 0 24px;
+}
+
+.current-weather-summary > svg {
+    width: 72px;
+    height: 72px;
+    color: #ffb626;
+    stroke-width: 1.55;
+}
+
+.current-weather-summary strong {
+    display: block;
+    color: #111827;
+    font-size: 32px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+}
+
+.current-weather-summary p,
+.current-weather-summary span {
+    display: block;
+    margin: 8px 0 0;
+    color: #5d6b87;
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 600;
+}
+
+.current-weather-summary span {
+    margin-top: 5px;
+}
+
+.weather-details-list {
+    display: grid;
+    gap: 17px;
+    margin: 0;
+}
+
+.weather-details-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.weather-details-list dt {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    color: #596987;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.weather-details-list dt svg {
+    width: 19px;
+    height: 19px;
+    color: #60708e;
+    stroke-width: 1.8;
+}
+
+.weather-details-list dd {
+    margin: 0;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.today-glance-card h2 {
+    margin-bottom: 20px;
+}
+
+.today-glance-list {
+    display: grid;
+    gap: 8px;
+}
+
+.today-glance-list > div {
+    display: grid;
+    grid-template-columns: 1fr 29px auto;
+    align-items: center;
+    gap: 12px;
+    min-height: 55px;
+    padding: 0 12px;
+    border: 1px solid rgba(16, 32, 58, 0.11);
+    border-radius: 11px;
+}
+
+.today-glance-list span {
+    color: #596987;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.today-glance-list svg {
+    width: 25px;
+    height: 25px;
+    color: #ffb626;
+    stroke-width: 1.6;
+}
+
+.today-glance-list > div:nth-child(3) svg {
+    color: #21a56e;
+}
+
+.today-glance-list > div:nth-child(4) svg {
+    color: #68748e;
+}
+
+.today-glance-list strong {
+    color: #111827;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.profile-tip-card {
+    padding-bottom: 23px;
+}
+
+.profile-tip-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.profile-tip-heading span {
+    display: inline-grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 12px;
+    color: #6a5af9;
+    background: #f0edff;
+}
+
+.profile-tip-heading svg {
+    width: 21px;
+    height: 21px;
+    stroke-width: 1.8;
+}
+
+.profile-tip-card p {
+    margin: 13px 0 0;
+    color: #596987;
+    font-size: 13px;
+    line-height: 1.55;
+    font-weight: 500;
+}
+
+@media (max-width: 1300px) {
+    .profile-feature-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .profile-insights {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .current-weather-summary {
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: 10px;
+        margin: 22px 0;
+    }
+
+    .current-weather-summary > svg {
+        width: 58px;
+        height: 58px;
+    }
+
+    .current-weather-summary strong {
+        font-size: 27px;
+    }
+}
+
+@media (max-width: 1050px) {
+    .profile-insights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .profile-tip-card {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 760px) {
+    .profile-insights {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-tip-card {
+        grid-column: auto;
+    }
+}

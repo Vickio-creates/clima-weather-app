@@ -36,9 +36,10 @@
 
 .city-date{
     font-size: 14px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.6);
-    margin: 0;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 8px;
+    margin-bottom: 28px;
     text-align: center;
 }
 

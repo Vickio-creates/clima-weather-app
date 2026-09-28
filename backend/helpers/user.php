@@ -44,10 +44,18 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
         p.personal_tags,
         pr.unit_system,
         pr.theme,
+        pr.notify_email,
+        pr.notify_push,
+        pr.notify_weather_alerts,
         pr.notify_severe,
         pr.notify_rain,
         pr.notify_air_quality,
         pr.notify_daily_summary,
+        pr.notify_activity_reminders,
+        pr.notify_clothing_recommendations,
+        pr.notify_general_updates,
+        pr.quiet_hours_from,
+        pr.quiet_hours_to,
         pr.privacy_location,
         pr.profile_personalization,
         pr.activity_history,
@@ -93,10 +101,28 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
 
         // Notification settings.
         'notifications' => [
+            // Existing settings retained for other parts of the app.
             'severe' => (bool) ($row['notify_severe'] ?? true),
             'rain' => (bool) ($row['notify_rain'] ?? true),
             'airQuality' => (bool) ($row['notify_air_quality'] ?? true),
             'dailySummary' => (bool) ($row['notify_daily_summary'] ?? false),
+
+            // Settings used by the Notification tab.
+            'channels' => [
+                'email' => (bool) ($row['notify_email'] ?? true),
+                'push' => (bool) ($row['notify_push'] ?? false),
+            ],
+            'types' => [
+                'weatherAlerts' => (bool) ($row['notify_weather_alerts'] ?? true),
+                'dailySummary' => (bool) ($row['notify_daily_summary'] ?? true),
+                'activityReminders' => (bool) ($row['notify_activity_reminders'] ?? true),
+                'clothingRecommendations' => (bool) ($row['notify_clothing_recommendations'] ?? true),
+                'generalUpdates' => (bool) ($row['notify_general_updates'] ?? false),
+            ],
+            'quietHours' => [
+                'from' => substr((string) ($row['quiet_hours_from'] ?: '22:00:00'), 0, 5),
+                'to' => substr((string) ($row['quiet_hours_to'] ?: '07:00:00'), 0, 5),
+            ],
         ],
 
         // Privacy and personalization settings.

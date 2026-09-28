@@ -1,4 +1,5 @@
 config.php
 database.php
+/backend/config/security.php
 .env
 .DS_Store

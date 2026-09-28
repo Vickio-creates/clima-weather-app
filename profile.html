@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="style/profile/profile-tabs.css" />
     <link rel="stylesheet" href="style/profile/profile-cards.css" />
     <link rel="stylesheet" href="style/profile/profile-preferences.css" />
+    <link rel="stylesheet" href="style/profile/profile-notifications.css" />
+    <link rel="stylesheet" href="style/profile/profile-security.css" />
+    <link rel="stylesheet" href="style/profile/profile-insights.css" />
     <link rel="stylesheet" href="style/profile/profile-responsive.css" />
 
     <script src="https://unpkg.com/lucide@latest" defer></script>
@@ -22,7 +25,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet" />
 </head>
 
 <body class="clima-app-page" data-require-auth="true">
@@ -220,7 +223,7 @@
                             <article class="profile-card about-card">
                                 <div class="profile-card-header">
                                     <div>
-                                        <h2>Lifestyle & Activities</h2>
+                                        <h2>Lifestyle &amp; Activities</h2>
                                         <p>Select your daily activities to get better recommendations.</p>
                                     </div>
                                 </div>
@@ -361,26 +364,407 @@
 
                 <!-- Notifications section -->
                 <section class="profile-panel" data-profile-panel="notifications" hidden>
-                    <article class="profile-card about-card">
-                        <div class="profile-card-header">
-                            <div>
-                                <h2>Notifications</h2>
-                                <p>This section will be implemented in the final thesis version.</p>
+                    <div class="profile-feature-layout">
+                    <div class="notification-settings">
+                        <article class="profile-card notification-card">
+                            <header class="notification-card-header">
+                                <h2>Notification channels</h2>
+                                <p>Choose where you want to receive notifications.</p>
+                            </header>
+
+                            <div class="notification-setting-list">
+                                <div class="notification-setting-row">
+                                    <span class="notification-icon notification-icon--blue" aria-hidden="true">
+                                        <i data-lucide="mail"></i>
+                                    </span>
+                                    <div class="notification-copy">
+                                        <h3>Email</h3>
+                                        <p>Receive notifications to your email address.</p>
+                                    </div>
+                                    <label class="switch" aria-label="Enable email notifications">
+                                        <input type="checkbox" id="notify-channel-email" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="notification-setting-row">
+                                    <span class="notification-icon notification-icon--blue" aria-hidden="true">
+                                        <i data-lucide="smartphone"></i>
+                                    </span>
+                                    <div class="notification-copy">
+                                        <h3>Push notifications</h3>
+                                        <p>Receive notifications on this device.</p>
+                                    </div>
+                                    <label class="switch" aria-label="Enable push notifications">
+                                        <input type="checkbox" id="notify-channel-push">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
+
+                        <article class="profile-card notification-card">
+                            <header class="notification-card-header">
+                                <h2>Notification types</h2>
+                                <p>Select the types of notifications you want to receive.</p>
+                            </header>
+
+                            <div class="notification-setting-list">
+                                <div class="notification-setting-row">
+                                    <span class="notification-icon notification-icon--alert" aria-hidden="true">
+                                        <i data-lucide="triangle-alert"></i>
+                                    </span>
+                                    <div class="notification-copy">
+                                        <h3>Weather alerts</h3>
+                                        <p>Severe weather, storms, heavy rain, strong winds and more.</p>
+                                    </div>
+                                    <label class="switch" aria-label="Enable weather alerts">
+                                        <input type="checkbox" id="notify-types-weather-alerts" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="notification-setting-row">
+                                    <span class="notification-icon notification-icon--blue" aria-hidden="true">
+                                        <i data-lucide="calendar-clock"></i>
+                                    </span>
+                                    <div class="notification-copy">
+                                        <h3>Daily weather summary</h3>
+                                        <p>Get a summary of the day’s weather every morning.</p>
+                                    </div>
+                                    <label class="switch" aria-label="Enable daily weather summary">
+                                        <input type="checkbox" id="notify-types-daily-weather-summary" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="notification-setting-row">
+                                    <span class="notification-icon notification-icon--green" aria-hidden="true">
+                                        <i data-lucide="person-standing"></i>
+                                    </span>
+                                    <div class="notification-copy">
+                                        <h3>Activity reminders</h3>
+                                        <p>Reminders for your planned activities based on weather.</p>
+                                    </div>
+                                    <label class="switch" aria-label="Enable activity reminders">
+                                        <input type="checkbox" id="notify-types-activity-reminder" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="notification-setting-row">
+                                    <span class="notification-icon notification-icon--blue" aria-hidden="true">
+                                        <i data-lucide="shirt"></i>
+                                    </span>
+                                    <div class="notification-copy">
+                                        <h3>Clothing recommendations</h3>
+                                        <p>Get notified about suitable clothing for the day.</p>
+                                    </div>
+                                    <label class="switch" aria-label="Enable clothing recommendations">
+                                        <input type="checkbox" id="notify-types-clothing" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="notification-setting-row">
+                                    <span class="notification-icon notification-icon--neutral" aria-hidden="true">
+                                        <i data-lucide="info"></i>
+                                    </span>
+                                    <div class="notification-copy">
+                                        <h3>General updates</h3>
+                                        <p>New features, tips, and important updates from Clima.</p>
+                                    </div>
+                                    <label class="switch" aria-label="Enable general updates">
+                                        <input type="checkbox" id="notify-types-info">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="profile-card notification-card quiet-hours-card">
+                            <header class="notification-card-header">
+                                <h2>Quiet hours</h2>
+                                <p>Choose when you don’t want to receive non-critical notifications.</p>
+                            </header>
+
+                            <div class="quiet-hours-picker">
+                                <label class="quiet-hours-field" for="quiet-hours-from">
+                                    <span>From</span>
+                                    <select id="quiet-hours-from" name="quiet-hours-from">
+                                        <option value="21:00">9:00 PM</option>
+                                        <option value="22:00" selected>10:00 PM</option>
+                                        <option value="23:00">11:00 PM</option>
+                                    </select>
+                                </label>
+                                <span class="quiet-hours-divider" aria-hidden="true"></span>
+                                <label class="quiet-hours-field" for="quiet-hours-to">
+                                    <span>To</span>
+                                    <select id="quiet-hours-to" name="quiet-hours-to">
+                                        <option value="06:00">6:00 AM</option>
+                                        <option value="07:00" selected>7:00 AM</option>
+                                        <option value="08:00">8:00 AM</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <p class="quiet-hours-note">Weather alerts and critical notifications will always be sent.</p>
+                            <p class="notification-save-status" data-notification-save-status role="status" aria-live="polite"></p>
+                        </article>
+                    </div>
+                    <aside class="profile-insights" aria-label="Weather overview">
+                        <article class="profile-card insight-card current-weather-card">
+                            <h2>Current Weather</h2>
+                            <div class="current-weather-summary">
+                                <i data-lucide="sun" aria-hidden="true"></i>
+                                <div>
+                                    <strong>21°C</strong>
+                                    <p>Clear Sky / Sunny</p>
+                                    <span>Feels like 21°C</span>
+                                </div>
+                            </div>
+                            <dl class="weather-details-list">
+                                <div><dt><i data-lucide="droplets" aria-hidden="true"></i>Humidity</dt><dd>81%</dd></div>
+                                <div><dt><i data-lucide="wind" aria-hidden="true"></i>Wind</dt><dd>14 km/h</dd></div>
+                                <div><dt><i data-lucide="thermometer" aria-hidden="true"></i>Feels Like</dt><dd>21°C</dd></div>
+                                <div><dt><i data-lucide="sunrise" aria-hidden="true"></i>Sunrise</dt><dd>04:51</dd></div>
+                                <div><dt><i data-lucide="sunset" aria-hidden="true"></i>Sunset</dt><dd>22:00</dd></div>
+                            </dl>
+                        </article>
+
+                        <article class="profile-card insight-card today-glance-card">
+                            <h2>Today at a glance</h2>
+                            <div class="today-glance-list">
+                                <div><span>Morning</span><i data-lucide="sun" aria-hidden="true"></i><strong>18°C</strong></div>
+                                <div><span>Afternoon</span><i data-lucide="sun" aria-hidden="true"></i><strong>21°C</strong></div>
+                                <div><span>Evening</span><i data-lucide="sunset" aria-hidden="true"></i><strong>19°C</strong></div>
+                                <div><span>Night</span><i data-lucide="moon" aria-hidden="true"></i><strong>17°C</strong></div>
+                            </div>
+                        </article>
+
+                        <article class="profile-card insight-card profile-tip-card">
+                            <div class="profile-tip-heading">
+                                <span><i data-lucide="lightbulb" aria-hidden="true"></i></span>
+                                <h2>Tip</h2>
+                            </div>
+                            <p>You can still receive critical weather alerts even during quiet hours.</p>
+                        </article>
+                    </aside>
+                    </div>
                 </section>
 
                 <!-- Security section -->
                 <section class="profile-panel" data-profile-panel="security" hidden>
-                    <article class="profile-card about-card">
-                        <div class="profile-card-header">
-                            <div>
-                                <h2>Security</h2>
-                                <p>This section will be implemented in the final thesis version.</p>
+                    <div class="profile-feature-layout">
+                    <div class="security-settings">
+                        <article class="profile-card security-card change-password-card">
+                            <header class="security-card-header">
+                                <h2>Change Password</h2>
+                                <p>Use a strong password to keep your account secure.</p>
+                            </header>
+
+                            <div class="security-password-layout">
+                                <div class="security-password-fields">
+                                    <div class="security-password-field">
+                                        <label for="security-current-password">Current password</label>
+                                        <span class="security-password-input">
+                                            <input id="security-current-password" type="password" autocomplete="current-password"
+                                                data-password-label="current password" />
+                                            <button type="button" class="security-password-toggle" data-toggle-password
+                                                aria-label="Show current password" aria-pressed="false">
+                                                <i data-lucide="eye-off" aria-hidden="true"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+
+                                    <div class="security-password-field">
+                                        <label for="security-new-password">New password</label>
+                                        <span class="security-password-input">
+                                            <input id="security-new-password" type="password" minlength="15" autocomplete="new-password"
+                                                data-password-label="new password" />
+                                            <button type="button" class="security-password-toggle" data-toggle-password
+                                                aria-label="Show new password" aria-pressed="false">
+                                                <i data-lucide="eye-off" aria-hidden="true"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+
+                                    <div class="security-password-field">
+                                        <label for="security-confirm-password">Confirm new password</label>
+                                        <span class="security-password-input">
+                                            <input id="security-confirm-password" type="password" minlength="15" autocomplete="new-password"
+                                                data-password-label="confirmation password" />
+                                            <button type="button" class="security-password-toggle" data-toggle-password
+                                                aria-label="Show confirmation password" aria-pressed="false">
+                                                <i data-lucide="eye-off" aria-hidden="true"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <aside class="password-requirements" aria-label="Password requirements">
+                                    <h3>Password requirements</h3>
+                                    <ul>
+                                        <li><i data-lucide="circle-check" aria-hidden="true"></i>At least 15 characters</li>
+                                    </ul>
+                                </aside>
                             </div>
-                        </div>
-                    </article>
+
+                            <div class="security-card-action">
+                                <button type="button" class="security-update-button">Update Password</button>
+                            </div>
+                            <p class="password-change-status" data-password-change-status role="status" aria-live="polite"></p>
+                        </article>
+
+                        <article class="profile-card security-card two-factor-card">
+                            <header class="security-card-header">
+                                <h2>Two-Factor Authentication</h2>
+                                <p>Add an extra layer of security to your account.</p>
+                            </header>
+
+                            <div class="two-factor-row">
+                                <span class="security-feature-icon" aria-hidden="true">
+                                    <i data-lucide="shield"></i>
+                                </span>
+                                <div class="two-factor-copy">
+                                    <div class="two-factor-title">
+                                        <h3>Two-factor authentication</h3>
+                                        <span data-two-factor-badge>Checking status</span>
+                                    </div>
+                                    <p data-two-factor-description>Use an authenticator app to require a code at sign-in.</p>
+                                </div>
+                                <button type="button" class="two-factor-action" data-two-factor-action disabled>Loading...</button>
+                            </div>
+
+                            <div class="two-factor-panel" data-two-factor-panel hidden>
+                                <p class="two-factor-status" data-two-factor-status role="status" aria-live="polite"></p>
+
+                                <section class="two-factor-setup" data-two-factor-setup>
+                                    <label for="two-factor-setup-password">Confirm your current password</label>
+                                    <span class="security-password-input two-factor-input">
+                                        <input id="two-factor-setup-password" type="password" autocomplete="current-password"
+                                            data-password-label="current password" />
+                                        <button type="button" class="security-password-toggle" data-toggle-password
+                                            aria-label="Show current password" aria-pressed="false">
+                                            <i data-lucide="eye-off" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <button type="button" class="two-factor-action" data-two-factor-start>Start setup</button>
+
+                                    <div class="two-factor-enrollment" data-two-factor-enrollment hidden>
+                                        <p>In your authenticator app, add an account and choose to enter a setup key manually.</p>
+                                        <label for="two-factor-secret">Setup key</label>
+                                        <code id="two-factor-secret" class="two-factor-secret" data-two-factor-secret></code>
+                                        <label for="two-factor-setup-code">Current six-digit app code</label>
+                                        <input id="two-factor-setup-code" class="two-factor-code-input" type="text"
+                                            inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+                                        <button type="button" class="two-factor-action" data-two-factor-confirm>Enable two-factor authentication</button>
+                                    </div>
+                                </section>
+
+                                <section class="two-factor-disable" data-two-factor-disable hidden>
+                                    <label for="two-factor-disable-password">Confirm your current password</label>
+                                    <span class="security-password-input two-factor-input">
+                                        <input id="two-factor-disable-password" type="password" autocomplete="current-password"
+                                            data-password-label="current password" />
+                                        <button type="button" class="security-password-toggle" data-toggle-password
+                                            aria-label="Show current password" aria-pressed="false">
+                                            <i data-lucide="eye-off" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <label for="two-factor-disable-code">Authenticator or recovery code</label>
+                                    <input id="two-factor-disable-code" class="two-factor-code-input" type="text"
+                                        autocomplete="one-time-code" maxlength="39" autocapitalize="characters" spellcheck="false" />
+                                    <label class="two-factor-recovery-choice">
+                                        <input type="checkbox" data-two-factor-use-recovery />
+                                        <span>Use an unused recovery code</span>
+                                    </label>
+                                    <div class="two-factor-actions">
+                                        <button type="button" class="two-factor-action" data-two-factor-disable-button>Disable two-factor authentication</button>
+                                        <button type="button" class="two-factor-secondary-action" data-two-factor-reissue>Replace recovery codes</button>
+                                    </div>
+                                </section>
+
+                                <section class="two-factor-recovery-codes" data-two-factor-recovery hidden>
+                                    <h3>Save your recovery codes</h3>
+                                    <p>Each code works once. Store them somewhere private; Clima cannot show them again.</p>
+                                    <ol data-two-factor-recovery-list></ol>
+                                    <button type="button" class="two-factor-secondary-action" data-two-factor-recovery-dismiss>I saved these codes</button>
+                                </section>
+                            </div>
+                        </article>
+
+                        <article class="profile-card security-card security-tips-card">
+                            <header class="security-card-header">
+                                <h2>Account Security Tips</h2>
+                                <p>Follow these tips to keep your account safe.</p>
+                            </header>
+
+                            <div class="security-tips-list">
+                                <div class="security-tip-row">
+                                    <span class="security-feature-icon" aria-hidden="true"><i data-lucide="key-round"></i></span>
+                                    <div>
+                                        <h3>Use a strong password</h3>
+                                        <p>Avoid using personal information and common passwords.</p>
+                                    </div>
+                                </div>
+
+                                <div class="security-tip-row">
+                                    <span class="security-feature-icon" aria-hidden="true"><i data-lucide="smartphone"></i></span>
+                                    <div>
+                                        <h3>Keep your devices secure</h3>
+                                        <p>Lock your devices and keep your operating systems up to date.</p>
+                                    </div>
+                                </div>
+
+                                <div class="security-tip-row">
+                                    <span class="security-feature-icon" aria-hidden="true"><i data-lucide="mail"></i></span>
+                                    <div>
+                                        <h3>Be cautious of suspicious emails</h3>
+                                        <p>Clima will never ask for your password via email.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <aside class="profile-insights" aria-label="Weather overview">
+                        <article class="profile-card insight-card current-weather-card">
+                            <h2>Current Weather</h2>
+                            <div class="current-weather-summary">
+                                <i data-lucide="sun" aria-hidden="true"></i>
+                                <div>
+                                    <strong>21°C</strong>
+                                    <p>Clear Sky / Sunny</p>
+                                    <span>Feels like 21°C</span>
+                                </div>
+                            </div>
+                            <dl class="weather-details-list">
+                                <div><dt><i data-lucide="droplets" aria-hidden="true"></i>Humidity</dt><dd>81%</dd></div>
+                                <div><dt><i data-lucide="wind" aria-hidden="true"></i>Wind</dt><dd>14 km/h</dd></div>
+                                <div><dt><i data-lucide="thermometer" aria-hidden="true"></i>Feels Like</dt><dd>21°C</dd></div>
+                                <div><dt><i data-lucide="sunrise" aria-hidden="true"></i>Sunrise</dt><dd>04:51</dd></div>
+                                <div><dt><i data-lucide="sunset" aria-hidden="true"></i>Sunset</dt><dd>22:00</dd></div>
+                            </dl>
+                        </article>
+
+                        <article class="profile-card insight-card today-glance-card">
+                            <h2>Today at a glance</h2>
+                            <div class="today-glance-list">
+                                <div><span>Morning</span><i data-lucide="sun" aria-hidden="true"></i><strong>18°C</strong></div>
+                                <div><span>Afternoon</span><i data-lucide="sun" aria-hidden="true"></i><strong>21°C</strong></div>
+                                <div><span>Evening</span><i data-lucide="sunset" aria-hidden="true"></i><strong>19°C</strong></div>
+                                <div><span>Night</span><i data-lucide="moon" aria-hidden="true"></i><strong>17°C</strong></div>
+                            </div>
+                        </article>
+
+                        <article class="profile-card insight-card profile-tip-card">
+                            <div class="profile-tip-heading">
+                                <span><i data-lucide="lightbulb" aria-hidden="true"></i></span>
+                                <h2>Tip</h2>
+                            </div>
+                            <p>Keep your account secure by using a strong password and enabling two-factor authentication.</p>
+                        </article>
+                    </aside>
+                    </div>
                 </section>
             </div>
         </main>

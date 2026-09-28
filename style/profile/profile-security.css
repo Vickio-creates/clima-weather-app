@@ -1,0 +1,498 @@
+/* Security tab layout and responsive styles. */
+.security-settings {
+    display: grid;
+    gap: 23px;
+    padding-bottom: 24px;
+}
+
+.security-card {
+    overflow: hidden;
+    border-radius: 18px;
+    background: #ffffff;
+    border-color: rgba(16, 32, 58, 0.15);
+}
+
+.security-card-header {
+    padding: 15px 23px 11px;
+}
+
+.security-card-header h2,
+.password-requirements h3,
+.two-factor-copy h3,
+.security-tip-row h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.security-card-header p,
+.two-factor-copy p,
+.security-tip-row p {
+    margin: 6px 0 0;
+    color: #8798b3;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.security-password-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    align-items: start;
+    gap: clamp(16px, 2.2vw, 34px);
+    padding: 12px 23px 18px 13px;
+}
+
+.security-password-fields {
+    display: grid;
+    gap: 12px;
+    padding-top: 2px;
+    min-width: 0;
+}
+
+.security-password-field {
+    display: grid;
+    grid-template-columns: minmax(0, 140px) minmax(0, 1fr);
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+    color: #7789a3;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.security-password-input {
+    position: relative;
+    display: block;
+    min-width: 0;
+}
+
+.security-password-input input {
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    padding: 0 47px 0 18px;
+    border: 1px solid rgba(16, 32, 58, 0.2);
+    border-radius: 9px;
+    outline: 0;
+    color: #111827;
+    background: #ffffff;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.security-password-input input::placeholder {
+    color: #111827;
+    opacity: 1;
+}
+
+.security-password-input input:focus {
+    border-color: #2d6cdf;
+    box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.18);
+}
+
+.security-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 7px;
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    color: #8a8a8a;
+    background: transparent;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.security-password-toggle:hover,
+.security-password-toggle:focus-visible {
+    color: #2868e8;
+    background: #eaf1ff;
+}
+
+.security-password-toggle svg {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+.password-requirements {
+    padding: 12px 11px 11px;
+    border-radius: 9px;
+    background: #eaf1ff;
+}
+
+.password-requirements h3 {
+    font-size: 15px;
+}
+
+.password-requirements ul {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 0;
+    padding: 0 8px 0 21px;
+    list-style: none;
+}
+
+.password-requirements li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #5d626b;
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+.password-requirements li svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    color: #2868e8;
+    stroke-width: 1.8;
+}
+
+.security-card-action {
+    display: flex;
+    justify-content: flex-end;
+    padding: 4px 23px 22px;
+}
+
+.security-update-button {
+    min-width: 186px;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 10px;
+    color: #ffffff;
+    background: #2d6cdf;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.security-update-button:hover {
+    filter: brightness(1.06);
+}
+
+.password-change-status {
+    min-height: 18px;
+    margin: 10px 0 0;
+    color: #16803a;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.password-change-status.is-error {
+    color: #c62b2b;
+}
+
+.two-factor-row,
+.security-tip-row {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 23px;
+}
+
+.security-feature-icon {
+    display: inline-grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border-radius: 11px;
+    color: #2868e8;
+    background: #eaf1ff;
+}
+
+.security-feature-icon svg {
+    width: 29px;
+    height: 29px;
+    stroke-width: 1.8;
+}
+
+.two-factor-copy,
+.security-tip-row > div {
+    min-width: 0;
+}
+
+.two-factor-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px;
+}
+
+.two-factor-copy h3,
+.security-tip-row h3 {
+    font-size: 14px;
+}
+
+.two-factor-title span {
+    padding: 4px 8px;
+    border-radius: 999px;
+    color: #ffffff;
+    background: #c7c9ce;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.two-factor-copy p,
+.security-tip-row p {
+    color: #5d626b;
+    font-weight: 500;
+}
+
+.two-factor-action,
+.two-factor-secondary-action {
+    min-height: 40px;
+    padding: 0 15px;
+    border: 0;
+    border-radius: 9px;
+    color: #ffffff;
+    background: #2d6cdf;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.two-factor-action:disabled,
+.two-factor-secondary-action:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.two-factor-secondary-action {
+    border: 1px solid rgba(16, 32, 58, 0.18);
+    color: #34435a;
+    background: #ffffff;
+}
+
+.two-factor-panel {
+    display: grid;
+    gap: 14px;
+    padding: 16px 23px 20px;
+    border-top: 1px solid rgba(16, 32, 58, 0.12);
+}
+
+.two-factor-panel[hidden],
+.two-factor-setup[hidden],
+.two-factor-disable[hidden],
+.two-factor-enrollment[hidden],
+.two-factor-recovery-codes[hidden] {
+    display: none;
+}
+
+.two-factor-status {
+    min-height: 18px;
+    margin: 0;
+    color: #16803a;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.two-factor-status.is-error {
+    color: #c62b2b;
+}
+
+.two-factor-setup,
+.two-factor-disable {
+    display: grid;
+    max-width: 540px;
+    gap: 9px;
+}
+
+.two-factor-setup > label,
+.two-factor-disable > label:not(.two-factor-recovery-choice),
+.two-factor-enrollment > label {
+    color: #7789a3;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.two-factor-input {
+    width: 100%;
+}
+
+.two-factor-code-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    border: 1px solid rgba(16, 32, 58, 0.2);
+    border-radius: 9px;
+    color: #111827;
+    background: #ffffff;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.two-factor-code-input:focus {
+    border-color: #2d6cdf;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.18);
+}
+
+.two-factor-enrollment {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.two-factor-enrollment p,
+.two-factor-recovery-codes p {
+    margin: 0;
+    color: #5d626b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.two-factor-secret {
+    display: block;
+    overflow-wrap: anywhere;
+    padding: 12px;
+    border-radius: 8px;
+    color: #20334d;
+    background: #eaf1ff;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.two-factor-recovery-choice {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #5d626b;
+    font-size: 13px;
+}
+
+.two-factor-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 5px;
+}
+
+.two-factor-recovery-codes h3 {
+    margin: 0 0 6px;
+    color: #111827;
+    font-size: 15px;
+}
+
+.two-factor-recovery-codes ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 8px 20px;
+    margin: 12px 0;
+    padding: 12px 12px 12px 38px;
+    border-radius: 9px;
+    color: #20334d;
+    background: #eaf1ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.security-tips-list {
+    padding: 3px 23px 0;
+}
+
+.security-tip-row {
+    grid-template-columns: 58px minmax(0, 1fr);
+    padding: 11px 0;
+    border-top: 1px solid rgba(16, 32, 58, 0.14);
+}
+
+.security-tips-list .security-tip-row:first-child {
+    border-top: 0;
+}
+
+@media (max-width: 900px) {
+    .password-requirements {
+        max-width: 460px;
+    }
+}
+
+@media (max-width: 640px) {
+    .security-card-header {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+
+    .security-password-layout {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+
+    .security-password-field {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+
+    .security-card-action {
+        padding: 4px 17px 18px;
+    }
+
+    .security-update-button {
+        width: 100%;
+    }
+
+    .two-factor-row,
+    .security-tip-row {
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .two-factor-row {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+
+    .security-feature-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+    }
+
+    .security-feature-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .two-factor-row > .two-factor-action {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .two-factor-panel {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+
+    .two-factor-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .two-factor-actions button {
+        width: 100%;
+    }
+
+    .security-tips-list {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+}

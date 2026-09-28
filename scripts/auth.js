@@ -10,6 +10,7 @@ const CLIMA_SESSION_KEY = "climaSession";
 const AUTH_ENDPOINTS = {
   register: "backend/auth/register.php",
   login: "backend/auth/login.php",
+  verifyTwoFactor: "backend/auth/verify_two_factor.php",
   logout: "backend/auth/logout.php",
   session: "backend/auth/session.php",
   profileUpdate: "backend/profile/update.php",
@@ -288,11 +289,9 @@ function validateEmail(email) {
 }
 
 
-// Check password strength.
-// The password must contain at least 8 characters, one lowercase letter,
-// one uppercase letter, and one number.
-function validateStrongPassword(password) {
-  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+// NIST's password-only minimum is 15 characters, without character-mix rules.
+function validatePasswordLength(password) {
+  return Array.from(password).length >= 15;
 }
 
 
@@ -359,11 +358,11 @@ function initRegisterForm() {
       );
     }
 
-    // Validate password strength.
-    if (!validateStrongPassword(password)) {
+    // Validate the NIST-aligned minimum password length.
+    if (!validatePasswordLength(password)) {
       return showAuthMessage(
         message,
-        "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
+        "Password must be at least 15 characters.",
         true,
       );
     }
@@ -425,22 +424,83 @@ function initLoginForm() {
   // Stop if this page does not have a login form.
   if (!form) return;
 
+  const credentialsFields = document.querySelector("#login-credentials-fields");
+  const twoFactorFields = document.querySelector("#login-two-factor-fields");
+  const twoFactorCode = document.querySelector("#login-two-factor-code");
+  const useRecoveryCode = document.querySelector("#login-use-recovery-code");
+  const backToPasswordButton = document.querySelector("#login-back-to-password");
+  let awaitingTwoFactor = false;
+
+  useRecoveryCode?.addEventListener("change", () => {
+    if (!twoFactorCode) return;
+    twoFactorCode.maxLength = useRecoveryCode.checked ? 39 : 6;
+    twoFactorCode.inputMode = useRecoveryCode.checked ? "text" : "numeric";
+    document.querySelector("#login-two-factor-hint").textContent = useRecoveryCode.checked
+      ? "Enter one unused recovery code."
+      : "Enter the six-digit code from your authenticator app.";
+  });
+
+  backToPasswordButton?.addEventListener("click", () => {
+    awaitingTwoFactor = false;
+    twoFactorFields.hidden = true;
+    credentialsFields.hidden = false;
+    twoFactorCode.value = "";
+    useRecoveryCode.checked = false;
+    twoFactorCode.maxLength = 6;
+    twoFactorCode.inputMode = "numeric";
+    const submitButton = form.querySelector("button[type='submit']");
+    submitButton.textContent = "Log in";
+    submitButton.dataset.originalText = "Log in";
+    document.querySelector("#auth-message").textContent = "";
+  });
+
   // Handle form submission.
   form.addEventListener("submit", async (event) => {
     // Prevent page refresh.
     event.preventDefault();
 
-    // Read login input values.
-    const email = document
-      .querySelector("#login-email")
-      .value.trim()
-      .toLowerCase();
-
-    const password = document.querySelector("#login-password").value;
-
     // Get message area and submit button.
     const message = document.querySelector("#auth-message");
     const submitButton = form.querySelector("button[type='submit']");
+
+    const finishLogin = (data) => {
+      saveClimaUser(data.user);
+      showAuthMessage(message, "Welcome back. Opening your dashboard...", false);
+      setTimeout(() => {
+        window.location.href = "app.html";
+      }, 650);
+    };
+
+    if (awaitingTwoFactor) {
+      const code = twoFactorCode.value.trim();
+      const recovery = useRecoveryCode.checked;
+
+      if (!code || (!recovery && !/^\d{6}$/.test(code))) {
+        return showAuthMessage(
+          message,
+          recovery ? "Enter one of your recovery codes." : "Enter the six-digit authenticator code.",
+          true,
+        );
+      }
+
+      try {
+        setButtonLoading(submitButton, true, "Verifying code...");
+        const data = await requestJson(AUTH_ENDPOINTS.verifyTwoFactor, {
+          method: "POST",
+          body: JSON.stringify({ code, method: recovery ? "recovery" : "totp" }),
+        });
+        finishLogin(data);
+      } catch (error) {
+        showAuthMessage(message, error.message, true);
+      } finally {
+        setButtonLoading(submitButton, false);
+      }
+      return;
+    }
+
+    // Read login input values.
+    const email = document.querySelector("#login-email").value.trim().toLowerCase();
+    const password = document.querySelector("#login-password").value;
 
     // Validate email format.
     if (!validateEmail(email)) {
@@ -466,20 +526,18 @@ function initLoginForm() {
         body: JSON.stringify({ email, password }),
       });
 
-      // Save returned user data in localStorage as UI cache.
-      saveClimaUser(data.user);
+      if (data.requiresTwoFactor) {
+        awaitingTwoFactor = true;
+        credentialsFields.hidden = true;
+        twoFactorFields.hidden = false;
+        document.querySelector("#login-password").value = "";
+        submitButton.dataset.originalText = "Verify code";
+        twoFactorCode.focus();
+        showAuthMessage(message, data.message, false);
+        return;
+      }
 
-      // Show success message.
-      showAuthMessage(
-        message,
-        "Welcome back. Opening your dashboard...",
-        false,
-      );
-
-      // Redirect to dashboard after a short delay.
-      setTimeout(() => {
-        window.location.href = "app.html";
-      }, 650);
+      finishLogin(data);
     } catch (error) {
       // Show login error.
       showAuthMessage(message, error.message, true);
@@ -526,8 +584,8 @@ function showAuthMessage(message, text, isError) {
 function initPasswordToggles() {
   // Find all buttons that show/hide passwords.
   document.querySelectorAll("[data-toggle-password]").forEach((toggle) => {
-    // Find the input field inside the same .field wrapper.
-    const input = toggle.closest(".field")?.querySelector("input");
+    // Password fields appear in both the login form and the profile Security tab.
+    const input = toggle.closest(".field, .security-password-input")?.querySelector("input");
 
     // Stop if no input exists.
     if (!input) return;
@@ -542,8 +600,9 @@ function initPasswordToggles() {
       // Update accessibility label.
       toggle.setAttribute(
         "aria-label",
-        isHidden ? "Hide password" : "Show password",
+        `${isHidden ? "Hide" : "Show"} ${input.dataset.passwordLabel || "password"}`,
       );
+      toggle.setAttribute("aria-pressed", String(isHidden));
 
       // Update the icon.
       toggle.innerHTML = `<i data-lucide="${isHidden ? "eye" : "eye-off"}"></i>`;

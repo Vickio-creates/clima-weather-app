@@ -7,6 +7,19 @@
     "editor.inlineSuggest.suppressInSnippetMode": false,
     "editor.inlineSuggest.showToolbar": "never",
     "cSpell.words": [
-        "OPENWEATHER"
+        "blocklist",
+        "ciphertext",
+        "CONNECTTIMEOUT",
+        "CURLOPT",
+        "dbconnection",
+        "ERRMODE",
+        "FOLLOWLOCATION",
+        "HTTPHEADER",
+        "Klaipėda",
+        "OPENWEATHER",
+        "RETURNTRANSFER",
+        "topbar",
+        "totp",
+        "XAMPP"
     ]
 }

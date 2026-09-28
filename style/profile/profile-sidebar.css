@@ -5,7 +5,7 @@
     gap: 22px;
     padding: 28px 18px 24px;
     color: #ffffff;
-    background: #081523;
+    background:#EEF4FF;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -15,7 +15,7 @@
     gap: 14px;
     padding: 10px 10px 18px;
     text-decoration: none;
-    color: #ffffff;
+    color: #010101;
     font-size: 26px;
     font-weight: 900;
     letter-spacing: -0.04em;
@@ -47,7 +47,7 @@
     min-height: 56px;
     padding: 0 16px;
     border-radius: 16px;
-    color: rgba(255, 255, 255, 0.72);
+    color: #010101;
     font-size: 16px;
     font-weight: 700;
     text-decoration: none;
@@ -55,15 +55,15 @@
 }
 
 .sidebar-link.active {
-    color: #ffffff;
-    background: rgba(45, 108, 223, 0.28);
+    color: #2d6cdf;
+    background: rgba(45, 108, 223, 0.1);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-link:hover:not(.active),
 .sidebar-logout:hover {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(45, 108, 223, 0.5);
     transform: translateX(2px);
 }
 
@@ -86,5 +86,5 @@
 .sidebar-divider {
     height: 1px;
     margin: 12px 12px 10px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(1, 1, 1, 0.2);
 }

@@ -118,6 +118,7 @@ echo json_encode([
     "sunrise" => $currentData["sys"]["sunrise"] ?? null,
     "sunset" => $currentData["sys"]["sunset"] ?? null,
     "timezoneOffset" => $currentData["timezone"] ?? 0,
+    "todayGlance" => buildTodayGlance($forecastData["list"] ?? [], (int) ($currentData["timezone"] ?? 0)),
     "forecast" => $forecast,
     "hourly" => $hourly
 ]);
@@ -223,4 +224,73 @@ function getCountryName(string $code): string
     ];
 
     return $countries[$code] ?? $code;
+}
+function buildTodayGlance(array $items, int $timezoneOffset): array
+{
+    $today = gmdate('Y-m-d', time() + $timezoneOffset);
+    $currentHour = (int) gmdate('G', time() + $timezoneOffset);
+
+    $periods = [
+        ['period' => 'Morning', 'start' => 6, 'end' => 12, 'target' => 9],
+        ['period' => 'Afternoon', 'start' => 12, 'end' => 18, 'target' => 15],
+        ['period' => 'Evening', 'start' => 18, 'end' => 21, 'target' => 19.5],
+        ['period' => 'Night', 'start' => 21, 'end' => 24, 'target' => 22.5],
+    ];
+
+    $result = [];
+
+    foreach ($periods as $period) {
+        $bestItem = null;
+        $bestDistance = INF;
+
+        foreach ($items as $item) {
+            $timestamp = (int) ($item['dt'] ?? 0);
+
+            if ($timestamp <= 0 || !isset($item['main']['temp'])) {
+                continue;
+            }
+
+            $localTimestamp = $timestamp + $timezoneOffset;
+            $forecastDate = gmdate('Y-m-d', $localTimestamp);
+            $hour = (int) gmdate('G', $localTimestamp);
+            $minute = (int) gmdate('i', $localTimestamp);
+            $forecastHour = $hour + ($minute / 60);
+            $targetHour = $period['target'];
+
+            if ($forecastDate === $today) {
+                if ($forecastHour < $period['start'] || $forecastHour >= $period['end']) {
+                    continue;
+                }
+            } elseif (
+                $period['period'] === 'Night'
+                && $currentHour >= 21
+                && $forecastDate === gmdate('Y-m-d', time() + $timezoneOffset + 86400)
+                && $hour < 6
+            ) {
+                // After 9 PM, early tomorrow morning is part of tonight.
+                $forecastHour += 24;
+                $targetHour = 27;
+            } else {
+                continue;
+            }
+
+            $distance = abs($forecastHour - $targetHour);
+
+            if ($distance < $bestDistance) {
+                $bestItem = $item;
+                $bestDistance = $distance;
+            }
+        }
+
+        $result[] = [
+            'period' => $period['period'],
+            'temperature' => $bestItem === null
+                ? null
+                : round((float) $bestItem['main']['temp']),
+            'condition' => $bestItem['weather'][0]['main'] ?? null,
+            'description' => $bestItem['weather'][0]['description'] ?? null,
+        ];
+    }
+
+    return $result;
 }

@@ -72,6 +72,28 @@ Planned:
 - `app.html` — protected weather dashboard
 - `profile.html` — user profile page structure in progress
 
+## Saving Notification Settings
+
+The notification screen now saves a logged-in user’s choices in MySQL.
+
+```text
+Profile toggle or quiet-hours select
+        ↓
+scripts/profile.js creates JSON
+        ↓
+backend/profile/update_notifications.php validates it
+        ↓
+user_preferences table stores it for the PHP session user
+        ↓
+backend/auth/session.php loads it on the next visit
+```
+
+### One-time database migration
+
+If you already created the `clima_app` database before this change, open phpMyAdmin, select the `clima_app` database, open the **SQL** tab, and run [database/migrations/add_notification_settings.sql](database/migrations/add_notification_settings.sql) once.
+
+For a new database, run [database/clima_app_schema.sql](database/clima_app_schema.sql) instead; it already includes these fields. Your current database already has the `bio` and `personal_tags` fields required by the Edit Personal Info form.
+
 
 ## Project Structure
 

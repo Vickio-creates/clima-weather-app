@@ -38,10 +38,10 @@ h1 {
 
 span {
     color: white;
-    font-size: 11px;
+    font-size: 18px;
     font-weight: 600;
-    opacity: 70%;
-    letter-spacing: 11%;
+    opacity: 100%;
+    letter-spacing: -3%;
 }
 
 .app-layout {

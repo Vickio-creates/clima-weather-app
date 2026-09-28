@@ -8,6 +8,7 @@ declare(strict_types=1);
 // dbconnection.php contains getPDO(), which connects to the database.
 require_once __DIR__ . '/../helpers/response.php';
 require_once __DIR__ . '/../helpers/user.php';
+require_once __DIR__ . '/../helpers/password_blocklist.php';
 require_once __DIR__ . '/../config/dbconnection.php';
 
 try {
@@ -35,12 +36,17 @@ try {
         jsonResponse(['error' => 'Please enter a valid email address.'], 422);
     }
 
-    // Validate password strength.
-    // This matches the frontend rule: at least 8 characters, one uppercase letter,
-    // one lowercase letter, and one number.
-    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
+    // Password-only sign-in requires a minimum of 15 characters.
+    if (mb_strlen($password, 'UTF-8') < 15) {
         jsonResponse([
-            'error' => 'Password must be at least 8 characters and include uppercase, lowercase, and a number.'
+            'error' => 'Password must be at least 15 characters.'
+        ], 422);
+    }
+
+    // Reject passwords already found in known data breaches.
+    if (climaPasswordIsCompromised($password)) {
+        jsonResponse([
+            'error' => 'Choose a password that has not appeared in a known data breach.'
         ], 422);
     }
 
@@ -68,7 +74,7 @@ try {
     $insertUser->execute([
         $name,
         $email,
-        password_hash($password, PASSWORD_DEFAULT),
+        password_hash($password, PASSWORD_ARGON2ID),
     ]);
 
     // Get the ID of the newly created user.
@@ -114,12 +120,19 @@ try {
         'user' => fetchUserPayload($pdo, $userId),
     ], 201);
 
+} catch (ClimaPasswordBlocklistUnavailable $error) {
+    error_log('Password blocklist check failed: ' . $error->getMessage());
+    jsonResponse([
+        'error' => 'Password security check is temporarily unavailable. Please try again shortly.'
+    ], 503);
+
 } catch (Throwable $error) {
     // If an error happens during the transaction, undo all database changes.
     if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
 
-    // Return the error as JSON.
-    jsonResponse(['error' => $error->getMessage()], 500);
+    // Keep internal database or server details out of the response.
+    error_log($error->getMessage());
+    jsonResponse(['error' => 'Could not create your account. Please try again.'], 500);
 }

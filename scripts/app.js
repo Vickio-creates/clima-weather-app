@@ -2,7 +2,8 @@ const RECENT_SEARCH_LIMIT = 10;
 const DASHBOARD_RECENT_LIMIT = 2;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const currentUser = typeof requireClimaAuth === "function" ? await requireClimaAuth() : null;
+  const currentUser =
+    typeof requireClimaAuth === "function" ? await requireClimaAuth() : null;
   if (!currentUser) return;
 
   if (typeof updateUserInterface === "function") {
@@ -15,7 +16,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateDashboardGreeting(currentUser);
 
   const cityInput = document.querySelector("#city-input");
-  const searchIcon = document.querySelector("#search-icon") || document.querySelector(".input-box .lucide-search");
+  const searchIcon =
+    document.querySelector("#search-icon") ||
+    document.querySelector(".input-box .lucide-search");
 
   if (cityInput) {
     cityInput.addEventListener("keydown", handleEnter);
@@ -59,7 +62,7 @@ async function loadInitialDashboardWeather(currentUser) {
 
   const currentLocationWeather = await getWeatherForCurrentLocation({
     saveSearch: false,
-    showErrors: false
+    showErrors: false,
   });
 
   if (currentLocationWeather) return;
@@ -69,7 +72,7 @@ async function loadInitialDashboardWeather(currentUser) {
   if (savedCity) {
     const savedWeather = await getWeather(savedCity, {
       saveSearch: false,
-      showErrors: false
+      showErrors: false,
     });
 
     if (savedWeather) return;
@@ -77,7 +80,7 @@ async function loadInitialDashboardWeather(currentUser) {
 
   const fallbackWeather = await getWeather("Vilnius", {
     saveSearch: false,
-    showErrors: false
+    showErrors: false,
   });
 
   if (!fallbackWeather) {
@@ -97,7 +100,7 @@ async function getWeatherForCurrentLocation(options = {}) {
     const { latitude, longitude } = position.coords;
     const params = new URLSearchParams({
       lat: String(latitude),
-      lon: String(longitude)
+      lon: String(longitude),
     });
 
     const data = await fetchWeather(`api.php?${params.toString()}`);
@@ -114,7 +117,7 @@ function getBrowserPosition() {
     navigator.geolocation.getCurrentPosition(resolve, reject, {
       enableHighAccuracy: false,
       timeout: 7000,
-      maximumAge: 300000
+      maximumAge: 300000,
     });
   });
 }
@@ -122,8 +125,8 @@ function getBrowserPosition() {
 async function getWeather(city, options = {}) {
   const settings = {
     saveSearch: true,
-    showErrors: true,
-    ...options
+    showErrors: true,     
+    ...options,
   };
 
   try {
@@ -154,6 +157,8 @@ async function fetchWeather(url) {
 }
 
 function renderWeather(data, options = {}) {
+  if (!data) return;
+
   const saveSearch = options.saveSearch !== false;
   const condition = data.condition || data.description || "Unknown";
   const conditionText = formatCondition(data.description || condition);
@@ -161,9 +166,9 @@ function renderWeather(data, options = {}) {
   const windSpeed = data.windSpeed ?? 2.8;
   const feelsLike = data.feelsLike ?? data.temperature;
 
-  setText("#city-name", data.city);
-  setText("#country", data.country);
-  setText("#temperature", `${data.temperature}°C`);
+  setText("#city-name", data.city || "Unknown");
+  setText("#country", data.country || "");
+  setText("#temperature", `${data.temperature ?? "--"}°C`);
   setText("#description", conditionText);
   setText("#feels-like", `Feels like ${feelsLike}°C`);
   setText("#feels-like-value", `${feelsLike}°C`);
@@ -173,21 +178,33 @@ function renderWeather(data, options = {}) {
   setText("#high-temp", `${data.highTemp ?? data.temperature}°C`);
   setText("#low-temp", `${data.lowTemp ?? data.temperature}°C`);
 
-  updateRightPanel(data);
-  updateHourlyGlance(data);
-  updateDashboardRecommendations(data.temperature, condition, windSpeed, humidity);
-  updateAiGuidance(data, condition, windSpeed, humidity);
-
-  const iconName = getWeatherIcon(condition);
+  const iconName = getWeatherIcon(condition, data.description);
   const wrapper = document.querySelector("#weather-icon-wrapper");
 
   if (wrapper) {
     wrapper.innerHTML = `<i class="location-icon-big" data-lucide="${iconName}"></i>`;
   }
 
+  if (data.forecast || data.sunrise) {
+    updateRightPanel(data);
+  }
+
+  if (data.hourly) {
+    updateHourlyGlance(data);
+  }
+
+  updateDashboardRecommendations(
+    data.temperature,
+    condition,
+    data.description,
+    windSpeed,
+    humidity,
+  );
+  updateAiGuidance(data, condition, windSpeed, humidity);
+
   if (window.lucide) lucide.createIcons();
 
-  if (saveSearch) {
+  if (saveSearch && data.city) {
     saveToLocalStorage(data.city, data.country, data.temperature, condition);
     refreshRecentSearches();
   }
@@ -230,18 +247,18 @@ function getTimeGreeting() {
   return "Good night";
 }
 
-function getWeatherIcon(condition) {
-  const normalized = String(condition || "").toLowerCase();
+function getWeatherIcon(condition, description = "") {
+  const text = `${condition} ${description}`.toLowerCase();
 
-  if (normalized.includes("thunder")) return "cloud-lightning";
-  if (normalized.includes("drizzle")) return "cloud-drizzle";
-  if (normalized.includes("rain")) return "cloud-rain";
-  if (normalized.includes("snow")) return "cloud-snow";
-  if (normalized.includes("wind")) return "wind";
-  if (normalized.includes("mist")) return "droplets";
-  if (normalized.includes("fog") || normalized.includes("haze")) return "cloud-fog";
-  if (normalized.includes("cloud")) return "cloud";
-  if (normalized.includes("clear") || normalized.includes("sun")) return "sun";
+  if (text.includes("thunder")) return "cloud-lightning";
+  if (text.includes("drizzle")) return "cloud-drizzle";
+  if (text.includes("rain") || text.includes("shower")) return "cloud-rain";
+  if (text.includes("snow") || text.includes("sleet")) return "cloud-snow";
+  if (text.includes("wind")) return "wind";
+  if (text.includes("mist")) return "droplets";
+  if (text.includes("fog") || text.includes("haze")) return "cloud-fog";
+  if (text.includes("cloud") || text.includes("overcast")) return "cloud";
+  if (text.includes("clear") || text.includes("sun")) return "sun";
 
   return "cloud";
 }
@@ -253,8 +270,13 @@ function formatDayName(dateText) {
 
 function formatTimeFromUnix(unixTime, timezoneOffset = null) {
   const offset = Number(timezoneOffset);
-  const useLocationTime = timezoneOffset !== null && timezoneOffset !== undefined && Number.isFinite(offset);
-  const date = new Date((Number(unixTime) + (useLocationTime ? offset : 0)) * 1000);
+  const useLocationTime =
+    timezoneOffset !== null &&
+    timezoneOffset !== undefined &&
+    Number.isFinite(offset);
+  const date = new Date(
+    (Number(unixTime) + (useLocationTime ? offset : 0)) * 1000,
+  );
 
   if (useLocationTime) {
     return `${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")}`;
@@ -262,7 +284,7 @@ function formatTimeFromUnix(unixTime, timezoneOffset = null) {
 
   return date.toLocaleTimeString("en-GB", {
     hour: "2-digit",
-    minute: "2-digit"
+    minute: "2-digit",
   });
 }
 
@@ -275,11 +297,17 @@ function updateRightPanel(data) {
   setText("#air-quality-value", data.airQuality || "--");
 
   if (data.sunrise) {
-    setText("#sunrise-value", formatTimeFromUnix(data.sunrise, data.timezoneOffset));
+    setText(
+      "#sunrise-value",
+      formatTimeFromUnix(data.sunrise, data.timezoneOffset),
+    );
   }
 
   if (data.sunset) {
-    setText("#sunset-value", formatTimeFromUnix(data.sunset, data.timezoneOffset));
+    setText(
+      "#sunset-value",
+      formatTimeFromUnix(data.sunset, data.timezoneOffset),
+    );
   }
 
   const forecast = Array.isArray(data.forecast) ? data.forecast : [];
@@ -292,7 +320,9 @@ function updateRightPanel(data) {
     if (!dayName || !dayTemp) continue;
 
     const forecastItem = dayName.closest(".forecast-item");
-    const divider = forecastItem?.nextElementSibling?.classList.contains("day-divider")
+    const divider = forecastItem?.nextElementSibling?.classList.contains(
+      "day-divider",
+    )
       ? forecastItem.nextElementSibling
       : null;
 
@@ -322,18 +352,20 @@ function updateHourlyGlance(data) {
   const hourlyList = document.querySelector(".hourly-list");
   if (!hourlyList) return;
 
-  const forecastItems = Array.isArray(data.hourly) ? data.hourly.slice(0, 5) : [];
+  const forecastItems = Array.isArray(data.hourly)
+    ? data.hourly.slice(0, 5)
+    : [];
   const items = [
     {
       label: "Now",
       temp: data.temperature,
-      condition: data.condition || data.description
+      condition: data.condition || data.description,
     },
     ...forecastItems.map((item) => ({
       label: formatHourlyLabel(item, data.timezoneOffset),
       temp: item.temp,
-      condition: item.condition || item.description
-    }))
+      condition: item.condition || item.description,
+    })),
   ];
 
   hourlyList.innerHTML = items.map(createHourlyItemMarkup).join("");
@@ -355,7 +387,9 @@ function formatHourlyLabel(item, timezoneOffset) {
 
 function createHourlyItemMarkup(item) {
   const iconName = getWeatherIcon(item.condition);
-  const temperature = Number.isFinite(Number(item.temp)) ? `${Math.round(Number(item.temp))}°C` : "--°C";
+  const temperature = Number.isFinite(Number(item.temp))
+    ? `${Math.round(Number(item.temp))}°C`
+    : "--°C";
 
   return `
     <article class="hourly-item">
@@ -397,7 +431,7 @@ function displayDate() {
   const dateString = today.toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
-    month: "long"
+    month: "long",
   });
 
   setText("#city-date", dateString);
@@ -407,7 +441,7 @@ function saveToLocalStorage(city, country, temperature, condition) {
   const searches = getSavedSearches();
   const newSearch = { city, country, temperature, condition };
 
-  const filtered = searches.filter(function(search) {
+  const filtered = searches.filter(function (search) {
     return search.city.toLowerCase() !== city.toLowerCase();
   });
 
@@ -423,8 +457,13 @@ function loadRecentSearches() {
   searches
     .slice(0, DASHBOARD_RECENT_LIMIT)
     .reverse()
-    .forEach(function(search) {
-      addRecentSearch(search.city, search.country, search.temperature, search.condition);
+    .forEach(function (search) {
+      addRecentSearch(
+        search.city,
+        search.country,
+        search.temperature,
+        search.condition,
+      );
     });
 }
 
@@ -445,7 +484,9 @@ function getSavedSearches() {
 
   try {
     const searches = JSON.parse(saved);
-    return Array.isArray(searches) && searches.length ? searches : getDefaultSearches();
+    return Array.isArray(searches) && searches.length
+      ? searches
+      : getDefaultSearches();
   } catch (error) {
     return getDefaultSearches();
   }
@@ -457,34 +498,36 @@ function getDefaultSearches() {
       city: "Klaipeda",
       country: "Lithuania",
       temperature: 16,
-      condition: "Clouds"
+      condition: "Clouds",
     },
     {
       city: "Berlin",
       country: "Germany",
       temperature: 15,
-      condition: "Clear"
-    }
+      condition: "Clear",
+    },
   ];
 }
 
 function formatCondition(condition) {
   return String(condition || "Unknown")
     .split(" ")
-    .map(function(word) {
+    .map(function (word) {
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
     .join(" ");
 }
 
 function initSearchHistoryModal() {
-  const seeAll = document.querySelector("#see-all-searches") || document.querySelector(".see-all a");
+  const seeAll =
+    document.querySelector("#see-all-searches") ||
+    document.querySelector(".see-all a");
   const modal = document.querySelector("#search-history-modal");
   const closeButton = document.querySelector("#close-search-history");
 
   if (!seeAll || !modal || !closeButton) return;
 
-  seeAll.addEventListener("click", function(event) {
+  seeAll.addEventListener("click", function (event) {
     event.preventDefault();
     renderSearchHistory();
     modal.hidden = false;
@@ -492,11 +535,11 @@ function initSearchHistoryModal() {
     if (window.lucide) lucide.createIcons();
   });
 
-  closeButton.addEventListener("click", function() {
+  closeButton.addEventListener("click", function () {
     modal.hidden = true;
   });
 
-  modal.addEventListener("click", function(event) {
+  modal.addEventListener("click", function (event) {
     if (event.target === modal) {
       modal.hidden = true;
     }
@@ -510,7 +553,7 @@ function renderSearchHistory() {
   const searches = getSavedSearches();
   historyList.innerHTML = "";
 
-  searches.forEach(function(search) {
+  searches.forEach(function (search) {
     const iconName = getWeatherIcon(search.condition);
 
     const item = document.createElement("button");
@@ -530,7 +573,7 @@ function renderSearchHistory() {
       <div class="location-temp">${search.temperature}°C</div>
     `;
 
-    item.addEventListener("click", function() {
+    item.addEventListener("click", function () {
       getWeather(search.city);
 
       const modal = document.querySelector("#search-history-modal");
@@ -543,12 +586,18 @@ function renderSearchHistory() {
   if (window.lucide) lucide.createIcons();
 }
 
-function updateDashboardRecommendations(temperature, condition, windSpeed, humidity) {
+function updateDashboardRecommendations(
+  temperature,
+  condition,
+  description,
+  windSpeed,
+  humidity,
+) {
   const wear = document.querySelector("#wear-recommendation");
   const umbrella = document.querySelector("#umbrella-recommendation");
   const outdoor = document.querySelector("#outdoor-recommendation");
 
-  const rainy = isWetCondition(condition);
+  const rainy = isWetCondition(condition, description);
 
   if (wear) {
     wear.textContent = getWearAdvice(temperature);
@@ -559,7 +608,12 @@ function updateDashboardRecommendations(temperature, condition, windSpeed, humid
   }
 
   if (outdoor) {
-    outdoor.textContent = getOutdoorAdvice(temperature, windSpeed, humidity, rainy);
+    outdoor.textContent = getOutdoorAdvice(
+      temperature,
+      windSpeed,
+      humidity,
+      rainy,
+    );
   }
 }
 
@@ -574,20 +628,20 @@ function updateAiGuidance(data, condition, windSpeed, humidity) {
   const items = [
     {
       label: "Now",
-      text: `${conditionText} now, ${data.temperature}°C and feels like ${feelsLike}°C.`
+      text: `${conditionText} now, ${data.temperature}°C and feels like ${feelsLike}°C.`,
     },
     {
       label: "Wear",
-      text: `${getWearAdvice(temperature)}.`
+      text: `${getWearAdvice(temperature)}.`,
     },
     {
       label: "Rain",
-      text: rainy ? "Carry an umbrella." : "Umbrella not needed right now."
+      text: rainy ? "Carry an umbrella." : "Umbrella not needed right now.",
     },
     {
       label: "Plan",
-      text: `${getOutdoorAdvice(temperature, windSpeed, humidity, rainy)}.`
-    }
+      text: `${getOutdoorAdvice(temperature, windSpeed, humidity, rainy)}.`,
+    },
   ];
 
   aiList.innerHTML = "";
@@ -602,11 +656,11 @@ function updateAiGuidance(data, condition, windSpeed, humidity) {
   });
 }
 
-function isWetCondition(condition) {
-  const conditionLower = String(condition || "").toLowerCase();
+function isWetCondition(condition, description = "") {
+  const text = `${condition} ${description}`.toLowerCase();
 
-  return ["rain", "drizzle", "thunderstorm", "snow", "mist"].some((word) =>
-    conditionLower.includes(word)
+  return ["rain", "drizzle", "thunderstorm", "shower", "snow", "mist"].some(
+    (word) => text.includes(word),
   );
 }
 
