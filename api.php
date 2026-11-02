@@ -1,28 +1,265 @@
 <?php
 header("Content-Type: application/json; charset=utf-8");
-header("Access-Control-Allow-Origin: *");
+
+function apiJsonError(int $status, string $message): void
+{
+    http_response_code($status);
+
+    $encodedError = json_encode(["error" => $message]);
+
+    if ($encodedError === false) {
+        $encodedError = '{"error":"The request could not be completed."}';
+    }
+
+    echo $encodedError;
+    exit;
+}
+
+function requestOpenWeather(string $url): array
+{
+    if (!function_exists('curl_init')) {
+        return ["status" => 0, "data" => null, "failure" => "transport"];
+    }
+
+    $handle = curl_init($url);
+
+    if ($handle === false) {
+        return ["status" => 0, "data" => null, "failure" => "transport"];
+    }
+
+    curl_setopt_array($handle, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => 3,
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_FOLLOWLOCATION => false,
+        CURLOPT_HTTPHEADER => ["Accept: application/json"],
+    ]);
+
+    $body = curl_exec($handle);
+    $curlError = curl_errno($handle);
+    $status = (int) curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
+    curl_close($handle);
+
+    if ($body === false) {
+        return [
+            "status" => $status,
+            "data" => null,
+            "failure" => $curlError === CURLE_OPERATION_TIMEDOUT
+                ? "timeout"
+                : "transport",
+        ];
+    }
+
+    $data = json_decode($body, true);
+
+    if (!is_array($data)) {
+        return ["status" => $status, "data" => null, "failure" => "invalid_json"];
+    }
+
+    return ["status" => $status, "data" => $data, "failure" => null];
+}
+
+function sendOpenWeatherError(array $response): void
+{
+    $failure = $response["failure"] ?? null;
+    $status = (int) ($response["status"] ?? 0);
+    $data = is_array($response["data"] ?? null) ? $response["data"] : [];
+    $providerCode = isset($data["cod"]) ? apiOpenWeatherCode($data["cod"]) : 0;
+
+    if ($failure === "timeout") {
+        apiJsonError(504, "The weather service timed out. Please try again.");
+    }
+
+    if ($failure === "transport") {
+        apiJsonError(502, "Could not connect to OpenWeather right now.");
+    }
+
+    if ($status === 404 || $providerCode === 404) {
+        apiJsonError(404, "City not found.");
+    }
+
+    if (in_array($status, [401, 403], true) || in_array($providerCode, [401, 403], true)) {
+        apiJsonError(502, "Weather service authentication failed.");
+    }
+
+    if ($status === 429 || $providerCode === 429) {
+        apiJsonError(503, "Weather service quota is temporarily unavailable.");
+    }
+
+    if ($status >= 500 || $providerCode >= 500) {
+        apiJsonError(502, "Weather service is temporarily unavailable.");
+    }
+
+    if ($failure === "invalid_json") {
+        apiJsonError(502, "OpenWeather returned an invalid response.");
+    }
+
+    apiJsonError(502, "Weather service rejected the request.");
+}
+
+function validateOpenWeatherStatus(array $response): array
+{
+    $status = (int) ($response["status"] ?? 0);
+    $data = $response["data"] ?? null;
+
+    if (
+        ($response["failure"] ?? null) !== null ||
+        $status < 200 ||
+        $status >= 300
+    ) {
+        sendOpenWeatherError($response);
+    }
+
+    if (!is_array($data)) {
+        apiJsonError(502, "OpenWeather returned an invalid response.");
+    }
+
+    if (array_key_exists("cod", $data)) {
+        $providerCode = apiOpenWeatherCode($data["cod"]);
+
+        if ($providerCode === 0) {
+            apiJsonError(502, "OpenWeather returned an invalid response.");
+        }
+
+        if ($providerCode !== 200) {
+            sendOpenWeatherError($response);
+        }
+    }
+
+    return $data;
+}
+
+function apiIsFiniteNumeric($value): bool
+{
+    if (
+        !is_int($value) &&
+        !is_float($value) &&
+        !(is_string($value) && is_numeric($value))
+    ) {
+        return false;
+    }
+
+    return is_finite((float) $value);
+}
+
+function apiOpenWeatherCode($value): int
+{
+    if (is_int($value)) {
+        return $value;
+    }
+
+    if (is_string($value) && preg_match('/^\d{3}$/D', $value)) {
+        return (int) $value;
+    }
+
+    return 0;
+}
+
+function apiOptionalNumericIsValid(array $data, string $key): bool
+{
+    return !array_key_exists($key, $data) ||
+        $data[$key] === null ||
+        apiIsFiniteNumeric($data[$key]);
+}
+
+function apiOptionalIntegerInRangeIsValid(array $data, string $key, int $minimum, int $maximum): bool
+{
+    if (!array_key_exists($key, $data) || $data[$key] === null) {
+        return true;
+    }
+
+    if (!apiIsFiniteNumeric($data[$key])) {
+        return false;
+    }
+
+    $value = (float) $data[$key];
+
+    return $value >= $minimum &&
+        $value <= $maximum &&
+        floor($value) === $value;
+}
+
+function apiIsValidForecastDateTime(string $value): bool
+{
+    if (!preg_match('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/D', $value, $parts)) {
+        return false;
+    }
+
+    $year = (int) $parts[1];
+    $month = (int) $parts[2];
+    $day = (int) $parts[3];
+    $hour = (int) $parts[4];
+    $minute = (int) $parts[5];
+    $second = (int) $parts[6];
+
+    return checkdate($month, $day, $year) &&
+        $hour >= 0 && $hour <= 23 &&
+        $minute >= 0 && $minute <= 59 &&
+        $second >= 0 && $second <= 59;
+}
+
+function apiIsReasonableForecastTimestamp($value, int $now): bool
+{
+    if (!apiIsFiniteNumeric($value)) {
+        return false;
+    }
+
+    $timestamp = (float) $value;
+    $earliestAllowed = $now - 86400;
+    // The endpoint covers five days; the extra day allows for clock skew and forecast-boundary rounding.
+    $latestAllowed = $now + (6 * 86400);
+
+    return $timestamp >= $earliestAllowed &&
+        $timestamp <= $latestAllowed &&
+        floor($timestamp) === $timestamp;
+}
+
+function apiOptionalStringIsValid(array $data, string $key): bool
+{
+    return !array_key_exists($key, $data) ||
+        $data[$key] === null ||
+        is_string($data[$key]);
+}
+
+function apiOptionalNumericValue(array $data, string $key, $fallback)
+{
+    if (!array_key_exists($key, $data) || $data[$key] === null) {
+        return $fallback;
+    }
+
+    return $data[$key] + 0;
+}
+
+function apiOptionalStringValue(array $data, string $key, string $fallback): string
+{
+    if (!array_key_exists($key, $data) || $data[$key] === null) {
+        return $fallback;
+    }
+
+    return $data[$key];
+}
 
 $configPath = __DIR__ . '/config.php';
 
 if (!file_exists($configPath)) {
-    http_response_code(500);
-    echo json_encode([
-        "error" => "Missing config.php. Copy config.example.php to config.php and add your OpenWeather API key."
-    ]);
-    exit;
+    apiJsonError(500, "OpenWeather is not configured.");
 }
 
 require_once $configPath;
 
 if (!defined('OPENWEATHER_API_KEY') || OPENWEATHER_API_KEY === '' || OPENWEATHER_API_KEY === 'your_api_key_here') {
-    http_response_code(500);
-    echo json_encode(["error" => "OpenWeather API key is not configured."]);
-    exit;
+    apiJsonError(500, "OpenWeather is not configured.");
 }
 
-$city = isset($_GET["city"]) ? trim($_GET["city"]) : "";
-$lat = isset($_GET["lat"]) ? trim($_GET["lat"]) : "";
-$lon = isset($_GET["lon"]) ? trim($_GET["lon"]) : "";
+foreach (["city", "lat", "lon"] as $parameter) {
+    if (array_key_exists($parameter, $_GET) && !is_string($_GET[$parameter])) {
+        apiJsonError(400, "Query parameters must be single text values.");
+    }
+}
+
+$city = trim($_GET["city"] ?? "");
+$lat = trim($_GET["lat"] ?? "");
+$lon = trim($_GET["lon"] ?? "");
 $hasCoordinates = $lat !== "" || $lon !== "";
 
 if ($hasCoordinates) {
@@ -37,23 +274,17 @@ if ($hasCoordinates) {
         $longitude < -180 ||
         $longitude > 180
     ) {
-        http_response_code(422);
-        echo json_encode(["error" => "Please allow a valid current location."]);
-        exit;
+        apiJsonError(400, "Please provide a valid latitude and longitude.");
     }
 
     $weatherQuery = "lat=" . urlencode((string) $latitude) . "&lon=" . urlencode((string) $longitude);
 } else {
     if ($city === "") {
-        http_response_code(422);
-        echo json_encode(["error" => "City is required."]);
-        exit;
+        apiJsonError(400, "City is required.");
     }
 
-    if (mb_strlen($city) > 60 || !preg_match("/^[\p{L}\s.'-]+$/u", $city)) {
-        http_response_code(422);
-        echo json_encode(["error" => "Please enter a valid city name."]);
-        exit;
+    if (mb_strlen($city) > 60 || !preg_match("/^[\p{L}\p{M}\p{Zs}.'’-]+$/u", $city)) {
+        apiJsonError(400, "Please enter a valid city name.");
     }
 
     $weatherQuery = "q=" . urlencode($city);
@@ -66,62 +297,147 @@ $apiKey = OPENWEATHER_API_KEY;
 */
 $currentUrl = "https://api.openweathermap.org/data/2.5/weather?" . $weatherQuery . "&appid=" . urlencode($apiKey) . "&units=metric";
 
-$currentResponse = @file_get_contents($currentUrl);
+$currentResponse = requestOpenWeather($currentUrl);
+$currentData = validateOpenWeatherStatus($currentResponse);
 
-if ($currentResponse === false) {
-    http_response_code(502);
-    echo json_encode(["error" => "Could not connect to OpenWeather right now."]);
-    exit;
+$currentMain = $currentData["main"] ?? null;
+$currentWeather = $currentData["weather"] ?? null;
+$currentWeatherEntry = is_array($currentWeather) && isset($currentWeather[0])
+    ? $currentWeather[0]
+    : null;
+$currentSystem = $currentData["sys"] ?? null;
+$currentWind = $currentData["wind"] ?? [];
+$currentClouds = $currentData["clouds"] ?? [];
+$currentCity = $currentData["name"] ?? $city;
+
+if (
+    !is_string($currentCity) ||
+    trim($currentCity) === "" ||
+    !is_array($currentMain) ||
+    !apiIsFiniteNumeric($currentMain["temp"] ?? null) ||
+    !is_array($currentWeather) ||
+    !isset($currentWeather[0]) ||
+    !is_array($currentWeatherEntry) ||
+    !is_string($currentWeatherEntry["main"] ?? null) ||
+    trim($currentWeatherEntry["main"]) === "" ||
+    !is_array($currentSystem) ||
+    !is_string($currentSystem["country"] ?? null) ||
+    !preg_match('/^[A-Za-z]{2}$/D', $currentSystem["country"]) ||
+    !is_array($currentWind) ||
+    !is_array($currentClouds) ||
+    !apiOptionalNumericIsValid($currentMain, "temp_max") ||
+    !apiOptionalNumericIsValid($currentMain, "temp_min") ||
+    !apiOptionalNumericIsValid($currentMain, "feels_like") ||
+    !apiOptionalNumericIsValid($currentMain, "humidity") ||
+    !apiOptionalNumericIsValid($currentWind, "speed") ||
+    !apiOptionalStringIsValid($currentWeatherEntry, "description") ||
+    !apiOptionalNumericIsValid($currentClouds, "all") ||
+    !apiOptionalNumericIsValid($currentData, "visibility") ||
+    !apiOptionalNumericIsValid($currentSystem, "sunrise") ||
+    !apiOptionalNumericIsValid($currentSystem, "sunset") ||
+    // OpenWeather reports timezone as seconds from UTC; this broad bound allows a full day either side.
+    !apiOptionalIntegerInRangeIsValid($currentData, "timezone", -86400, 86400)
+) {
+    apiJsonError(502, "OpenWeather returned incomplete current weather data.");
 }
 
-$currentData = json_decode($currentResponse, true);
-$currentCode = isset($currentData["cod"]) ? (int) $currentData["cod"] : 0;
-
-if (!$currentData || $currentCode !== 200) {
-    http_response_code(404);
-    echo json_encode(["error" => "City not found."]);
-    exit;
-}
+$timezoneOffset = (int) apiOptionalNumericValue($currentData, "timezone", 0);
 
 /*
 2. Forecast request
 */
 $forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?" . $weatherQuery . "&appid=" . urlencode($apiKey) . "&units=metric";
 
-$forecastResponse = @file_get_contents($forecastUrl);
-$forecastData = json_decode($forecastResponse, true);
+$forecastResponse = requestOpenWeather($forecastUrl);
+$forecastData = validateOpenWeatherStatus($forecastResponse);
 
-$forecast = [];
-$hourly = [];
-
-if ($forecastResponse !== false && isset($forecastData["list"]) && is_array($forecastData["list"])) {
-    $forecast = buildDailyForecast($forecastData["list"]);
-    $hourly = buildHourlyForecast($forecastData["list"]);
+if (!isset($forecastData["list"]) || !is_array($forecastData["list"]) || !$forecastData["list"]) {
+    apiJsonError(502, "OpenWeather returned incomplete forecast data.");
 }
+
+$forecastItems = $forecastData["list"];
+$forecastValidationTime = time();
+
+foreach ($forecastItems as $forecastIndex => $forecastItem) {
+    if (!is_array($forecastItem)) {
+        apiJsonError(502, "OpenWeather returned incomplete forecast data.");
+    }
+
+    $forecastMain = $forecastItem["main"] ?? null;
+    $forecastWeather = $forecastItem["weather"] ?? null;
+    $forecastWeatherEntry = is_array($forecastWeather) && isset($forecastWeather[0])
+        ? $forecastWeather[0]
+        : null;
+
+    if (
+        !is_string($forecastItem["dt_txt"] ?? null) ||
+        !apiIsValidForecastDateTime($forecastItem["dt_txt"]) ||
+        !apiIsReasonableForecastTimestamp($forecastItem["dt"] ?? null, $forecastValidationTime) ||
+        !is_array($forecastMain) ||
+        !apiIsFiniteNumeric($forecastMain["temp"] ?? null) ||
+        !is_array($forecastWeather) ||
+        !isset($forecastWeather[0]) ||
+        !is_array($forecastWeatherEntry) ||
+        !is_string($forecastWeatherEntry["main"] ?? null) ||
+        trim($forecastWeatherEntry["main"]) === "" ||
+        !apiOptionalNumericIsValid($forecastMain, "temp_max") ||
+        !apiOptionalNumericIsValid($forecastMain, "temp_min") ||
+        !apiOptionalStringIsValid($forecastWeatherEntry, "description")
+    ) {
+        apiJsonError(502, "OpenWeather returned incomplete forecast data.");
+    }
+
+    $forecastTimestamp = (int) ($forecastItem["dt"] + 0);
+
+    if (gmdate('Y-m-d H:i:s', $forecastTimestamp) !== $forecastItem["dt_txt"]) {
+        apiJsonError(502, "OpenWeather returned incomplete forecast data.");
+    }
+
+    // Normalize accepted numeric strings before the builders use or serialize them.
+    $forecastItems[$forecastIndex]["dt"] = $forecastTimestamp;
+    $forecastItems[$forecastIndex]["main"]["temp"] = $forecastMain["temp"] + 0;
+
+    foreach (["temp_max", "temp_min"] as $temperatureKey) {
+        if (array_key_exists($temperatureKey, $forecastMain) && $forecastMain[$temperatureKey] !== null) {
+            $forecastItems[$forecastIndex]["main"][$temperatureKey] = $forecastMain[$temperatureKey] + 0;
+        }
+    }
+}
+
+$forecast = buildDailyForecast($forecastItems);
+$hourly = buildHourlyForecast($forecastItems);
 
 /*
 3. Final response sent to JavaScript
 */
-echo json_encode([
-    "city" => $currentData["name"] ?? $city,
-    "country" => getCountryName($currentData["sys"]["country"] ?? ""),
-    "temperature" => round($currentData["main"]["temp"] ?? 0),
-    "highTemp" => round($currentData["main"]["temp_max"] ?? 0),
-    "lowTemp" => round($currentData["main"]["temp_min"] ?? 0),
-    "feelsLike" => round($currentData["main"]["feels_like"] ?? 0),
-    "humidity" => $currentData["main"]["humidity"] ?? null,
-    "windSpeed" => round($currentData["wind"]["speed"] ?? 0, 1),
-    "condition" => $currentData["weather"][0]["main"] ?? "Unknown",
-    "description" => $currentData["weather"][0]["description"] ?? "Unknown",
-    "clouds" => $currentData["clouds"]["all"] ?? null,
-    "visibility" => $currentData["visibility"] ?? null,
-    "sunrise" => $currentData["sys"]["sunrise"] ?? null,
-    "sunset" => $currentData["sys"]["sunset"] ?? null,
-    "timezoneOffset" => $currentData["timezone"] ?? 0,
-    "todayGlance" => buildTodayGlance($forecastData["list"] ?? [], (int) ($currentData["timezone"] ?? 0)),
+$responsePayload = [
+    "city" => $currentCity,
+    "country" => getCountryName($currentSystem["country"]),
+    "temperature" => round((float) $currentMain["temp"]),
+    "highTemp" => round((float) apiOptionalNumericValue($currentMain, "temp_max", 0)),
+    "lowTemp" => round((float) apiOptionalNumericValue($currentMain, "temp_min", 0)),
+    "feelsLike" => round((float) apiOptionalNumericValue($currentMain, "feels_like", 0)),
+    "humidity" => apiOptionalNumericValue($currentMain, "humidity", null),
+    "windSpeed" => round((float) apiOptionalNumericValue($currentWind, "speed", 0), 1),
+    "condition" => $currentWeatherEntry["main"],
+    "description" => apiOptionalStringValue($currentWeatherEntry, "description", "Unknown"),
+    "clouds" => apiOptionalNumericValue($currentClouds, "all", null),
+    "visibility" => apiOptionalNumericValue($currentData, "visibility", null),
+    "sunrise" => apiOptionalNumericValue($currentSystem, "sunrise", null),
+    "sunset" => apiOptionalNumericValue($currentSystem, "sunset", null),
+    "timezoneOffset" => $timezoneOffset,
+    "todayGlance" => buildTodayGlance($forecastItems, $timezoneOffset),
     "forecast" => $forecast,
     "hourly" => $hourly
-]);
+];
+
+$encodedResponse = json_encode($responsePayload);
+
+if ($encodedResponse === false) {
+    apiJsonError(502, "OpenWeather returned an invalid response.");
+}
+
+echo $encodedResponse;
 
 function buildDailyForecast(array $items): array
 {
