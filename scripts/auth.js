@@ -185,18 +185,25 @@ function updateUserInterface(user) {
   document.querySelectorAll("[data-user-personal-tags]").forEach((container) => {
     // Make sure personalTags is an array before using it.
     const tags = Array.isArray(user.personalTags) ? user.personalTags : [];
+    const renderedTags = document.createDocumentFragment();
 
     // If the user has not selected any tags, show a default message.
     if (tags.length === 0) {
-      container.innerHTML =
-        '<span class="profile-pill">No personal tags selected yet.</span>';
-      return;
+      const emptyMessage = document.createElement("span");
+      emptyMessage.className = "profile-pill";
+      emptyMessage.textContent = "No personal tags selected yet.";
+      renderedTags.appendChild(emptyMessage);
+    } else {
+      // Create each pill with textContent so tag values are never parsed as HTML.
+      tags.forEach((tag) => {
+        const pill = document.createElement("span");
+        pill.className = "profile-pill";
+        pill.textContent = String(tag);
+        renderedTags.appendChild(pill);
+      });
     }
 
-    // Create one pill for each selected tag.
-    container.innerHTML = tags
-      .map((tag) => `<span class="profile-pill">${tag}</span>`)
-      .join("");
+    container.replaceChildren(renderedTags);
   });
 
   // Update the profile avatar photo or fallback initial.

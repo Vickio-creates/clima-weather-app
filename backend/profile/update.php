@@ -49,10 +49,23 @@ try {
         jsonResponse(['error' => 'Please enter a valid email address.'], 422);
     }
 
-    // Validate personal tags.
-    // The frontend must send personalTags as an array/list.
-    if (!is_array($personalTags)) {
+    // Accept only the personal tags offered by the Edit Personal Info form.
+    $allowedPersonalTags = [
+        'Student',
+        'Morning Person',
+        'Outdoor Activities',
+        'Walking',
+        'Photography',
+    ];
+
+    if (!is_array($personalTags) || !array_is_list($personalTags)) {
         jsonResponse(['error' => 'Personal tags must be a list.'], 422);
+    }
+
+    foreach ($personalTags as $tag) {
+        if (!is_string($tag) || !in_array($tag, $allowedPersonalTags, true)) {
+            jsonResponse(['error' => 'One or more personal tags are not supported.'], 422);
+        }
     }
 
     // Convert personal tags to JSON before saving them in MySQL.
