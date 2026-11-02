@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#eef3ff">
+
+    <title>Location | Clima</title>
+
+    <link rel="stylesheet" href="../style/output.css">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="../scripts/onboarding.js" defer></script>
+</head>
+
+<body>
+    <main class="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#eef3ff] px-4 py-8">
+
+        <!-- Background decorations -->
+        <div class="pointer-events-none absolute -left-20 top-20 size-64 rounded-full bg-blue-200/30 blur-3xl"></div>
+        <div class="pointer-events-none absolute -right-20 bottom-10 size-72 rounded-full bg-purple-200/30 blur-3xl"></div>
+
+        <!-- Onboarding card -->
+        <section class="relative flex min-h-[650px] w-full max-w-[650px] flex-col overflow-hidden rounded-[32px] bg-white/80 px-6 py-8 shadow-[0_20px_60px_rgba(45,108,223,0.12)] backdrop-blur-xl sm:px-10">
+
+            <!-- Progress indicators -->
+            <nav class="mb-8 flex items-center justify-center gap-3" aria-label="Onboarding progress">
+
+                <span class="grid size-8 place-items-center rounded-full bg-[#2d6cdf] text-white" aria-label="Step 1 completed">
+                    <i data-lucide="check" class="size-4"></i>
+                </span>
+
+                <span class="h-1 w-8 rounded-full bg-[#2d6cdf]"></span>
+
+                <span class="grid size-8 place-items-center rounded-full bg-[#2d6cdf] text-white" aria-label="Step 2 completed">
+                    <i data-lucide="check" class="size-4"></i>
+                </span>
+
+                <span class="h-1 w-8 rounded-full bg-[#2d6cdf]"></span>
+
+                <span class="grid size-8 place-items-center rounded-full bg-[#2d6cdf] text-white ring-4 ring-blue-100" aria-current="step">
+                    3
+                </span>
+
+                <span class="h-1 w-8 rounded-full bg-gray-200"></span>
+
+                <span class="grid size-8 place-items-center rounded-full bg-gray-100 text-gray-400">4</span>
+
+                <span class="h-1 w-8 rounded-full bg-gray-200"></span>
+
+                <span class="grid size-8 place-items-center rounded-full bg-gray-100 text-gray-400">5</span>
+            </nav>
+
+            <!-- Clima logo -->
+            <div class="mb-6 flex items-center justify-center">
+                <div class="flex items-center gap-4" aria-label="Clima logo">
+                    <span class="grid size-[64px] shrink-0 place-items-center rounded-2xl bg-[#2d6cdf] text-white shadow-[0_8px_20px_rgba(45,108,223,0.25)]">
+                        <i data-lucide="cloud" class="size-9"></i>
+                    </span>
+
+                    <span class="text-[38px] font-bold tracking-[-0.055em] text-[#202938]">
+                        Clima
+                    </span>
+                </div>
+            </div>
+
+            <!-- Heading -->
+            <header class="mb-7 text-center">
+                <span class="mx-auto mb-3 grid size-12 place-items-center rounded-2xl bg-blue-50 text-[#2d6cdf]">
+                    <i data-lucide="map-pin" class="size-6"></i>
+                </span>
+
+                <h1 class="text-2xl font-bold tracking-tight text-[#202938] sm:text-3xl">
+                    Where are you located?
+                </h1>
+
+                <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-gray-500 sm:text-base">
+                    Tell Clima where you are to receive relevant weather updates and personalized recommendations.
+                </p>
+            </header>
+
+            <!-- Location form -->
+            <form id="location-form" class="mx-auto flex w-full max-w-md flex-1 flex-col">
+
+                <!-- Current location button -->
+                <button
+                    type="button"
+                    id="detect-location"
+                    class="mb-6 flex w-full items-center justify-center gap-2 rounded-xl border border-[#2d6cdf]/30 bg-blue-50 px-4 py-3 font-semibold text-[#2d6cdf] transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300">
+
+                    <i data-lucide="locate-fixed" class="size-5"></i>
+
+                    <span>Use My Current Location</span>
+                </button>
+
+                <p id="location-status" class="mb-4 text-center text-sm text-gray-500" role="status" aria-live="polite"></p>
+                <!-- Country -->
+<label for="country" class="mb-2 text-sm font-semibold text-[#202938]">
+    Country
+</label>
+
+<div class="relative mb-5">
+    <!-- Country icon -->
+    <i
+        data-lucide="globe"
+        class="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-gray-400">
+    </i>
+
+    <!-- Country search input -->
+    <input
+        type="text"
+        id="country"
+        name="country"
+        placeholder="Search for your country"
+        autocomplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="false"
+        aria-controls="country-options"
+        required
+        class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pl-12 pr-12 text-[#202938] outline-none transition placeholder:text-gray-400 focus:border-[#2d6cdf] focus:ring-4 focus:ring-blue-100">
+
+    <!-- Dropdown arrow -->
+    <button
+        type="button"
+        id="country-toggle"
+        aria-label="Show countries"
+        aria-controls="country-options"
+        aria-expanded="false"
+        class="absolute right-3 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-gray-400 transition hover:bg-gray-100 hover:text-[#2d6cdf]">
+
+        <i data-lucide="chevron-down" class="size-5"></i>
+    </button>
+
+    <!-- Country suggestions will appear here -->
+    <ul
+        id="country-options"
+        role="listbox"
+        aria-label="Country suggestions"
+        class="absolute left-0 right-0 top-full z-20 mt-2 hidden max-h-52 overflow-y-auto rounded-xl border border-gray-200 bg-white py-2 shadow-lg">
+    </ul>
+</div>
+
+       <!-- City -->
+<label for="city" class="mb-2 text-sm font-semibold text-[#202938]">
+    City
+</label>
+
+<div class="relative mb-5">
+    <i
+        data-lucide="building-2"
+        class="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-gray-400">
+    </i>
+
+    <input
+        type="text"
+        id="city"
+        name="city"
+        placeholder="Select a country first"
+        autocomplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="false"
+        aria-controls="city-options"
+        required
+        disabled
+        class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pl-12 pr-4 text-[#202938] outline-none transition placeholder:text-gray-400 focus:border-[#2d6cdf] focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-gray-50">
+
+    <!-- City suggestions -->
+    <ul
+        id="city-options"
+        role="listbox"
+        aria-label="City suggestions"
+        class="absolute left-0 right-0 top-full z-20 mt-2 hidden max-h-60 overflow-y-auto rounded-xl border border-gray-200 bg-white py-2 shadow-lg">
+    </ul>
+</div>
+
+                <!-- Optional location details -->
+                <label for="location-details" class="mb-2 text-sm font-semibold text-[#202938]">
+                    Location details <span class="font-normal text-gray-400">(optional)</span>
+                </label>
+
+                <div class="relative mb-5">
+                    <i data-lucide="map" class="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-gray-400"></i>
+
+                    <input
+                        type="text"
+                        id="location-details"
+                        name="location_details"
+                        placeholder="e.g. Old Town or city centre"
+                        autocomplete="off"
+                        class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pl-12 text-[#202938] outline-none transition placeholder:text-gray-400 focus:border-[#2d6cdf] focus:ring-4 focus:ring-blue-100">
+                </div>
+
+                <p class="mb-6 text-xs leading-5 text-gray-400">
+                    Your city and country help Clima find the right weather forecast. You don't need to provide your street address.
+                </p>
+
+                <!-- Navigation buttons -->
+                <div class="mt-auto flex items-center justify-between gap-4 pt-4">
+
+                    <a
+                        href="activity.html"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-5 py-3 font-semibold text-gray-600 transition hover:bg-gray-50">
+
+                        <i data-lucide="arrow-left" class="size-4"></i>
+                        Back
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2d6cdf] px-6 py-3 font-semibold text-white shadow-md shadow-blue-200 transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200">
+
+                        Next
+                        <i data-lucide="arrow-right" class="size-4"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>

@@ -59,10 +59,23 @@
 
 .save-preferences-status {
     margin: 10px 0 0;
-    min-height: 17px;
-    color: rgba(255, 255, 255, 0.78);
+    min-height: 20px;
+    color: #596b87;
     font-size: 13px;
-    font-weight: 700;
+    line-height: 1.45;
+    font-weight: 600;
+}
+
+.save-preferences-status.is-success {
+    color: #16803a;
+}
+
+.save-preferences-status.is-error {
+    color: #c62b2b;
+}
+
+.save-preferences-status.is-pending {
+    color: #526580;
 }
 
 /* Compact Preferences layout */
@@ -145,7 +158,7 @@
 
 .profile-panel[data-profile-panel="preferences"] .save-preferences-status {
     margin-top: 8px;
-    min-height: 15px;
+    min-height: 20px;
     font-size: 12px;
 }
 

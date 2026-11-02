@@ -235,6 +235,7 @@
                                     <button type="button" class="profile-pill">Outdoor Worker</button>
                                     <button type="button" class="profile-pill">Athlete</button>
                                     <button type="button" class="profile-pill">Traveler</button>
+                                    <button type="button" class="profile-pill">Construction Worker</button>
                                 </div>
                             </article>
 
@@ -243,19 +244,20 @@
                                     <div>
                                         <h2>Weather Preferences</h2>
                                         <p>
-                                            Help Clima personalize alerts and daily suggestions based on the weather
-                                            conditions that matter most to you.
+                                            Help Clima personalise daily recommendations based on the weather conditions that matter most to you.
                                         </p>
                                     </div>
                                 </div>
 
-                                <div class="profile-pill-list" aria-label="Weather preferences"
-                                    data-preference-group="weather">
+                                <div class="profile-pill-list" aria-label="Weather sensitivities"
+                                    data-preference-group="weatherSensitivities">
                                     <button type="button" class="profile-pill">Sensitive to Cold</button>
                                     <button type="button" class="profile-pill">Sensitive to Heat</button>
-                                    <button type="button" class="profile-pill active">Rain Alerts</button>
-                                    <button type="button" class="profile-pill active">Strong Wind Alerts</button>
-                                    <button type="button" class="profile-pill active">Air Quality Alerts</button>
+                                    <button type="button" class="profile-pill">Sensitive to Rain</button>
+                                    <button type="button" class="profile-pill">Sensitive to Wind</button>
+                                    <button type="button" class="profile-pill">Sensitive to Snow</button>
+                                    <button type="button" class="profile-pill">Sensitive to Pollen</button>
+                                    <button type="button" class="profile-pill">Sensitive to Poor Air Quality</button>
                                 </div>
                             </article>
 
@@ -328,8 +330,8 @@
                                     </div>
 
                                     <div class="summary-item">
-                                        <span>Weather focus</span>
-                                        <strong data-summary-weather>Rain, Strong Wind, Air Quality</strong>
+                                        <span>Weather sensitivities</span>
+                                        <strong data-summary-sensitivities>None selected</strong>
                                     </div>
 
                                     <div class="summary-item">
@@ -356,7 +358,7 @@
                                     Save Changes
                                 </button>
 
-                                <p class="save-preferences-status" role="status"></p>
+                                <p class="save-preferences-status" role="status" aria-live="polite" aria-atomic="true"></p>
                             </article>
                         </aside>
                     </section>
@@ -378,12 +380,12 @@
                                         <i data-lucide="mail"></i>
                                     </span>
                                     <div class="notification-copy">
-                                        <h3>Email</h3>
-                                        <p>Receive notifications to your email address.</p>
+                                        <h3 id="notify-channel-email-label">Email</h3>
+                                        <p id="notify-channel-email-description">Receive notifications to your email address.</p>
                                     </div>
-                                    <label class="switch" aria-label="Enable email notifications">
-                                        <input type="checkbox" id="notify-channel-email" checked>
-                                        <span class="slider"></span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notify-channel-email" role="switch" aria-labelledby="notify-channel-email-label" aria-describedby="notify-channel-email-description" checked>
+                                        <span class="slider" aria-hidden="true"></span>
                                     </label>
                                 </div>
 
@@ -392,15 +394,18 @@
                                         <i data-lucide="smartphone"></i>
                                     </span>
                                     <div class="notification-copy">
-                                        <h3>Push notifications</h3>
-                                        <p>Receive notifications on this device.</p>
+                                        <h3 id="notify-channel-push-label">Push notifications</h3>
+                                        <p id="notify-channel-push-description">Receive notifications on this device.</p>
                                     </div>
-                                    <label class="switch" aria-label="Enable push notifications">
-                                        <input type="checkbox" id="notify-channel-push">
-                                        <span class="slider"></span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notify-channel-push" role="switch" aria-labelledby="notify-channel-push-label" aria-describedby="notify-channel-push-description">
+                                        <span class="slider" aria-hidden="true"></span>
                                     </label>
                                 </div>
                             </div>
+                            <p class="notification-delivery-note" role="note">
+                                Delivery is not configured yet. These controls save your choices but do not send email or push notifications.
+                            </p>
                         </article>
 
                         <article class="profile-card notification-card">
@@ -415,26 +420,49 @@
                                         <i data-lucide="triangle-alert"></i>
                                     </span>
                                     <div class="notification-copy">
-                                        <h3>Weather alerts</h3>
-                                        <p>Severe weather, storms, heavy rain, strong winds and more.</p>
+                                        <h3 id="notify-types-weather-alerts-label">Weather alerts</h3>
+                                        <p id="notify-types-weather-alerts-description">Severe weather, storms, heavy rain, strong winds and more.</p>
                                     </div>
-                                    <label class="switch" aria-label="Enable weather alerts">
-                                        <input type="checkbox" id="notify-types-weather-alerts" checked>
-                                        <span class="slider"></span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notify-types-weather-alerts" role="switch" aria-labelledby="notify-types-weather-alerts-label" aria-describedby="notify-types-weather-alerts-description" aria-controls="weather-alert-subtypes" checked>
+                                        <span class="slider" aria-hidden="true"></span>
                                     </label>
                                 </div>
+
+                                <fieldset class="notification-alert-subtypes" id="weather-alert-subtypes" aria-describedby="weather-alert-subtypes-description" hidden>
+                                    <legend>Choose specific weather alerts</legend>
+                                    <p id="weather-alert-subtypes-description">These categories are included within Weather alerts.</p>
+                                    <div class="notification-alert-options">
+                                        <label class="notification-alert-option">
+                                            <input type="checkbox" data-weather-alert-type value="heavy_rain">
+                                            <span>Heavy rain</span>
+                                        </label>
+                                        <label class="notification-alert-option">
+                                            <input type="checkbox" data-weather-alert-type value="strong_wind">
+                                            <span>Strong wind</span>
+                                        </label>
+                                        <label class="notification-alert-option">
+                                            <input type="checkbox" data-weather-alert-type value="cold_warning">
+                                            <span>Cold weather warning</span>
+                                        </label>
+                                        <label class="notification-alert-option">
+                                            <input type="checkbox" data-weather-alert-type value="extreme_heat">
+                                            <span>Extreme heat</span>
+                                        </label>
+                                    </div>
+                                </fieldset>
 
                                 <div class="notification-setting-row">
                                     <span class="notification-icon notification-icon--blue" aria-hidden="true">
                                         <i data-lucide="calendar-clock"></i>
                                     </span>
                                     <div class="notification-copy">
-                                        <h3>Daily weather summary</h3>
-                                        <p>Get a summary of the day’s weather every morning.</p>
+                                        <h3 id="notify-types-daily-summary-label">Daily weather summary</h3>
+                                        <p id="notify-types-daily-summary-description">Get a summary of the day's weather every morning.</p>
                                     </div>
-                                    <label class="switch" aria-label="Enable daily weather summary">
-                                        <input type="checkbox" id="notify-types-daily-weather-summary" checked>
-                                        <span class="slider"></span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notify-types-daily-weather-summary" role="switch" aria-labelledby="notify-types-daily-summary-label" aria-describedby="notify-types-daily-summary-description" checked>
+                                        <span class="slider" aria-hidden="true"></span>
                                     </label>
                                 </div>
 
@@ -443,12 +471,12 @@
                                         <i data-lucide="person-standing"></i>
                                     </span>
                                     <div class="notification-copy">
-                                        <h3>Activity reminders</h3>
-                                        <p>Reminders for your planned activities based on weather.</p>
+                                        <h3 id="notify-types-activity-reminders-label">Activity reminders</h3>
+                                        <p id="notify-types-activity-reminders-description">Reminders for your planned activities based on weather.</p>
                                     </div>
-                                    <label class="switch" aria-label="Enable activity reminders">
-                                        <input type="checkbox" id="notify-types-activity-reminder" checked>
-                                        <span class="slider"></span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notify-types-activity-reminder" role="switch" aria-labelledby="notify-types-activity-reminders-label" aria-describedby="notify-types-activity-reminders-description" checked>
+                                        <span class="slider" aria-hidden="true"></span>
                                     </label>
                                 </div>
 
@@ -457,12 +485,12 @@
                                         <i data-lucide="shirt"></i>
                                     </span>
                                     <div class="notification-copy">
-                                        <h3>Clothing recommendations</h3>
-                                        <p>Get notified about suitable clothing for the day.</p>
+                                        <h3 id="notify-types-clothing-label">Clothing recommendations</h3>
+                                        <p id="notify-types-clothing-description">Get notified about suitable clothing for the day.</p>
                                     </div>
-                                    <label class="switch" aria-label="Enable clothing recommendations">
-                                        <input type="checkbox" id="notify-types-clothing" checked>
-                                        <span class="slider"></span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notify-types-clothing" role="switch" aria-labelledby="notify-types-clothing-label" aria-describedby="notify-types-clothing-description" checked>
+                                        <span class="slider" aria-hidden="true"></span>
                                     </label>
                                 </div>
 
@@ -471,12 +499,12 @@
                                         <i data-lucide="info"></i>
                                     </span>
                                     <div class="notification-copy">
-                                        <h3>General updates</h3>
-                                        <p>New features, tips, and important updates from Clima.</p>
+                                        <h3 id="notify-types-general-updates-label">General updates</h3>
+                                        <p id="notify-types-general-updates-description">New features, tips, and important updates from Clima.</p>
                                     </div>
-                                    <label class="switch" aria-label="Enable general updates">
-                                        <input type="checkbox" id="notify-types-info">
-                                        <span class="slider"></span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="notify-types-info" role="switch" aria-labelledby="notify-types-general-updates-label" aria-describedby="notify-types-general-updates-description">
+                                        <span class="slider" aria-hidden="true"></span>
                                     </label>
                                 </div>
                             </div>
@@ -507,9 +535,9 @@
                                     </select>
                                 </label>
                             </div>
-                            <p class="quiet-hours-note">Weather alerts and critical notifications will always be sent.</p>
-                            <p class="notification-save-status" data-notification-save-status role="status" aria-live="polite"></p>
+                            <p class="quiet-hours-note">Quiet hours are saved as a preference; notification delivery is not configured yet.</p>
                         </article>
+                        <p class="notification-save-status" data-notification-save-status role="status" aria-live="polite"></p>
                     </div>
                     <aside class="profile-insights" aria-label="Weather overview">
                         <article class="profile-card insight-card current-weather-card">
@@ -615,84 +643,6 @@
                             <p class="password-change-status" data-password-change-status role="status" aria-live="polite"></p>
                         </article>
 
-                        <article class="profile-card security-card two-factor-card">
-                            <header class="security-card-header">
-                                <h2>Two-Factor Authentication</h2>
-                                <p>Add an extra layer of security to your account.</p>
-                            </header>
-
-                            <div class="two-factor-row">
-                                <span class="security-feature-icon" aria-hidden="true">
-                                    <i data-lucide="shield"></i>
-                                </span>
-                                <div class="two-factor-copy">
-                                    <div class="two-factor-title">
-                                        <h3>Two-factor authentication</h3>
-                                        <span data-two-factor-badge>Checking status</span>
-                                    </div>
-                                    <p data-two-factor-description>Use an authenticator app to require a code at sign-in.</p>
-                                </div>
-                                <button type="button" class="two-factor-action" data-two-factor-action disabled>Loading...</button>
-                            </div>
-
-                            <div class="two-factor-panel" data-two-factor-panel hidden>
-                                <p class="two-factor-status" data-two-factor-status role="status" aria-live="polite"></p>
-
-                                <section class="two-factor-setup" data-two-factor-setup>
-                                    <label for="two-factor-setup-password">Confirm your current password</label>
-                                    <span class="security-password-input two-factor-input">
-                                        <input id="two-factor-setup-password" type="password" autocomplete="current-password"
-                                            data-password-label="current password" />
-                                        <button type="button" class="security-password-toggle" data-toggle-password
-                                            aria-label="Show current password" aria-pressed="false">
-                                            <i data-lucide="eye-off" aria-hidden="true"></i>
-                                        </button>
-                                    </span>
-                                    <button type="button" class="two-factor-action" data-two-factor-start>Start setup</button>
-
-                                    <div class="two-factor-enrollment" data-two-factor-enrollment hidden>
-                                        <p>In your authenticator app, add an account and choose to enter a setup key manually.</p>
-                                        <label for="two-factor-secret">Setup key</label>
-                                        <code id="two-factor-secret" class="two-factor-secret" data-two-factor-secret></code>
-                                        <label for="two-factor-setup-code">Current six-digit app code</label>
-                                        <input id="two-factor-setup-code" class="two-factor-code-input" type="text"
-                                            inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
-                                        <button type="button" class="two-factor-action" data-two-factor-confirm>Enable two-factor authentication</button>
-                                    </div>
-                                </section>
-
-                                <section class="two-factor-disable" data-two-factor-disable hidden>
-                                    <label for="two-factor-disable-password">Confirm your current password</label>
-                                    <span class="security-password-input two-factor-input">
-                                        <input id="two-factor-disable-password" type="password" autocomplete="current-password"
-                                            data-password-label="current password" />
-                                        <button type="button" class="security-password-toggle" data-toggle-password
-                                            aria-label="Show current password" aria-pressed="false">
-                                            <i data-lucide="eye-off" aria-hidden="true"></i>
-                                        </button>
-                                    </span>
-                                    <label for="two-factor-disable-code">Authenticator or recovery code</label>
-                                    <input id="two-factor-disable-code" class="two-factor-code-input" type="text"
-                                        autocomplete="one-time-code" maxlength="39" autocapitalize="characters" spellcheck="false" />
-                                    <label class="two-factor-recovery-choice">
-                                        <input type="checkbox" data-two-factor-use-recovery />
-                                        <span>Use an unused recovery code</span>
-                                    </label>
-                                    <div class="two-factor-actions">
-                                        <button type="button" class="two-factor-action" data-two-factor-disable-button>Disable two-factor authentication</button>
-                                        <button type="button" class="two-factor-secondary-action" data-two-factor-reissue>Replace recovery codes</button>
-                                    </div>
-                                </section>
-
-                                <section class="two-factor-recovery-codes" data-two-factor-recovery hidden>
-                                    <h3>Save your recovery codes</h3>
-                                    <p>Each code works once. Store them somewhere private; Clima cannot show them again.</p>
-                                    <ol data-two-factor-recovery-list></ol>
-                                    <button type="button" class="two-factor-secondary-action" data-two-factor-recovery-dismiss>I saved these codes</button>
-                                </section>
-                            </div>
-                        </article>
-
                         <article class="profile-card security-card security-tips-card">
                             <header class="security-card-header">
                                 <h2>Account Security Tips</h2>
@@ -761,7 +711,7 @@
                                 <span><i data-lucide="lightbulb" aria-hidden="true"></i></span>
                                 <h2>Tip</h2>
                             </div>
-                            <p>Keep your account secure by using a strong password and enabling two-factor authentication.</p>
+                            <p>Use a long, unique password and avoid reusing it on other websites.</p>
                         </article>
                     </aside>
                     </div>

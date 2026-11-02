@@ -3,3 +3,4 @@ database.php
 /backend/config/security.php
 .env
 .DS_Store
+node_modules/

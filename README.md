@@ -94,7 +94,6 @@ If you already created the `clima_app` database before this change, open phpMyAd
 
 For a new database, run [database/clima_app_schema.sql](database/clima_app_schema.sql) instead; it already includes these fields. Your current database already has the `bio` and `personal_tags` fields required by the Edit Personal Info form.
 
-
 ## Project Structure
 
 clima-weather-app/

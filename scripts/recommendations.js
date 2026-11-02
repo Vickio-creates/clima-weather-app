@@ -168,10 +168,10 @@ function updateRecommendationCards(recommendations) {
   setText("#outdoor-recommendation-detail", outdoor.detail || "No outdoor detail available.");
   setText("#outdoor-recommendation-reason", outdoor.reason || "No outdoor reason available.");
 
-  // Weather focus card.
-  setText("#focus-recommendation-page", focus.title || "Weather focus");
-  setText("#focus-recommendation-detail", focus.detail || "No weather focus detail available.");
-  setText("#focus-recommendation-reason", focus.reason || "No weather focus reason available.");
+  // Profile-based weather guidance card.
+  setText("#focus-recommendation-page", focus.title || "Personal weather guidance");
+  setText("#focus-recommendation-detail", focus.detail || "No profile-based weather guidance available.");
+  setText("#focus-recommendation-reason", focus.reason || "No profile-based weather explanation available.");
 
   // Bottom explanation section.
   setText("#reason-temperature", reasons.temperature || clothing.reason || "Temperature checked.");

@@ -1,5 +1,6 @@
 const RECENT_SEARCH_LIMIT = 10;
 const DASHBOARD_RECENT_LIMIT = 2;
+let dashboardRecommendationRequestId = 0;
 
 document.addEventListener("DOMContentLoaded", async () => {
   const currentUser =
@@ -193,14 +194,7 @@ function renderWeather(data, options = {}) {
     updateHourlyGlance(data);
   }
 
-  updateDashboardRecommendations(
-    data.temperature,
-    condition,
-    data.description,
-    windSpeed,
-    humidity,
-  );
-  updateAiGuidance(data, condition, windSpeed, humidity);
+  loadPersonalizedDashboardGuidance(data);
 
   if (window.lucide) lucide.createIcons();
 
@@ -586,104 +580,60 @@ function renderSearchHistory() {
   if (window.lucide) lucide.createIcons();
 }
 
-function updateDashboardRecommendations(
-  temperature,
-  condition,
-  description,
-  windSpeed,
-  humidity,
-) {
-  const wear = document.querySelector("#wear-recommendation");
-  const umbrella = document.querySelector("#umbrella-recommendation");
-  const outdoor = document.querySelector("#outdoor-recommendation");
-
-  const rainy = isWetCondition(condition, description);
-
-  if (wear) {
-    wear.textContent = getWearAdvice(temperature);
-  }
-
-  if (umbrella) {
-    umbrella.textContent = rainy ? "Recommended" : "Not needed now";
-  }
-
-  if (outdoor) {
-    outdoor.textContent = getOutdoorAdvice(
-      temperature,
-      windSpeed,
-      humidity,
-      rainy,
-    );
-  }
-}
-
-function updateAiGuidance(data, condition, windSpeed, humidity) {
+async function loadPersonalizedDashboardGuidance(weatherData) {
+  const requestId = ++dashboardRecommendationRequestId;
   const aiList = document.querySelector(".ai-list");
   if (!aiList) return;
 
-  const temperature = Number(data.temperature);
-  const feelsLike = data.feelsLike ?? data.temperature;
-  const conditionText = formatCondition(data.description || condition);
-  const rainy = isWetCondition(condition);
-  const items = [
-    {
-      label: "Now",
-      text: `${conditionText} now, ${data.temperature}°C and feels like ${feelsLike}°C.`,
-    },
-    {
-      label: "Wear",
-      text: `${getWearAdvice(temperature)}.`,
-    },
-    {
-      label: "Rain",
-      text: rainy ? "Carry an umbrella." : "Umbrella not needed right now.",
-    },
-    {
-      label: "Plan",
-      text: `${getOutdoorAdvice(temperature, windSpeed, humidity, rainy)}.`,
-    },
-  ];
+  aiList.textContent = "Loading recommendations based on your saved profile...";
 
-  aiList.innerHTML = "";
+  try {
+    const response = await fetch("backend/recommendations/generate.php", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ weather: weatherData }),
+    });
+    const result = await response.json();
 
-  items.forEach((item) => {
-    const listItem = document.createElement("li");
-    const label = document.createElement("span");
+    if (!response.ok) {
+      throw new Error(result.error || "Could not load personalized guidance.");
+    }
 
-    label.textContent = item.label;
-    listItem.append(label, ` ${item.text}`);
-    aiList.appendChild(listItem);
-  });
-}
+    if (requestId !== dashboardRecommendationRequestId) return;
 
-function isWetCondition(condition, description = "") {
-  const text = `${condition} ${description}`.toLowerCase();
+    const recommendations = result.recommendations || {};
+    const cards = recommendations.cards || {};
+    const condition = weatherData.condition || weatherData.description || "Unknown";
+    const conditionText = formatCondition(weatherData.description || condition);
+    const feelsLike = weatherData.feelsLike ?? weatherData.temperature;
 
-  return ["rain", "drizzle", "thunderstorm", "shower", "snow", "mist"].some(
-    (word) => text.includes(word),
-  );
-}
+    setText("#wear-recommendation", cards.clothing?.title || "Check current conditions");
+    setText("#umbrella-recommendation", cards.rain?.title || "Check the rain forecast");
+    setText("#outdoor-recommendation", cards.outdoor?.title || "Check outdoor conditions");
 
-function getWearAdvice(temperature) {
-  const value = Number(temperature);
+    const items = [
+      {
+        label: "Now",
+        text: `${conditionText}, ${weatherData.temperature}°C and feels like ${feelsLike}°C.`,
+      },
+      { label: "Wear", text: cards.clothing?.detail || cards.clothing?.title || "No clothing guidance available." },
+      { label: "Rain", text: cards.rain?.detail || cards.rain?.title || "No rain guidance available." },
+      { label: "Plan", text: cards.outdoor?.detail || cards.outdoor?.title || "No outdoor guidance available." },
+    ];
 
-  if (!Number.isFinite(value)) return "Check current conditions";
-  if (value <= 0) return "Warm coat & layers";
-  if (value <= 10) return "Warm jacket";
-  if (value <= 18) return "Light jacket";
-  if (value <= 26) return "Light layers";
+    aiList.replaceChildren();
+    items.forEach((item) => {
+      const listItem = document.createElement("li");
+      const label = document.createElement("span");
+      label.textContent = item.label;
+      listItem.append(label, ` ${item.text}`);
+      aiList.appendChild(listItem);
+    });
+  } catch (error) {
+    if (requestId !== dashboardRecommendationRequestId) return;
 
-  return "Light breathable clothes";
-}
-
-function getOutdoorAdvice(temperature, windSpeed, humidity, rainy) {
-  const temperatureValue = Number(temperature);
-  const windValue = Number(windSpeed);
-  const humidityValue = Number(humidity);
-
-  if (rainy) return "Better before rain";
-  if (windValue >= 10) return "Careful, windy";
-  if (humidityValue >= 85 && temperatureValue >= 25) return "Keep it light";
-
-  return "Good conditions";
+    console.error("Could not load personalized dashboard guidance:", error);
+    aiList.textContent = "Personalized guidance is unavailable right now.";
+  }
 }

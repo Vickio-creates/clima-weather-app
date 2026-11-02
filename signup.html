@@ -79,9 +79,9 @@
         <label for="signup-password">Password</label>
         <div class="field">
           <i data-lucide="lock"></i>
-          <input type="password" id="signup-password" name="password" placeholder="Create a strong password" minlength="15"
-            autocomplete="new-password" required />
-          <button type="button" class="password-toggle" data-toggle-password aria-label="Show password">
+          <input type="password" id="signup-password" name="password" minlength="15"
+            autocomplete="new-password" data-password-label="password" required />
+          <button type="button" class="password-toggle" data-toggle-password aria-label="Show password" aria-pressed="false">
             <i data-lucide="eye-off"></i>
           </button>
         </div>
@@ -91,9 +91,9 @@
         <label for="signup-confirm">Confirm password</label>
         <div class="field">
           <i data-lucide="shield-check"></i>
-          <input type="password" id="signup-confirm" name="confirm_password" placeholder="Repeat your password" minlength="15"
-            autocomplete="new-password" required />
-          <button type="button" class="password-toggle" data-toggle-password aria-label="Show password">
+          <input type="password" id="signup-confirm" name="confirm_password" minlength="15"
+            autocomplete="new-password" data-password-label="confirmation password" required />
+          <button type="button" class="password-toggle" data-toggle-password aria-label="Show confirmation password" aria-pressed="false">
             <i data-lucide="eye-off"></i>
           </button>
         </div>

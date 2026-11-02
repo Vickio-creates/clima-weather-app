@@ -10,7 +10,6 @@ const CLIMA_SESSION_KEY = "climaSession";
 const AUTH_ENDPOINTS = {
   register: "backend/auth/register.php",
   login: "backend/auth/login.php",
-  verifyTwoFactor: "backend/auth/verify_two_factor.php",
   logout: "backend/auth/logout.php",
   session: "backend/auth/session.php",
   profileUpdate: "backend/profile/update.php",
@@ -397,13 +396,13 @@ function initRegisterForm() {
       // Show success message.
       showAuthMessage(
         message,
-        "Account created. Opening your dashboard...",
+        "Account created. Welcome to Clima!",
         false,
       );
 
       // Redirect to the app dashboard after a short delay.
       setTimeout(() => {
-        window.location.href = "app.html";
+        window.location.href = "onboarding/welcome.html";
       }, 650);
     } catch (error) {
       // Show backend or network error.
@@ -424,36 +423,6 @@ function initLoginForm() {
   // Stop if this page does not have a login form.
   if (!form) return;
 
-  const credentialsFields = document.querySelector("#login-credentials-fields");
-  const twoFactorFields = document.querySelector("#login-two-factor-fields");
-  const twoFactorCode = document.querySelector("#login-two-factor-code");
-  const useRecoveryCode = document.querySelector("#login-use-recovery-code");
-  const backToPasswordButton = document.querySelector("#login-back-to-password");
-  let awaitingTwoFactor = false;
-
-  useRecoveryCode?.addEventListener("change", () => {
-    if (!twoFactorCode) return;
-    twoFactorCode.maxLength = useRecoveryCode.checked ? 39 : 6;
-    twoFactorCode.inputMode = useRecoveryCode.checked ? "text" : "numeric";
-    document.querySelector("#login-two-factor-hint").textContent = useRecoveryCode.checked
-      ? "Enter one unused recovery code."
-      : "Enter the six-digit code from your authenticator app.";
-  });
-
-  backToPasswordButton?.addEventListener("click", () => {
-    awaitingTwoFactor = false;
-    twoFactorFields.hidden = true;
-    credentialsFields.hidden = false;
-    twoFactorCode.value = "";
-    useRecoveryCode.checked = false;
-    twoFactorCode.maxLength = 6;
-    twoFactorCode.inputMode = "numeric";
-    const submitButton = form.querySelector("button[type='submit']");
-    submitButton.textContent = "Log in";
-    submitButton.dataset.originalText = "Log in";
-    document.querySelector("#auth-message").textContent = "";
-  });
-
   // Handle form submission.
   form.addEventListener("submit", async (event) => {
     // Prevent page refresh.
@@ -470,33 +439,6 @@ function initLoginForm() {
         window.location.href = "app.html";
       }, 650);
     };
-
-    if (awaitingTwoFactor) {
-      const code = twoFactorCode.value.trim();
-      const recovery = useRecoveryCode.checked;
-
-      if (!code || (!recovery && !/^\d{6}$/.test(code))) {
-        return showAuthMessage(
-          message,
-          recovery ? "Enter one of your recovery codes." : "Enter the six-digit authenticator code.",
-          true,
-        );
-      }
-
-      try {
-        setButtonLoading(submitButton, true, "Verifying code...");
-        const data = await requestJson(AUTH_ENDPOINTS.verifyTwoFactor, {
-          method: "POST",
-          body: JSON.stringify({ code, method: recovery ? "recovery" : "totp" }),
-        });
-        finishLogin(data);
-      } catch (error) {
-        showAuthMessage(message, error.message, true);
-      } finally {
-        setButtonLoading(submitButton, false);
-      }
-      return;
-    }
 
     // Read login input values.
     const email = document.querySelector("#login-email").value.trim().toLowerCase();
@@ -525,17 +467,6 @@ function initLoginForm() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-
-      if (data.requiresTwoFactor) {
-        awaitingTwoFactor = true;
-        credentialsFields.hidden = true;
-        twoFactorFields.hidden = false;
-        document.querySelector("#login-password").value = "";
-        submitButton.dataset.originalText = "Verify code";
-        twoFactorCode.focus();
-        showAuthMessage(message, data.message, false);
-        return;
-      }
 
       finishLogin(data);
     } catch (error) {

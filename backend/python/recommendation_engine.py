@@ -64,12 +64,19 @@ def format_condition(condition):
 
 
 # Create clothing recommendation.
-def get_clothing_advice(temperature, condition, clothing_preferences):
+def get_clothing_advice(
+    temperature,
+    condition,
+    clothing_preferences,
+    weather_sensitivities=None
+):
     rainy = is_rainy_condition(condition)
 
     prefers_waterproof = has_preference(clothing_preferences, "Waterproof")
     prefers_warm = has_preference(clothing_preferences, "Warm Clothing")
     prefers_light = has_preference(clothing_preferences, "Light Clothing")
+    cold_sensitive = has_preference(weather_sensitivities, "Sensitive to Cold")
+    heat_sensitive = has_preference(weather_sensitivities, "Sensitive to Heat")
 
     # Rain and waterproof preference get priority.
     if rainy and prefers_waterproof:
@@ -77,6 +84,20 @@ def get_clothing_advice(temperature, condition, clothing_preferences):
             "title": "Waterproof outfit",
             "detail": "Rainy or wet conditions are possible, so waterproof clothing is a good choice.",
             "reason": "Rain is detected and your profile includes waterproof clothing."
+        }
+
+    if temperature <= 12 and cold_sensitive:
+        return {
+            "title": "Extra warmth recommended",
+            "detail": "Based on your cold sensitivity, an extra layer may feel more comfortable.",
+            "reason": f"The temperature is {temperature}°C and your profile notes cold sensitivity."
+        }
+
+    if temperature >= 24 and heat_sensitive:
+        return {
+            "title": "Light clothing recommended",
+            "detail": "Based on your heat sensitivity, lighter clothing may feel more comfortable.",
+            "reason": f"The temperature is {temperature}°C and your profile notes heat sensitivity."
         }
 
     # Cold weather and warm clothing preference.
@@ -132,17 +153,38 @@ def get_clothing_advice(temperature, condition, clothing_preferences):
 
 
 # Create rain preparation recommendation.
-def get_rain_advice(condition, clothing_preferences, weather_focus):
+def get_rain_advice(
+    condition,
+    clothing_preferences,
+    weather_focus,
+    weather_sensitivities=None
+):
     rainy = is_rainy_condition(condition)
 
     prefers_waterproof = has_preference(clothing_preferences, "Waterproof")
     rain_focus_enabled = has_preference(weather_focus, "Rain Alerts")
+    rain_sensitive = has_preference(weather_sensitivities, "Sensitive to Rain")
+    snow_sensitive = has_preference(weather_sensitivities, "Sensitive to Snow")
 
     if rainy and prefers_waterproof:
         return {
             "title": "Use waterproof protection",
             "detail": "Rainy or wet weather is detected, and your profile includes waterproof clothing.",
             "reason": "Rain is detected and your saved clothing preference includes waterproof protection."
+        }
+
+    condition_text = str(condition or "").lower()
+    rain_condition = any(
+        word in condition_text
+        for word in ["rain", "drizzle", "thunderstorm", "shower", "mist"]
+    )
+    snow_condition = "snow" in condition_text
+
+    if (rain_condition and rain_sensitive) or (snow_condition and snow_sensitive):
+        return {
+            "title": "Plan for wet weather",
+            "detail": "Your weather sensitivity is saved, so Clima highlights waterproof clothing or a covered route.",
+            "reason": "The current forecast includes wet weather and your profile includes a matching sensitivity."
         }
 
     if rainy and rain_focus_enabled:
@@ -172,6 +214,7 @@ def has_outdoor_profile(activities, main_activity):
 
     return (
         has_preference(activities, "Outdoor Worker")
+        or has_preference(activities, "Construction Worker")
         or has_preference(activities, "Athlete")
         or has_preference(activities, "Traveler")
         or has_preference(activities, "Student")
@@ -251,42 +294,80 @@ def get_weather_focus_advice(
     condition,
     wind_speed,
     humidity,
-    weather_focus
+    weather_focus,
+    weather_sensitivities=None
 ):
     rainy = is_rainy_condition(condition)
 
-    cold_focus = has_preference(weather_focus, "Sensitive to Cold")
-    heat_focus = has_preference(weather_focus, "Sensitive to Heat")
+    cold_sensitive = has_preference(weather_sensitivities, "Sensitive to Cold")
+    heat_sensitive = has_preference(weather_sensitivities, "Sensitive to Heat")
+    rain_sensitive = has_preference(weather_sensitivities, "Sensitive to Rain")
+    wind_sensitive = has_preference(weather_sensitivities, "Sensitive to Wind")
+    snow_sensitive = has_preference(weather_sensitivities, "Sensitive to Snow")
+    pollen_sensitive = has_preference(weather_sensitivities, "Sensitive to Pollen")
+    poor_air_sensitive = has_preference(
+        weather_sensitivities,
+        "Sensitive to Poor Air Quality"
+    )
+
+    # Preserve old weather_focus values for existing profiles while new sensitivities
+    # use their dedicated field.
     rain_focus = has_preference(weather_focus, "Rain Alerts")
     wind_focus = has_preference(weather_focus, "Strong Wind Alerts")
     air_focus = has_preference(weather_focus, "Air Quality Alerts")
 
-    if rain_focus and rainy:
+    condition_text = str(condition or "").lower()
+
+    if snow_sensitive and "snow" in condition_text:
+        return {
+            "title": "Snow sensitivity noted",
+            "detail": "Snow is in the forecast; allow extra time and consider suitable footwear.",
+            "reason": "Your profile notes snow sensitivity and the current condition includes snow."
+        }
+
+    rain_condition = any(
+        word in condition_text
+        for word in ["rain", "drizzle", "thunderstorm", "shower", "mist"]
+    )
+
+    if (rain_sensitive and rain_condition) or (rain_focus and rainy):
+        if rain_sensitive and rain_condition:
+            return {
+                "title": "Rain sensitivity noted",
+                "detail": "Rain is in the forecast; a covered route or waterproof layer may feel more comfortable.",
+                "reason": "Your profile notes rain sensitivity and the current condition is wet."
+            }
         return {
             "title": "Rain focus active",
             "detail": "Rain is part of your saved weather focus, so Clima highlights rain preparation.",
             "reason": "Your profile includes Rain Alerts and rainy conditions are detected."
         }
 
-    if wind_focus and wind_speed >= 10:
+    if (wind_sensitive or wind_focus) and wind_speed >= 10:
+        if wind_sensitive:
+            return {
+                "title": "Wind sensitivity noted",
+                "detail": "Wind is strong; a sheltered route may feel more comfortable.",
+                "reason": f"Wind speed is {wind_speed} m/s and your profile notes wind sensitivity."
+            }
         return {
             "title": "Wind focus active",
             "detail": "Strong wind is part of your saved weather focus, so Clima warns you to be careful.",
             "reason": f"Wind speed is {wind_speed} m/s and Strong Wind Alerts are enabled."
         }
 
-    if cold_focus and temperature <= 8:
+    if cold_sensitive and temperature <= 12:
         return {
             "title": "Cold sensitivity noted",
-            "detail": "You selected cold sensitivity, so Clima gives extra attention to warmth.",
-            "reason": f"{temperature}°C is low and your profile includes cold sensitivity."
+            "detail": "An extra layer may feel more comfortable in these conditions.",
+            "reason": f"The temperature is {temperature}°C and your profile notes cold sensitivity."
         }
 
-    if heat_focus and temperature >= 25:
+    if heat_sensitive and temperature >= 24:
         return {
             "title": "Heat sensitivity noted",
-            "detail": "You selected heat sensitivity, so Clima recommends lighter activity.",
-            "reason": f"{temperature}°C is warm and your profile includes heat sensitivity."
+            "detail": "Lighter clothing may feel more comfortable in these conditions.",
+            "reason": f"The temperature is {temperature}°C and your profile notes heat sensitivity."
         }
 
     if air_focus and humidity >= 85:
@@ -296,10 +377,17 @@ def get_weather_focus_advice(
             "reason": f"Humidity is {humidity}%, and your profile includes Air Quality Alerts."
         }
 
+    if pollen_sensitive or poor_air_sensitive:
+        return {
+            "title": "Environmental forecast unavailable",
+            "detail": "Your environmental sensitivities are saved, but current weather data does not include pollen or air-quality forecasts.",
+            "reason": "Clima needs pollen or air-quality measurements before it can tailor advice for these sensitivities."
+        }
+
     return {
-        "title": "No major focus alert",
-        "detail": "Your saved weather focus does not show a serious issue right now.",
-        "reason": "No saved weather focus has reached a warning condition."
+        "title": "No matching condition right now",
+        "detail": "Current weather data does not show a condition that matches your saved sensitivities.",
+        "reason": "No supported sensitivity-related condition is currently present."
     }
 
 
@@ -360,7 +448,7 @@ def build_explanation(
 
     return (
         f"{base} The decision also considers humidity, wind speed, saved clothing "
-        f"preferences, activity profile, and weather focus settings."
+        f"preferences, activity profile, and weather sensitivities."
     )
 
 
@@ -373,6 +461,7 @@ def generate_recommendations(payload):
 
     activities = preferences.get("activities", [])
     weather_focus = preferences.get("weatherFocus", [])
+    weather_sensitivities = preferences.get("weatherSensitivities", []) or []
     clothing_style = preferences.get("clothingStyle", [])
     assistant_tone = preferences.get("assistantTone", [])
 
@@ -390,13 +479,15 @@ def generate_recommendations(payload):
     clothing = get_clothing_advice(
         temperature,
         condition,
-        clothing_style
+        clothing_style,
+        weather_sensitivities
     )
 
     rain = get_rain_advice(
         condition,
         clothing_style,
-        weather_focus
+        weather_focus,
+        weather_sensitivities
     )
 
     outdoor = get_outdoor_advice(
@@ -413,7 +504,8 @@ def generate_recommendations(payload):
         condition,
         wind_speed,
         humidity,
-        weather_focus
+        weather_focus,
+        weather_sensitivities
     )
 
     return {

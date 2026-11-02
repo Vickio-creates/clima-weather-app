@@ -4,7 +4,7 @@ const tabs = document.querySelectorAll("[data-profile-tab]");
 // Find all profile panels/sections that belong to the tabs.
 const panels = document.querySelectorAll("[data-profile-panel]");
 
-// Find all selectable preference buttons, such as Student, Rain Alerts, Warm Clothing.
+// Find all selectable preference buttons, such as Student, Sensitive to Cold, Warm Clothing.
 const preferenceButtons = document.querySelectorAll("button.profile-pill");
 
 // Find the Save Changes button and the paragraph used to show save status messages.
@@ -13,7 +13,7 @@ const savePreferencesStatus = document.querySelector(".save-preferences-status")
 
 // Find the summary text elements on the right side of the Preferences page.
 const summaryActivities = document.querySelector("[data-summary-activities]");
-const summaryWeather = document.querySelector("[data-summary-weather]");
+const summarySensitivities = document.querySelector("[data-summary-sensitivities]");
 const summaryClothing = document.querySelector("[data-summary-clothing]");
 const summaryAssistant = document.querySelector("[data-summary-assistant]");
 
@@ -30,6 +30,10 @@ const notificationControls = {
     quietHoursFrom: document.querySelector("#quiet-hours-from"),
     quietHoursTo: document.querySelector("#quiet-hours-to"),
 };
+const weatherAlertTypeControls = Array.from(
+    document.querySelectorAll("[data-weather-alert-type]")
+);
+const weatherAlertSubtypeGroup = document.querySelector("#weather-alert-subtypes");
 
 const notificationSaveStatus = document.querySelector("[data-notification-save-status]");
 const changePasswordButton = document.querySelector(".security-update-button");
@@ -37,6 +41,19 @@ const passwordChangeStatus = document.querySelector("[data-password-change-statu
 let notificationSaveTimer;
 let notificationRequestInProgress = false;
 let notificationSavePending = false;
+let isSavingPreferences = false;
+
+
+function setPreferencesSaveStatus(message, state = "") {
+    if (!savePreferencesStatus) {
+        return;
+    }
+
+    savePreferencesStatus.textContent = message;
+    savePreferencesStatus.classList.toggle("is-error", state === "error");
+    savePreferencesStatus.classList.toggle("is-success", state === "success");
+    savePreferencesStatus.classList.toggle("is-pending", state === "pending");
+}
 
 
 // Send the password change to the backend for the currently logged-in user.
@@ -87,229 +104,6 @@ if (changePasswordButton && passwordChangeStatus) {
 }
 
 
-// Keep the two-factor card connected to the authenticated PHP endpoints.
-const twoFactorAction = document.querySelector("[data-two-factor-action]");
-const twoFactorPanel = document.querySelector("[data-two-factor-panel]");
-const twoFactorBadge = document.querySelector("[data-two-factor-badge]");
-const twoFactorDescription = document.querySelector("[data-two-factor-description]");
-const twoFactorStatus = document.querySelector("[data-two-factor-status]");
-const twoFactorSetup = document.querySelector("[data-two-factor-setup]");
-const twoFactorEnrollment = document.querySelector("[data-two-factor-enrollment]");
-const twoFactorDisable = document.querySelector("[data-two-factor-disable]");
-const twoFactorRecovery = document.querySelector("[data-two-factor-recovery]");
-const twoFactorRecoveryList = document.querySelector("[data-two-factor-recovery-list]");
-let twoFactorEnabled = false;
-
-function setTwoFactorMessage(message, isError = false) {
-    if (!twoFactorStatus) return;
-    twoFactorStatus.textContent = message;
-    twoFactorStatus.classList.toggle("is-error", isError);
-}
-
-async function requestTwoFactorJson(url, method = "POST", payload = {}) {
-    const response = await fetch(url, {
-        method,
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        ...(method === "GET" ? {} : { body: JSON.stringify(payload) }),
-    });
-    const result = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-        throw new Error(result.error || "Could not update two-factor authentication.");
-    }
-
-    return result;
-}
-
-function updateTwoFactorStatus(enabled, recoveryCodesRemaining = 0) {
-    twoFactorEnabled = enabled;
-    twoFactorBadge.textContent = enabled ? "Enabled" : "Not enabled";
-    twoFactorAction.textContent = enabled ? "Manage" : "Set up";
-    twoFactorAction.disabled = false;
-    twoFactorDescription.textContent = enabled
-        ? `Authenticator sign-in is active. ${recoveryCodesRemaining} recovery codes remain.`
-        : "Use an authenticator app to require a code at sign-in.";
-}
-
-function displayRecoveryCodes(codes) {
-    twoFactorRecoveryList.replaceChildren();
-    codes.forEach((value) => {
-        const item = document.createElement("li");
-        const code = document.createElement("code");
-        code.textContent = value;
-        item.append(code);
-        twoFactorRecoveryList.append(item);
-    });
-    twoFactorRecovery.hidden = false;
-}
-
-async function loadTwoFactorStatus() {
-    if (!twoFactorAction || !twoFactorPanel) return;
-
-    try {
-        const result = await requestTwoFactorJson("backend/security/two_factor_status.php", "GET");
-        updateTwoFactorStatus(Boolean(result.enabled), Number(result.recoveryCodesRemaining || 0));
-    } catch (error) {
-        twoFactorAction.disabled = true;
-        twoFactorAction.textContent = "Unavailable";
-        setTwoFactorMessage(error.message, true);
-    }
-}
-
-if (twoFactorAction && twoFactorPanel) {
-    loadTwoFactorStatus();
-
-    twoFactorAction.addEventListener("click", () => {
-        twoFactorPanel.hidden = !twoFactorPanel.hidden;
-        if (twoFactorPanel.hidden) return;
-
-        setTwoFactorMessage("");
-        // Keep one-time recovery codes visible if the panel was closed before
-        // the user confirmed that they had saved them.
-        if (!twoFactorRecovery.hidden) return;
-
-        if (twoFactorEnabled) {
-            twoFactorSetup.hidden = true;
-            twoFactorDisable.hidden = false;
-            document.querySelector("#two-factor-disable-password").value = "";
-            document.querySelector("#two-factor-disable-code").value = "";
-        } else {
-            twoFactorSetup.hidden = false;
-            twoFactorDisable.hidden = true;
-            twoFactorEnrollment.hidden = true;
-            document.querySelector("[data-two-factor-secret]").textContent = "";
-            document.querySelector("[data-two-factor-start]").textContent = "Start setup";
-            document.querySelector("#two-factor-setup-password").value = "";
-            document.querySelector("#two-factor-setup-code").value = "";
-        }
-    });
-
-    document.querySelector("[data-two-factor-start]")?.addEventListener("click", async (event) => {
-        const button = event.currentTarget;
-        const password = document.querySelector("#two-factor-setup-password").value;
-        if (!password) {
-            setTwoFactorMessage("Enter your current password first.", true);
-            return;
-        }
-
-        button.disabled = true;
-        setTwoFactorMessage("Preparing authenticator setup...");
-        try {
-            const result = await requestTwoFactorJson("backend/security/two_factor_setup.php", "POST", {
-                currentPassword: password,
-            });
-            document.querySelector("#two-factor-setup-password").value = "";
-            document.querySelector("[data-two-factor-secret]").textContent = result.secret;
-            button.textContent = "Generate a new setup key";
-            twoFactorEnrollment.hidden = false;
-            setTwoFactorMessage(result.message || "Setup key created.");
-            document.querySelector("#two-factor-setup-code").focus();
-        } catch (error) {
-            setTwoFactorMessage(error.message, true);
-        } finally {
-            button.disabled = false;
-        }
-    });
-
-    document.querySelector("[data-two-factor-confirm]")?.addEventListener("click", async (event) => {
-        const button = event.currentTarget;
-        const code = document.querySelector("#two-factor-setup-code").value.trim();
-        if (!/^\d{6}$/.test(code)) {
-            setTwoFactorMessage("Enter the six-digit code shown in your authenticator app.", true);
-            return;
-        }
-
-        button.disabled = true;
-        setTwoFactorMessage("Verifying the authenticator...");
-        try {
-            const result = await requestTwoFactorJson("backend/security/two_factor_confirm.php", "POST", { code });
-            document.querySelector("#two-factor-setup-code").value = "";
-            document.querySelector("[data-two-factor-secret]").textContent = "";
-            twoFactorSetup.hidden = true;
-            twoFactorDisable.hidden = false;
-            updateTwoFactorStatus(true, result.recoveryCodes.length);
-            setTwoFactorMessage(result.message);
-            displayRecoveryCodes(result.recoveryCodes);
-        } catch (error) {
-            setTwoFactorMessage(error.message, true);
-        } finally {
-            button.disabled = false;
-        }
-    });
-
-    document.querySelector("[data-two-factor-disable-button]")?.addEventListener("click", async (event) => {
-        const button = event.currentTarget;
-        const currentPassword = document.querySelector("#two-factor-disable-password").value;
-        const code = document.querySelector("#two-factor-disable-code").value.trim();
-        const method = document.querySelector("[data-two-factor-use-recovery]").checked ? "recovery" : "totp";
-
-        if (!currentPassword || !code) {
-            setTwoFactorMessage("Enter your current password and verification code.", true);
-            return;
-        }
-
-        button.disabled = true;
-        setTwoFactorMessage("Disabling two-factor authentication...");
-        try {
-            const result = await requestTwoFactorJson("backend/security/two_factor_disable.php", "POST", {
-                currentPassword,
-                code,
-                method,
-            });
-            document.querySelector("#two-factor-disable-password").value = "";
-            document.querySelector("#two-factor-disable-code").value = "";
-            document.querySelector("[data-two-factor-use-recovery]").checked = false;
-            twoFactorDisable.hidden = true;
-            twoFactorSetup.hidden = false;
-            twoFactorEnrollment.hidden = true;
-            updateTwoFactorStatus(false, 0);
-            setTwoFactorMessage(result.message);
-        } catch (error) {
-            setTwoFactorMessage(error.message, true);
-        } finally {
-            button.disabled = false;
-        }
-    });
-
-    document.querySelector("[data-two-factor-reissue]")?.addEventListener("click", async (event) => {
-        const button = event.currentTarget;
-        const currentPassword = document.querySelector("#two-factor-disable-password").value;
-        const code = document.querySelector("#two-factor-disable-code").value.trim();
-
-        if (!currentPassword || !/^\d{6}$/.test(code)) {
-            setTwoFactorMessage("Enter your current password and a six-digit authenticator code.", true);
-            return;
-        }
-
-        button.disabled = true;
-        setTwoFactorMessage("Creating replacement recovery codes...");
-        try {
-            const result = await requestTwoFactorJson("backend/security/two_factor_recovery_codes.php", "POST", {
-                currentPassword,
-                code,
-            });
-            document.querySelector("#two-factor-disable-password").value = "";
-            document.querySelector("#two-factor-disable-code").value = "";
-            updateTwoFactorStatus(true, result.recoveryCodes.length);
-            setTwoFactorMessage(result.message);
-            displayRecoveryCodes(result.recoveryCodes);
-        } catch (error) {
-            setTwoFactorMessage(error.message, true);
-        } finally {
-            button.disabled = false;
-        }
-    });
-
-    document.querySelector("[data-two-factor-recovery-dismiss]")?.addEventListener("click", () => {
-        twoFactorRecovery.hidden = true;
-        twoFactorRecoveryList.replaceChildren();
-        loadTwoFactorStatus();
-        setTwoFactorMessage("Authenticator sign-in is active.");
-    });
-}
-
-
 // Go through each tab button one by one.
 tabs.forEach((tab) => {
     // Add a click event to each tab.
@@ -355,9 +149,7 @@ preferenceButtons.forEach((button) => {
         updatePreferencesSummary();
 
         // Clear the save message because the user changed preferences after saving.
-        if (savePreferencesStatus) {
-            savePreferencesStatus.textContent = "";
-        }
+        setPreferencesSaveStatus("");
     });
 });
 
@@ -365,22 +157,32 @@ preferenceButtons.forEach((button) => {
 // Add save behavior only if the Save button and status paragraph exist.
 if (savePreferencesButton && savePreferencesStatus) {
     savePreferencesButton.addEventListener("click", async () => {
+        if (isSavingPreferences) {
+            return;
+        }
+
         // Collect selected preference values from each preference group.
         const preferencesPayload = {
             activities: getSelectedPreferenceValues("activities"),
-            weatherFocus: getSelectedPreferenceValues("weather"),
+            weatherSensitivities: getSelectedPreferenceValues("weatherSensitivities"),
             clothingStyle: getSelectedPreferenceValues("clothing"),
             assistantTone: getSelectedPreferenceValues("assistant"),
         };
 
+        isSavingPreferences = true;
+        savePreferencesButton.disabled = true;
+        savePreferencesButton.setAttribute("aria-busy", "true");
+        preferenceButtons.forEach((button) => {
+            button.disabled = true;
+        });
+
         try {
-            // Show feedback while the request is being sent to the backend.
-            savePreferencesStatus.textContent = "Saving preferences...";
-            savePreferencesButton.disabled = true;
+            setPreferencesSaveStatus("Saving preferences...", "pending");
 
             // Send the selected preferences to the PHP backend.
             const response = await fetch("backend/profile/update_preferences.php", {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -388,22 +190,35 @@ if (savePreferencesButton && savePreferencesStatus) {
             });
 
             // Read the JSON response from PHP.
-            const result = await response.json();
+            const result = await response.json().catch(() => ({}));
 
             // If the backend returns an error, show the error message.
             if (!response.ok) {
-                savePreferencesStatus.textContent = result.error || "Could not save preferences.";
-                return;
+                throw new Error(result.error || `Could not save preferences (HTTP ${response.status}).`);
             }
 
-            // Show the success message returned by the backend.
-            savePreferencesStatus.textContent = result.message || "Preferences saved successfully.";
+            if (result.success !== true) {
+                throw new Error(result.error || "The server did not confirm that preferences were saved.");
+            }
+
+            // Announce success only after the server confirms the save.
+            setPreferencesSaveStatus(
+                result.message || "Preferences saved successfully.",
+                "success"
+            );
+            updatePreferencesSummary();
         } catch (error) {
-            // Show a general error message if the request fails.
-            savePreferencesStatus.textContent = "Could not save preferences. Please try again.";
+            const message = error instanceof TypeError
+                ? "Could not connect to save preferences. Check your connection and try again."
+                : error.message || "Could not save preferences. Please try again.";
+            setPreferencesSaveStatus(message, "error");
         } finally {
-            // Enable the Save button again after the request finishes.
+            isSavingPreferences = false;
             savePreferencesButton.disabled = false;
+            savePreferencesButton.removeAttribute("aria-busy");
+            preferenceButtons.forEach((button) => {
+                button.disabled = false;
+            });
         }
     });
 }
@@ -417,11 +232,11 @@ function updatePreferencesSummary() {
 
     summaryActivities.textContent = activitySummary || "None selected";
 
-    // Get selected weather preferences and show them in the Weather focus summary.
-    const weatherText = getSelectedPreferenceValues("weather");
-    const weatherSummary = weatherText.join(", ");
+    // Get selected sensitivities and show them in the matching summary.
+    const sensitivityText = getSelectedPreferenceValues("weatherSensitivities");
+    const sensitivitySummary = sensitivityText.join(", ");
 
-    summaryWeather.textContent = weatherSummary || "None selected";
+    summarySensitivities.textContent = sensitivitySummary || "None selected";
 
     // Get selected clothing preferences and show them in the Clothing style summary.
     const clothingText = getSelectedPreferenceValues("clothing");
@@ -478,14 +293,54 @@ function applySavedPreferences(preferences) {
         return;
     }
 
-    // Apply saved activities, weather focus, clothing style, and assistant tone.
+    // Apply saved activities, sensitivities, clothing style, and assistant tone.
     setActivePreferenceButtons("activities", preferences.activities || []);
-    setActivePreferenceButtons("weather", preferences.weatherFocus || []);
+    setActivePreferenceButtons(
+        "weatherSensitivities",
+        preferences.weatherSensitivities || []
+    );
     setActivePreferenceButtons("clothing", preferences.clothingStyle || []);
     setActivePreferenceButtons("assistant", preferences.assistantTone || []);
 
     // Update the summary after activating the saved buttons.
     updatePreferencesSummary();
+}
+
+
+function readLegacyOnboardingSensitivities() {
+    try {
+        const raw = sessionStorage.getItem("climaWeatherSensitivities");
+        if (raw === null) return null;
+
+        const savedValues = JSON.parse(raw);
+        if (!Array.isArray(savedValues)) return null;
+        if (savedValues.includes("none")) return [];
+
+        const labels = {
+            cold: "Sensitive to Cold",
+            heat: "Sensitive to Heat",
+            rain: "Sensitive to Rain",
+            wind: "Sensitive to Wind",
+            snow: "Sensitive to Snow",
+            pollen: "Sensitive to Pollen",
+            air_quality: "Sensitive to Poor Air Quality",
+            "Sensitive to Cold": "Sensitive to Cold",
+            "Sensitive to Heat": "Sensitive to Heat",
+            "Sensitive to Rain": "Sensitive to Rain",
+            "Sensitive to Wind": "Sensitive to Wind",
+            "Sensitive to Snow": "Sensitive to Snow",
+            "Sensitive to Pollen": "Sensitive to Pollen",
+            "Sensitive to Poor Air Quality": "Sensitive to Poor Air Quality",
+        };
+
+        if (savedValues.some((value) => !Object.prototype.hasOwnProperty.call(labels, value))) {
+            return null;
+        }
+
+        return Array.from(new Set(savedValues.map((value) => labels[value])));
+    } catch {
+        return null;
+    }
 }
 
 
@@ -498,9 +353,39 @@ async function loadSavedPreferences() {
 
     const user = await requireClimaAuth();
 
-    // If the backend returned saved preferences, apply them to the page.
+    // Migrate onboarding-only values only when the database has no value yet.
     if (user && user.preferences) {
-        applySavedPreferences(user.preferences);
+        let preferences = user.preferences;
+
+        if (!Array.isArray(preferences.weatherSensitivities)) {
+            const legacySensitivities = readLegacyOnboardingSensitivities();
+
+            if (legacySensitivities !== null) {
+                preferences = {
+                    ...preferences,
+                    weatherSensitivities: legacySensitivities,
+                };
+
+                try {
+                    const response = await fetch("backend/profile/update_preferences.php", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ weatherSensitivities: legacySensitivities }),
+                    });
+                    const result = await response.json().catch(() => ({}));
+
+                    if (response.ok && result.success === true) {
+                        sessionStorage.removeItem("climaWeatherSensitivities");
+                    }
+                } catch (error) {
+                    console.error("Could not migrate onboarding weather preferences:", error);
+                }
+            }
+        }
+
+        // The authenticated session response remains the source of saved values.
+        applySavedPreferences(preferences);
     }
 }
 
@@ -514,7 +399,16 @@ loadSavedPreferences();
 
 // Return true only on pages that include the complete notification form.
 function hasNotificationControls() {
-    return Object.values(notificationControls).every((control) => control);
+    return Object.values(notificationControls).every((control) => control) &&
+        weatherAlertTypeControls.length === 4;
+}
+
+
+function syncWeatherAlertSubtypeVisibility() {
+    if (weatherAlertSubtypeGroup && notificationControls.weatherAlerts) {
+        // Hiding the options never clears their checked values.
+        weatherAlertSubtypeGroup.hidden = !notificationControls.weatherAlerts.checked;
+    }
 }
 
 
@@ -540,6 +434,12 @@ function applyNotificationSettings(settings) {
         notificationControls.weatherAlerts.checked = types.weatherAlerts;
     }
 
+    if (Array.isArray(types.weatherAlertTypes)) {
+        weatherAlertTypeControls.forEach((control) => {
+            control.checked = types.weatherAlertTypes.includes(control.value);
+        });
+    }
+
     if (typeof types.dailySummary === "boolean") {
         notificationControls.dailySummary.checked = types.dailySummary;
     }
@@ -563,6 +463,8 @@ function applyNotificationSettings(settings) {
     if (quietHours.to) {
         notificationControls.quietHoursTo.value = quietHours.to;
     }
+
+    syncWeatherAlertSubtypeVisibility();
 }
 
 
@@ -580,6 +482,9 @@ function getNotificationPayload() {
             clothingRecommendations: notificationControls.clothingRecommendations.checked,
             generalUpdates: notificationControls.generalUpdates.checked,
         },
+        weatherAlertTypes: weatherAlertTypeControls
+            .filter((control) => control.checked)
+            .map((control) => control.value),
         quietHours: {
             from: notificationControls.quietHoursFrom.value,
             to: notificationControls.quietHoursTo.value,
@@ -637,6 +542,12 @@ async function saveNotificationSettings() {
             throw new Error(result.error || "Could not save notification settings.");
         }
 
+        if (result.success !== true || !result.notifications) {
+            throw new Error(result.error || "Could not confirm saved notification settings.");
+        }
+
+        applyNotificationSettings(result.notifications);
+
         showNotificationSaveStatus(result.message || "Notification settings saved.");
     } catch (error) {
         showNotificationSaveStatus(
@@ -668,9 +579,75 @@ async function initializeNotificationSettings() {
 
     applyNotificationSettings(user.notifications);
 
+    await migrateLegacyOnboardingAlertSelections(user.notifications);
+
     Object.values(notificationControls).forEach((control) => {
         control.addEventListener("change", queueNotificationSave);
     });
+
+    weatherAlertTypeControls.forEach((control) => {
+        control.addEventListener("change", queueNotificationSave);
+    });
+
+    notificationControls.weatherAlerts.addEventListener(
+        "change",
+        syncWeatherAlertSubtypeVisibility
+    );
+}
+
+
+async function migrateLegacyOnboardingAlertSelections(settings) {
+    if (Array.isArray(settings?.types?.weatherAlertTypes)) {
+        return;
+    }
+
+    try {
+        const raw = sessionStorage.getItem("climaNotificationPreferences");
+        if (raw === null) return;
+
+        const savedValues = JSON.parse(raw);
+        const allowedTypes = ["heavy_rain", "strong_wind", "cold_warning", "extreme_heat"];
+
+        if (
+            !Array.isArray(savedValues) ||
+            savedValues.some((value) => !allowedTypes.includes(value))
+        ) {
+            return;
+        }
+
+        weatherAlertTypeControls.forEach((control) => {
+            control.checked = savedValues.includes(control.value);
+        });
+
+        const response = await fetch("backend/profile/update_notifications.php", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ weatherAlertTypes: savedValues }),
+        });
+        const result = await response.json().catch(() => ({}));
+
+        if (
+            response.ok &&
+            result.success === true &&
+            Array.isArray(result.notifications?.types?.weatherAlertTypes)
+        ) {
+            if (result.notifications) {
+                applyNotificationSettings(result.notifications);
+            }
+            sessionStorage.removeItem("climaNotificationPreferences");
+        } else {
+            showNotificationSaveStatus(
+                result.error || "Could not migrate saved onboarding alerts.",
+                true
+            );
+        }
+    } catch (error) {
+        showNotificationSaveStatus(
+            error.message || "Could not migrate saved onboarding alerts.",
+            true
+        );
+    }
 }
 
 

@@ -131,95 +131,92 @@
                         <form id="profile-edit-form">
 
                             <!-- Personal information card -->
-                           <div class="profile-edit-form">
-    <label class="profile-form-field" for="edit-name">
-        <span>Full name</span>
-        <input type="text" id="edit-name" required />
-    </label>
+                            <div class="profile-edit-form">
+                                <label class="profile-form-field" for="edit-name">
+                                    <span>Full name</span>
+                                    <input type="text" id="edit-name" required />
+                                </label>
 
-    <label class="profile-form-field" for="edit-email">
-        <span>Email address</span>
-        <input type="email" id="edit-email" required />
-    </label>
+                                <label class="profile-form-field" for="edit-email">
+                                    <span>Email address</span>
+                                    <input type="email" id="edit-email" required />
+                                </label>
 
-    <div class="profile-form-field profile-form-field-full">
-        <span>Default location</span>
-        <div class="profile-location-fields">
-            <label for="edit-location-city">
-                <span class="profile-field-hint">City</span>
-                <input type="text" id="edit-location-city" placeholder="Klaipėda" />
-            </label>
+                                <div class="profile-form-field profile-form-field-full">
+                                    <span>Default location</span>
+                                    <div class="profile-location-fields">
+                                        <label for="edit-location-city">
+                                            <span class="profile-field-hint">City</span>
+                                            <input type="text" id="edit-location-city" placeholder="Klaipėda" />
+                                        </label>
 
-            <label for="edit-location-country">
-                <span class="profile-field-hint">Country</span>
-                <select id="edit-location-country">
-                    <option value="">Choose country</option>
-                </select>
-            </label>
-        </div>
-        <p class="form-help-text">
-            Type your city and choose the country Clima should use for your default weather.
-        </p>
-    </div>
+                                        <label for="edit-location-country">
+                                            <span class="profile-field-hint">Country</span>
+                                            <select id="edit-location-country">
+                                                <option value="">Choose country</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <p class="form-help-text">
+                                        Type your city and choose the country Clima should use for your default weather.
+                                    </p>
+                                </div>
 
-    <label class="profile-form-field" for="edit-activity">
-        <span>Main activity</span>
-        <select id="edit-activity">
-            <option value="Walking">Walking</option>
-            <option value="Studying">Studying</option>
-            <option value="Work">Work</option>
-            <option value="Outdoor Activities">Outdoor Activities</option>
-            <option value="Sport">Sport</option>
-            <option value="Travel">Travel</option>
-        </select>
-    </label>
+                                <label class="profile-form-field" for="edit-activity">
+                                    <span>Main activity</span>
+                                    <select id="edit-activity">
+                                        <option value="Walking">Walking</option>
+                                        <option value="Studying">Studying</option>
+                                        <option value="Work">Work</option>
+                                        <option value="Outdoor Activities">Outdoor Activities</option>
+                                        <option value="Sport">Sport</option>
+                                        <option value="Travel">Travel</option>
+                                    </select>
+                                </label>
 
-    <label class="profile-form-field profile-form-field-full" for="edit-bio">
-        <span>Short bio</span>
-        <textarea
-            id="edit-bio"
-            rows="4"
-            placeholder="Write a short personal description, for example: Computer Science student who enjoys walking, photography, and outdoor activities."
-        ></textarea>
-    </label>
+                                <label class="profile-form-field profile-form-field-full" for="edit-bio">
+                                    <span>Short bio</span>
+                                    <textarea id="edit-bio" rows="4"
+                                        placeholder="Write a short personal description, for example: Computer Science student who enjoys walking, photography, and outdoor activities."></textarea>
+                                </label>
 
-    <div class="profile-form-field profile-form-field-full">
-        <span>About You tags</span>
+                                <div class="profile-form-field profile-form-field-full">
+                                    <span>About You tags</span>
 
-        <div class="edit-tag-grid">
-            <label class="edit-tag-option">
-                <input type="checkbox" name="personal-tags" value="Student" />
-                <span>Student</span>
-            </label>
+                                    <div class="edit-tag-grid">
+                                        <label class="edit-tag-option">
+                                            <input type="checkbox" name="personal-tags" value="Student" />
+                                            <span>Student</span>
+                                        </label>
 
-            <label class="edit-tag-option">
-                <input type="checkbox" name="personal-tags" value="Morning Person" />
-                <span>Morning Person</span>
-            </label>
+                                        <label class="edit-tag-option">
+                                            <input type="checkbox" name="personal-tags" value="Morning Person" />
+                                            <span>Morning Person</span>
+                                        </label>
 
-            <label class="edit-tag-option">
-                <input type="checkbox" name="personal-tags" value="Outdoor Activities" />
-                <span>Outdoor Activities</span>
-            </label>
+                                        <label class="edit-tag-option">
+                                            <input type="checkbox" name="personal-tags" value="Outdoor Activities" />
+                                            <span>Outdoor Activities</span>
+                                        </label>
 
-            <label class="edit-tag-option">
-                <input type="checkbox" name="personal-tags" value="Walking" />
-                <span>Walking</span>
-            </label>
+                                        <label class="edit-tag-option">
+                                            <input type="checkbox" name="personal-tags" value="Walking" />
+                                            <span>Walking</span>
+                                        </label>
 
-            <label class="edit-tag-option">
-                <input type="checkbox" name="personal-tags" value="Photography" />
-                <span>Photography</span>
-            </label>
-        </div>
+                                        <label class="edit-tag-option">
+                                            <input type="checkbox" name="personal-tags" value="Photography" />
+                                            <span>Photography</span>
+                                        </label>
+                                    </div>
 
-        <p class="form-help-text">
-            These tags will appear in the About You section of your profile.
-        </p>
-    </div>
-</div>
+                                    <p class="form-help-text">
+                                        These tags will appear in the About You section of your profile.
+                                    </p>
+                                </div>
+                            </div>
 
-                  
+
                             <!-- Form buttons -->
                             <div class="profile-form-actions">
                                 <a href="profile.html" class="profile-cancel-btn">Cancel</a>

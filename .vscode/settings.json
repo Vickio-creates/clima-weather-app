@@ -16,10 +16,11 @@
         "FOLLOWLOCATION",
         "HTTPHEADER",
         "Klaipėda",
+        "NONCEBYTES",
         "OPENWEATHER",
         "RETURNTRANSFER",
+        "SECRETBOX",
         "topbar",
-        "totp",
         "XAMPP"
     ]
 }

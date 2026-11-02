@@ -71,22 +71,11 @@
 
                     <label for="login-password">Password</label>
                     <div class="field"><i data-lucide="lock"></i><input type="password" id="login-password" name="password"
-                            autocomplete="current-password" required><button type="button" class="password-toggle"
+                            autocomplete="current-password" data-password-label="password" required><button type="button" class="password-toggle"
                             data-toggle-password aria-label="Show password" aria-pressed="false"><i data-lucide="eye-off"></i></button></div>
                     <p class="field-hint">Use the password connected to your Clima account.</p>
                     <div class="form-options"><label class="checkbox-row"><input type="checkbox"
                                 name="remember"><span>Remember me</span></label><a href="#">Forgot password?</a></div>
-                </div>
-
-                <div id="login-two-factor-fields" hidden>
-                    <label for="login-two-factor-code">Verification code</label>
-                    <div class="field"><i data-lucide="shield-check" aria-hidden="true"></i><input
-                            id="login-two-factor-code" type="text" inputmode="numeric" autocomplete="one-time-code"
-                            autocapitalize="characters" spellcheck="false" maxlength="6"></div>
-                    <p class="field-hint" id="login-two-factor-hint">Enter the six-digit code from your authenticator app.</p>
-                    <label class="checkbox-row login-recovery-option"><input id="login-use-recovery-code" type="checkbox">
-                        <span>Use a recovery code instead</span></label>
-                    <button id="login-back-to-password" class="auth-secondary-button" type="button">Back to password</button>
                 </div>
 
                 <button id="login-submit" type="submit" class="submit-button">Log in</button>

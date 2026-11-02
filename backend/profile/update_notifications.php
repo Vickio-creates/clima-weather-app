@@ -40,77 +40,140 @@ try {
     $userId = requireLoggedInUserId();
     $data = readJsonBody();
 
-    $channels = $data['channels'] ?? null;
-    $types = $data['types'] ?? null;
-    $quietHours = $data['quietHours'] ?? null;
+    $allowedGroups = ['channels', 'types', 'quietHours', 'weatherAlertTypes'];
+    $unexpectedGroups = array_diff(array_keys($data), $allowedGroups);
 
-    if (!is_array($channels) || !is_array($types) || !is_array($quietHours)) {
-        jsonResponse(['error' => 'Channels, types, and quietHours are required.'], 422);
+    if ($unexpectedGroups || !$data) {
+        jsonResponse(['error' => 'Send supported notification settings to save.'], 422);
     }
 
-    $emailEnabled = notificationBoolean($channels, 'email');
-    $pushEnabled = notificationBoolean($channels, 'push');
-    $weatherAlertsEnabled = notificationBoolean($types, 'weatherAlerts');
-    $dailySummaryEnabled = notificationBoolean($types, 'dailySummary');
-    $activityRemindersEnabled = notificationBoolean($types, 'activityReminders');
-    $clothingRecommendationsEnabled = notificationBoolean($types, 'clothingRecommendations');
-    $generalUpdatesEnabled = notificationBoolean($types, 'generalUpdates');
-    $quietHoursFrom = notificationTime($quietHours, 'from');
-    $quietHoursTo = notificationTime($quietHours, 'to');
+    $changes = [];
+    $channelColumns = [
+        'email' => 'notify_email',
+        'push' => 'notify_push',
+    ];
+    $typeColumns = [
+        'weatherAlerts' => 'notify_weather_alerts',
+        'dailySummary' => 'notify_daily_summary',
+        'activityReminders' => 'notify_activity_reminders',
+        'clothingRecommendations' => 'notify_clothing_recommendations',
+        'generalUpdates' => 'notify_general_updates',
+    ];
 
+    if (array_key_exists('channels', $data)) {
+        if (!is_array($data['channels'])) {
+            jsonResponse(['error' => 'Channels must be an object.'], 422);
+        }
+
+        if (array_diff(array_keys($data['channels']), array_keys($channelColumns))) {
+            jsonResponse(['error' => 'An unsupported notification channel was supplied.'], 422);
+        }
+
+        foreach ($channelColumns as $key => $column) {
+            if (array_key_exists($key, $data['channels'])) {
+                $changes[$column] = (int) notificationBoolean($data['channels'], $key);
+            }
+        }
+    }
+
+    if (array_key_exists('types', $data)) {
+        if (!is_array($data['types'])) {
+            jsonResponse(['error' => 'Notification types must be an object.'], 422);
+        }
+
+        if (array_diff(array_keys($data['types']), array_keys($typeColumns))) {
+            jsonResponse(['error' => 'An unsupported notification type was supplied.'], 422);
+        }
+
+        foreach ($typeColumns as $key => $column) {
+            if (!array_key_exists($key, $data['types'])) {
+                continue;
+            }
+
+            $enabled = (int) notificationBoolean($data['types'], $key);
+            $changes[$column] = $enabled;
+
+            // Keep the legacy severe-alert preference aligned with the master.
+            if ($key === 'weatherAlerts') {
+                $changes['notify_severe'] = $enabled;
+            }
+        }
+    }
+
+    if (array_key_exists('quietHours', $data)) {
+        if (!is_array($data['quietHours'])) {
+            jsonResponse(['error' => 'Quiet hours must be an object.'], 422);
+        }
+
+        $quietHourColumns = [
+            'from' => 'quiet_hours_from',
+            'to' => 'quiet_hours_to',
+        ];
+
+        if (array_diff(array_keys($data['quietHours']), array_keys($quietHourColumns))) {
+            jsonResponse(['error' => 'An unsupported quiet-hours value was supplied.'], 422);
+        }
+
+        foreach ($quietHourColumns as $key => $column) {
+            if (array_key_exists($key, $data['quietHours'])) {
+                $changes[$column] = notificationTime($data['quietHours'], $key);
+            }
+        }
+    }
+
+    if (array_key_exists('weatherAlertTypes', $data)) {
+        $allowedAlertTypes = ['heavy_rain', 'strong_wind', 'cold_warning', 'extreme_heat'];
+        $alertTypes = $data['weatherAlertTypes'];
+
+        if (!is_array($alertTypes) || !array_is_list($alertTypes)) {
+            jsonResponse(['error' => 'Weather alert selections must be a list.'], 422);
+        }
+
+        foreach ($alertTypes as $alertType) {
+            if (!is_string($alertType) || !in_array($alertType, $allowedAlertTypes, true)) {
+                jsonResponse(['error' => 'An unsupported weather alert was selected.'], 422);
+            }
+        }
+
+        $changes['weather_alert_types'] = json_encode(
+            array_values(array_unique($alertTypes)),
+            JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
+        );
+    }
+
+    if (!$changes) {
+        jsonResponse(['error' => 'No notification settings were supplied.'], 422);
+    }
+
+    $insertColumns = ['user_id'];
+    $insertValues = ['?'];
+    $updateAssignments = [];
+    $parameters = [$userId];
+
+    foreach ($changes as $column => $value) {
+        $insertColumns[] = $column;
+        $insertValues[] = '?';
+        $updateAssignments[] = $column . ' = VALUES(' . $column . ')';
+        $parameters[] = $value;
+    }
+
+    $updateAssignments[] = 'updated_at = NOW()';
     $pdo = getPDO();
-
-    // A preference row is created at registration. The UPSERT also repairs an
-    // older account that does not have one yet, without trusting a user ID from JS.
     $statement = $pdo->prepare(
-        'INSERT INTO user_preferences (
-            user_id,
-            notify_email,
-            notify_push,
-            notify_weather_alerts,
-            notify_severe,
-            notify_daily_summary,
-            notify_activity_reminders,
-            notify_clothing_recommendations,
-            notify_general_updates,
-            quiet_hours_from,
-            quiet_hours_to
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE
-            notify_email = VALUES(notify_email),
-            notify_push = VALUES(notify_push),
-            notify_weather_alerts = VALUES(notify_weather_alerts),
-            notify_severe = VALUES(notify_severe),
-            notify_daily_summary = VALUES(notify_daily_summary),
-            notify_activity_reminders = VALUES(notify_activity_reminders),
-            notify_clothing_recommendations = VALUES(notify_clothing_recommendations),
-            notify_general_updates = VALUES(notify_general_updates),
-            quiet_hours_from = VALUES(quiet_hours_from),
-            quiet_hours_to = VALUES(quiet_hours_to),
-            updated_at = NOW()'
+        'INSERT INTO user_preferences (' . implode(', ', $insertColumns) . ')
+         VALUES (' . implode(', ', $insertValues) . ')
+         ON DUPLICATE KEY UPDATE ' . implode(', ', $updateAssignments)
     );
-
-    $statement->execute([
-        $userId,
-        (int) $emailEnabled,
-        (int) $pushEnabled,
-        (int) $weatherAlertsEnabled,
-        // Keep the existing severe-alert setting in sync with the new UI label.
-        (int) $weatherAlertsEnabled,
-        (int) $dailySummaryEnabled,
-        (int) $activityRemindersEnabled,
-        (int) $clothingRecommendationsEnabled,
-        (int) $generalUpdatesEnabled,
-        $quietHoursFrom,
-        $quietHoursTo,
-    ]);
+    $statement->execute($parameters);
 
     $user = fetchUserPayload($pdo, $userId);
 
     jsonResponse([
+        'success' => true,
         'message' => 'Notification settings saved.',
         'notifications' => $user['notifications'],
     ]);
 } catch (Throwable $error) {
-    jsonResponse(['error' => $error->getMessage()], 500);
+    error_log('Could not save notification settings: ' . $error->getMessage());
+    jsonResponse(['error' => 'Could not save notification settings. Please try again.'], 500);
 }

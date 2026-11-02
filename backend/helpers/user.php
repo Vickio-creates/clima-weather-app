@@ -47,6 +47,7 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
         pr.notify_email,
         pr.notify_push,
         pr.notify_weather_alerts,
+        pr.weather_alert_types,
         pr.notify_severe,
         pr.notify_rain,
         pr.notify_air_quality,
@@ -61,6 +62,7 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
         pr.activity_history,
         pr.activities,
         pr.weather_focus,
+        pr.weather_sensitivities,
         pr.clothing_style,
         pr.assistant_tone
     FROM users u
@@ -80,6 +82,27 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
     if (!$row) {
         return null;
     }
+
+    $weatherFocus = decodePreferenceList($row['weather_focus'] ?? null);
+    $weatherSensitivities = null;
+
+    if (($row['weather_sensitivities'] ?? null) !== null) {
+        $weatherSensitivities = decodePreferenceList($row['weather_sensitivities']);
+    } else {
+        // Older profiles stored cold and heat sensitivity in weather_focus.
+        $legacySensitivities = array_values(array_intersect(
+            ['Sensitive to Cold', 'Sensitive to Heat'],
+            $weatherFocus
+        ));
+
+        if ($legacySensitivities) {
+            $weatherSensitivities = $legacySensitivities;
+        }
+    }
+
+    $weatherAlertTypes = ($row['weather_alert_types'] ?? null) === null
+        ? null
+        : decodePreferenceList($row['weather_alert_types']);
 
     // Return a clean user payload that can be safely sent to JavaScript as JSON.
     return [
@@ -114,6 +137,7 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
             ],
             'types' => [
                 'weatherAlerts' => (bool) ($row['notify_weather_alerts'] ?? true),
+                'weatherAlertTypes' => $weatherAlertTypes,
                 'dailySummary' => (bool) ($row['notify_daily_summary'] ?? true),
                 'activityReminders' => (bool) ($row['notify_activity_reminders'] ?? true),
                 'clothingRecommendations' => (bool) ($row['notify_clothing_recommendations'] ?? true),
@@ -136,7 +160,8 @@ function fetchUserPayload(PDO $pdo, int $userId): ?array
         // These values are stored in the database as JSON, so they are decoded into PHP arrays.
         'preferences' => [
             'activities' => decodePreferenceList($row['activities'] ?? null),
-            'weatherFocus' => decodePreferenceList($row['weather_focus'] ?? null),
+            'weatherFocus' => $weatherFocus,
+            'weatherSensitivities' => $weatherSensitivities,
             'clothingStyle' => decodePreferenceList($row['clothing_style'] ?? null),
             'assistantTone' => decodePreferenceList($row['assistant_tone'] ?? null),
         ],

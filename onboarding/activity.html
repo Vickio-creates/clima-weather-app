@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#eef3ff">
+    <title>Activity</title>
+
+    <link rel="stylesheet" href="../style/output.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="../scripts/onboarding.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet" />
+
+</head>
+
+<body>
+    <main
+        class="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#eef3ff] px-4 py-8 font-[Inter] text-[#202938] max-md:items-start max-md:px-[18px] max-md:pt-[100px] max-md:pb-7 [@media(max-height:720px)_and_(min-width:761px)]:items-start [@media(max-height:720px)_and_(min-width:761px)]:pt-[95px]">
+        <i data-lucide="cloud"
+            class="absolute left-[10.5%] top-[16.8%] -z-10 hidden size-10 text-[#c9dcff] opacity-70 md:block"
+            aria-hidden="true">
+        </i>
+
+        <svg class="absolute right-[10.5%] top-[13.8%] -z-10 hidden size-24 rounded-full border border-white/70 p-6 text-[#c9dcff] opacity-90 md:block"
+            viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <circle cx="32" cy="32" r="10" />
+            <path d="M32 8v7m0 34v7M8 32h7m34 0h7M15 15l5 5m24 24 5 5m0-34-5 5M20 44l-5 5" />
+        </svg>
+        <svg class="absolute bottom-[13.3%] left-[6.3%] -z-10 hidden size-24 rounded-full border border-white/70 p-6 text-[#c9dcff] opacity-90 md:block"
+            viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 39h30a9 9 0 0 0 1-18 15 15 0 0 0-28-3 11 11 0 0 0-3 21Z" />
+            <path d="M23 45v9m9-9v13m9-13v9" />
+        </svg>
+        <svg class="absolute right-[3.6%] bottom-[13.3%] -z-10 hidden size-24 rounded-full border border-white/70 p-6 text-[#c9dcff] opacity-90 md:block"
+            viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="M35 7 14 34h15l-3 23 24-31H34l1-19Z" />
+        </svg>
+
+        <ol class="absolute left-1/2 top-[clamp(30px,calc(50vh_-_379px),133px)] flex -translate-x-1/2 list-none items-center gap-3 p-0 max-md:top-6 [@media(max-height:720px)_and_(min-width:761px)]:top-[25px]"
+            aria-label="Onboarding progress">
+            <li>
+                <span
+                    class="grid size-8 place-items-center rounded-full border border-[#2d6cdf] bg-[#2d6cdf] text-white">
+                    <i data-lucide="check" class="size-4" aria-label="Completed"></i>
+                </span>
+            </li>
+
+            <li aria-current="step">
+                <span
+                    class="grid size-8 place-items-center rounded-full border border-[#2d6cdf] bg-[#2d6cdf] text-sm font-bold leading-none text-white">
+                    2
+                </span>
+            </li>
+            <li><span
+                    class="grid size-8 place-items-center rounded-full border border-slate-300 bg-white/80 text-sm font-semibold leading-none text-slate-600">3</span>
+            </li>
+            <li><span
+                    class="grid size-8 place-items-center rounded-full border border-slate-300 bg-white/80 text-sm font-semibold leading-none text-slate-600">4</span>
+            </li>
+            <li><span
+                    class="grid size-8 place-items-center rounded-full border border-slate-300 bg-white/80 text-sm font-semibold leading-none text-slate-600">5</span>
+            </li>
+        </ol>
+
+        <section
+            class="flex min-h-[580px] w-full max-w-[650px] shrink-0 -translate-y-[5px] flex-col items-center rounded-[32px] border border-white/75 bg-white/[0.78] pb-8 text-center shadow-[0_28px_64px_rgba(51,75,112,0.09)] max-md:h-auto max-md:min-h-0 max-md:translate-y-0 max-md:rounded-[26px] max-md:px-[22px] max-md:pb-[25px]"
+            aria-labelledby="welcome-title">
+            <!-- Clima logo -->
+            <div class="flex h-[145px] w-full shrink-0 items-center justify-center max-md:h-[120px]"
+                aria-label="Clima logo">
+                <div class="flex items-center gap-4">
+                    <span
+                        class="grid size-[76px] shrink-0 place-items-center rounded-2xl bg-[#2d6cdf] text-white shadow-[0_8px_20px_rgba(45,108,223,0.25)]">
+                        <i data-lucide="cloud" class="size-10" aria-hidden="true"></i>
+                    </span>
+                    <span class="text-[42px] font-bold tracking-[-0.055em] text-[#202938]">
+                        Clima
+                    </span>
+                </div>
+            </div>
+
+            <!-- Heading -->
+            <h1 id="activity-title"
+                class="mt-[18px] text-[42px] leading-[1.2] font-bold tracking-[-0.045em] text-[#202938] max-md:mt-4 max-md:text-[clamp(30px,8vw,40px)]">
+                What best describes you?
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="mt-3 max-w-[480px] px-4 text-[16px] leading-7 text-[#707b8d] max-md:text-[15px]">
+                This helps Clima provide personalized recommendations.
+            </p>
+
+            <!-- Activity options -->
+            <form id="activity-form" class="mt-6 w-full max-w-[720px] px-10 max-md:px-0">
+                <div class="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+                    <label
+                        class="group flex min-h-[92px] cursor-pointer items-center gap-4 rounded-[20px] border border-slate-200 bg-white/65 px-5 py-4 text-left shadow-[0_6px_16px_rgba(34,55,87,0.03)] transition hover:border-[#2d6cdf]/60 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#2d6cdf] has-[:checked]:border-2 has-[:checked]:border-[#3b7cff] has-[:checked]:bg-[#eef4ff]">
+                        <input type="checkbox" name="activities" value="student" class="sr-only">
+                        <span aria-hidden="true"
+                            class="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[#f1f5fa] text-[24px] group-has-[:checked]:bg-[#e5eefc]">🎓</span>
+                        <span class="text-[17px] font-semibold text-[#384455] group-has-[:checked]:text-[#2d6cdf]">Student</span>
+                        <span aria-hidden="true"
+                            class="ml-auto grid size-5 shrink-0 place-items-center rounded-[3px] border border-slate-300 text-[14px] leading-none text-transparent group-has-[:checked]:border-[#2d6cdf] group-has-[:checked]:bg-white group-has-[:checked]:text-[#2d6cdf]">✓</span>
+                    </label>
+
+                    <label
+                        class="group flex min-h-[92px] cursor-pointer items-center gap-4 rounded-[20px] border border-slate-200 bg-white/65 px-5 py-4 text-left shadow-[0_6px_16px_rgba(34,55,87,0.03)] transition hover:border-[#2d6cdf]/60 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#2d6cdf] has-[:checked]:border-2 has-[:checked]:border-[#3b7cff] has-[:checked]:bg-[#eef4ff]">
+                        <input type="checkbox" name="activities" value="office_worker" class="sr-only">
+                        <span aria-hidden="true"
+                            class="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[#f1f5fa] text-[24px] group-has-[:checked]:bg-[#e5eefc]">💼</span>
+                        <span class="text-[17px] font-semibold text-[#384455] group-has-[:checked]:text-[#2d6cdf]">Office Worker</span>
+                        <span aria-hidden="true"
+                            class="ml-auto grid size-5 shrink-0 place-items-center rounded-[3px] border border-slate-300 text-[14px] leading-none text-transparent group-has-[:checked]:border-[#2d6cdf] group-has-[:checked]:bg-white group-has-[:checked]:text-[#2d6cdf]">✓</span>
+                    </label>
+
+                    <label
+                        class="group flex min-h-[92px] cursor-pointer items-center gap-4 rounded-[20px] border border-slate-200 bg-white/65 px-5 py-4 text-left shadow-[0_6px_16px_rgba(34,55,87,0.03)] transition hover:border-[#2d6cdf]/60 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#2d6cdf] has-[:checked]:border-2 has-[:checked]:border-[#3b7cff] has-[:checked]:bg-[#eef4ff]">
+                        <input type="checkbox" name="activities" value="athlete" class="sr-only">
+                        <span aria-hidden="true"
+                            class="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[#f1f5fa] text-[24px] group-has-[:checked]:bg-[#e5eefc]">🏃</span>
+                        <span class="text-[17px] font-semibold text-[#384455] group-has-[:checked]:text-[#2d6cdf]">Athlete</span>
+                        <span aria-hidden="true"
+                            class="ml-auto grid size-5 shrink-0 place-items-center rounded-[3px] border border-slate-300 text-[14px] leading-none text-transparent group-has-[:checked]:border-[#2d6cdf] group-has-[:checked]:bg-white group-has-[:checked]:text-[#2d6cdf]">✓</span>
+                    </label>
+
+                    <label
+                        class="group flex min-h-[92px] cursor-pointer items-center gap-4 rounded-[20px] border border-slate-200 bg-white/65 px-5 py-4 text-left shadow-[0_6px_16px_rgba(34,55,87,0.03)] transition hover:border-[#2d6cdf]/60 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#2d6cdf] has-[:checked]:border-2 has-[:checked]:border-[#3b7cff] has-[:checked]:bg-[#eef4ff]">
+                        <input type="checkbox" name="activities" value="construction_worker" class="sr-only">
+                        <span aria-hidden="true"
+                            class="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[#f1f5fa] text-[24px] group-has-[:checked]:bg-[#e5eefc]">🏗️</span>
+                        <span class="text-[17px] font-semibold text-[#384455] group-has-[:checked]:text-[#2d6cdf]">Construction Worker</span>
+                        <span aria-hidden="true"
+                            class="ml-auto grid size-5 shrink-0 place-items-center rounded-[3px] border border-slate-300 text-[14px] leading-none text-transparent group-has-[:checked]:border-[#2d6cdf] group-has-[:checked]:bg-white group-has-[:checked]:text-[#2d6cdf]">✓</span>
+                    </label>
+
+                    <label
+                        class="group flex min-h-[92px] cursor-pointer items-center gap-4 rounded-[20px] border border-slate-200 bg-white/65 px-5 py-4 text-left shadow-[0_6px_16px_rgba(34,55,87,0.03)] transition hover:border-[#2d6cdf]/60 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#2d6cdf] has-[:checked]:border-2 has-[:checked]:border-[#3b7cff] has-[:checked]:bg-[#eef4ff]">
+                        <input type="checkbox" name="activities" value="traveller" class="sr-only">
+                        <span aria-hidden="true"
+                            class="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[#f1f5fa] text-[24px] group-has-[:checked]:bg-[#e5eefc]">✈️</span>
+                        <span class="text-[17px] font-semibold text-[#384455] group-has-[:checked]:text-[#2d6cdf]">Traveller</span>
+                        <span aria-hidden="true"
+                            class="ml-auto grid size-5 shrink-0 place-items-center rounded-[3px] border border-slate-300 text-[14px] leading-none text-transparent group-has-[:checked]:border-[#2d6cdf] group-has-[:checked]:bg-white group-has-[:checked]:text-[#2d6cdf]">✓</span>
+                    </label>
+
+                    <label
+                        class="group flex min-h-[92px] cursor-pointer items-center gap-4 rounded-[20px] border border-slate-200 bg-white/65 px-5 py-4 text-left shadow-[0_6px_16px_rgba(34,55,87,0.03)] transition hover:border-[#2d6cdf]/60 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[#2d6cdf] has-[:checked]:border-2 has-[:checked]:border-[#3b7cff] has-[:checked]:bg-[#eef4ff]">
+                        <input type="checkbox" name="activities" value="outdoor_worker" class="sr-only">
+                        <span aria-hidden="true"
+                            class="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[#f1f5fa] text-[24px] group-has-[:checked]:bg-[#e5eefc]">🌳</span>
+                        <span class="text-[17px] font-semibold text-[#384455] group-has-[:checked]:text-[#2d6cdf]">Outdoor Worker</span>
+                        <span aria-hidden="true"
+                            class="ml-auto grid size-5 shrink-0 place-items-center rounded-[3px] border border-slate-300 text-[14px] leading-none text-transparent group-has-[:checked]:border-[#2d6cdf] group-has-[:checked]:bg-white group-has-[:checked]:text-[#2d6cdf]">✓</span>
+                    </label>
+                </div>
+
+                <p id="activity-status" class="mt-4 min-h-5 text-sm text-rose-600" role="status"
+                    aria-live="polite"></p>
+
+                <div class="mt-6 flex w-full items-center justify-between">
+                    <a href="welcome.html"
+                        class="grid h-[60px] w-[120px] max-w-[40%] place-items-center rounded-2xl border border-slate-200 bg-white text-[16px] font-semibold text-[#505b6c] transition hover:bg-slate-50 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#2d6cdf]/40">
+                        Back
+                    </a>
+
+                    <button type="submit"
+                        class="grid h-[60px] w-[180px] max-w-[60%] place-items-center rounded-2xl bg-[#2d6cdf] text-[16px] font-bold text-white shadow-[0_12px_22px_rgba(45,108,223,0.24)] transition hover:bg-[#2563d5] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#2d6cdf]/40">
+                        Next
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>
